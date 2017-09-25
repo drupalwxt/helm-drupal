@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  storageClassName: {{ .Values.persistence.drupal.storageClassName | quote }}
+  capacity:
+    storage: {{ .Values.persistence.drupal.size | quote }}
+  accessModes:
+    - {{ .Values.persistence.drupal.accessMode | quote }}
+  nfs:
+    path: {{ .Values.persistence.drupal.hostPath | quote }}
+    server: 192.168.99.1

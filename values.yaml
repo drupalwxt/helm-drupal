@@ -1,0 +1,122 @@
+## Drupal image version
+## ref: https://hub.docker.com/r/library/drupal/tags/
+##
+image: drupalwxt/site-wxt:latest
+
+## Optionally specify an array of imagePullSecrets.
+## Secrets must be manually created in the namespace.
+## ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
+##
+# imagePullSecrets:
+#   - name: myRegistryKeySecretName
+
+## Specify a imagePullPolicy
+## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+##
+imagePullPolicy: IfNotPresent
+
+## User of the application
+##
+drupalUsername: admin
+
+## Application password
+##
+drupalPassword: WxT@2017
+
+## Kubernetes configuration
+## For minikube, set this to NodePort, elsewhere use LoadBalancer
+## Use ClusterIP if your setup includes ingress controller
+##
+serviceType: LoadBalancer
+
+## Configure Ingress resource that allow you to access the Drupal installation
+## Set up the URL
+## ref: http://kubernetes.io/docs/user-guide/ingress/
+##
+ingress:
+  enabled: true
+  # Used to create Ingress record (should used with ServiceType: ClusterIP).
+  hostname: wxt.io
+
+## Enable persistence using Persistent Volume Claims
+## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+##
+persistence:
+  enabled: true
+  drupal:
+    ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
+    ## Default: volume.alpha.kubernetes.io/storage-class: default
+    ##
+    # storageClass:
+    accessMode: ReadWriteOnce
+    hostPath: /Users/sylus/Desktop/site-wxt
+    size: 10Gi
+    storageClassName: drupal
+  mysql:
+    ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
+    ## Default: volume.alpha.kubernetes.io/storage-class: default
+    ##
+    # storageClass:
+    accessMode: ReadWriteOnce
+    size: 20Gi
+  nginx:
+    ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
+    ## Default: volume.alpha.kubernetes.io/storage-class: default
+    ##
+    # storageClass:
+    accessMode: ReadWriteOnce
+    hostPath: /Users/sylus/Desktop/site-wxt/html
+    size: 10Gi
+    storageClassName: nginx
+
+    ## A manually managed Persistent Volume Claim
+    ## Requires persistence.enabled: true
+    ## If defined, PVC must be created manually before volume will be bound
+    ##
+    # existingClaim:
+
+    ## If defined, the drupal-data volume will mount to the speficied hostPath.
+    ## Requires persistence.enabled: true
+    ## Requires persistence.existingClaim: nil|false
+    ## Default: nil.
+    ##
+    # hostPath:
+
+## Configure resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+##
+resources: {}
+
+## Configure volume mounts. This is useful for images whose data mount paths are
+## different than the default.
+volumeMounts:
+  drupal:
+    mountPath: /var/www
+  nginx:
+    mountPath: /var/www/html
+
+## Pass extra environment variables to the Drupal container.
+##
+# extraVars:
+# - name: EXTRA_VAR_1
+#   value: extra-var-value-1
+# - name: EXTRA_VAR_2
+#   value: extra-var-value-2
+
+## Configure liveness and readiness probes.
+## Drupal core exposes /user/login to unauthenticated requests, making it a good
+## default liveness and readiness path. However, that may not always be the
+## case. For example, if the image value is overridden to an image containing a
+## module that alters that route, or an image that does not auto-install Drupal.
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+#
+livenessProbe:
+  httpGet:
+    path: /user/login
+    port: http
+  initialDelaySeconds: 120
+readinessProbe:
+  httpGet:
+    path: /user/login
+    port: http
+  initialDelaySeconds: 30

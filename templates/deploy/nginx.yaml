@@ -1,0 +1,45 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}-nginx
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+        tier: nginx
+    spec:
+      containers:
+      - image: nginx:alpine
+        name: nginx
+        ports:
+        - name: http
+          containerPort: 80
+        - name: https
+          containerPort: 443
+        resources:
+          requests:
+            memory: "200Mi"
+            cpu: "250m"
+          limits:
+            memory: "500Mi"
+            cpu: "400m"
+        volumeMounts:
+        - mountPath: /etc/nginx/nginx.conf
+          name: cm-drupal
+          subPath: nginx.conf
+        - name: pvc-drupal-nginx
+          mountPath: {{ .Values.volumeMounts.nginx.mountPath }}
+      volumes:
+      - name: pvc-drupal-nginx
+        persistentVolumeClaim:
+          claimName: {{ template "fullname" . }}-nginx
+      - name: cm-drupal
+        configMap:
+          name: {{ template "fullname" . }}

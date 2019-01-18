@@ -1,22 +1,26 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: {{ template "fullname" . }}-nginx
   labels:
-    app: {{ template "fullname" . }}
+    app: {{ template "appname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "appname" . }}
+      tier: frontend
   template:
     metadata:
       labels:
-        app: {{ template "fullname" . }}
-        tier: nginx
+        app: {{ template "appname" . }}
+        tier: frontend
     spec:
       containers:
-      - image: nginx:alpine
+      - image: "{{ .Values.nginx.image }}"
         name: nginx
         ports:
         - name: http
@@ -32,14 +36,13 @@ spec:
             cpu: "400m"
         volumeMounts:
         - mountPath: /etc/nginx/nginx.conf
-          name: cm-drupal
+          name: cm-nginx
           subPath: nginx.conf
-        - name: pvc-drupal-nginx
-          mountPath: {{ .Values.volumeMounts.nginx.mountPath }}
+      {{- if .Values.nginx.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.nginx.imagePullSecrets | indent 8 }}
+      {{- end }}
       volumes:
-      - name: pvc-drupal-nginx
-        persistentVolumeClaim:
-          claimName: {{ template "fullname" . }}-nginx
-      - name: cm-drupal
+      - name: cm-nginx
         configMap:
-          name: {{ template "fullname" . }}
+          name: {{ template "fullname" . }}-nginx

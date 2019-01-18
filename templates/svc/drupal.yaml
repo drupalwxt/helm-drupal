@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ template "fullname" . }}
   labels:
-    app: {{ template "fullname" . }}
+    app: {{ template "appname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
@@ -11,6 +11,6 @@ spec:
   ports:
     - port: 9000
   selector:
-    app: {{ template "fullname" . }}
-    tier: frontend
+    app: {{ template "appname" . }}
+    tier: drupal
   type:  {{ .Values.serviceType }}

@@ -1,37 +1,53 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: {{ template "fullname" . }}-mysql
   labels:
-    app: {{ template "fullname" . }}
+    app: {{ template "appname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
   strategy:
     type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "appname" . }}
+      tier: mysql
   template:
     metadata:
       labels:
-        app: {{ template "fullname" . }}
+        app: {{ template "appname" . }}
         tier: mysql
     spec:
       containers:
-      - image: mysql:5.6
+      - image: "{{ .Values.mysql.image }}"
         name: mysql
         env:
+        - name: MYSQL_DATABASE
+          value: "{{ .Values.mysql.db }}"
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ template "fullname" . }}
-              key: password
+              key: mysql-password
         ports:
         - containerPort: 3306
           name: mysql
         volumeMounts:
         - name: pvc-drupal-mysql
           mountPath: /var/lib/mysql
+        - mountPath: /etc/mysql/conf.d/overrides.cnf
+          name: cm-mysql
+          subPath: my.cnf
+      {{- if .Values.mysql.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.mysql.imagePullSecrets | indent 8 }}
+      {{- end }}
       volumes:
       - name: pvc-drupal-mysql
         persistentVolumeClaim:
           claimName: {{ template "fullname" . }}-mysql
+      - name: cm-mysql
+        configMap:
+          name: {{ template "fullname" . }}-mysql

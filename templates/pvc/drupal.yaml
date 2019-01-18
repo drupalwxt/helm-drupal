@@ -1,16 +1,28 @@
-apiVersion: v1
+{{- if and .Values.drupal.persistence.enabled (not .Values.drupal.persistence.existingClaim) -}}
 kind: PersistentVolumeClaim
+apiVersion: v1
 metadata:
-  name: {{ template "fullname" . }}
+{{- if .Values.drupal.persistence.annotations }}
+  annotations:
+{{ toYaml .Values.drupal.persistence.annotations | indent 4 }}
+{{- end }}
+  name: {{ template "fullname" . }}-drupal
   labels:
-    app: {{ template "fullname" . }}
+    app: {{ template "appname" . }}-drupal
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
-  storageClassName: {{ .Values.persistence.drupal.storageClassName | quote }}
   accessModes:
-    - {{ .Values.persistence.drupal.accessMode | quote }}
+    - {{ .Values.drupal.persistence.accessMode | quote }}
   resources:
     requests:
-      storage: {{ .Values.persistence.drupal.size | quote }}
+      storage: {{ .Values.drupal.persistence.size | quote }}
+{{- if .Values.drupal.persistence.storageClass }}
+{{- if (eq "-" .Values.drupal.persistence.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.drupal.persistence.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end }}

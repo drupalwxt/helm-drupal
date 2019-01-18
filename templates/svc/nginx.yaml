@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ template "fullname" . }}-nginx
   labels:
-    app: {{ template "fullname" . }}
+    app: {{ template "appname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
@@ -16,6 +16,6 @@ spec:
     port: 443
     targetPort: https
   selector:
-    app: {{ template "fullname" . }}
-    tier: nginx
+    app: {{ template "appname" . }}
+    tier: frontend
   type:  {{ .Values.serviceType }}

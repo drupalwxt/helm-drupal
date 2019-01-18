@@ -1,15 +1,28 @@
-apiVersion: v1
+{{- if and .Values.mysql.persistence.enabled (not .Values.mysql.persistence.existingClaim) -}}
 kind: PersistentVolumeClaim
+apiVersion: v1
 metadata:
+{{- if .Values.mysql.persistence.annotations }}
+  annotations:
+{{ toYaml .Values.mysql.persistence.annotations | indent 4 }}
+{{- end }}
   name: {{ template "fullname" . }}-mysql
   labels:
-    app: {{ template "fullname" . }}
+    app: {{ template "appname" . }}-mysql
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
   accessModes:
-    - {{ .Values.persistence.mysql.accessMode | quote }}
+    - {{ .Values.mysql.persistence.accessMode | quote }}
   resources:
     requests:
-      storage: {{ .Values.persistence.mysql.size | quote }}
+      storage: {{ .Values.mysql.persistence.size | quote }}
+{{- if .Values.mysql.persistence.storageClass }}
+{{- if (eq "-" .Values.mysql.persistence.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.mysql.persistence.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end }}

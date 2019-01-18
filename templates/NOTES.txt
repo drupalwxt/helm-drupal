@@ -37,5 +37,21 @@
 
 2. Login with the following credentials
 
-  echo Username: {{ .Values.drupalUsername }}
+  echo Username: {{ .Values.drupal.username }}
   echo Password: $(kubectl get secret --namespace {{ .Release.Namespace }} {{ template "fullname" . }} -o jsonpath="{.data.password}" | base64 --decode)
+
+3. Optionally run the site installation through Drush
+
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app={{ template "fullname" . }}-drupal" -o jsonpath="{.items[0].metadata.name}")
+  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush si stc \
+    --sites-subdir=default \
+    --db-url=mysql://root:WxT%402017@{{ template "fullname" . }}-mysql:3306/wxt \
+    --account-name=admin \
+    --account-pass=Drupal@2018 \
+    --site-mail=admin@example.com \
+    --site-name="Drupal Install Profile (STC)" \
+    install_configure_form.update_status_module='array(FALSE,FALSE)' \
+    --yes
+    kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- chown -R root:www-data /var/www/html/sites/default/files
+    kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush en wxt_s3fs -y
+    kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush cr

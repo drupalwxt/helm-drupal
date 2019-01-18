@@ -1,25 +1,33 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: {{ template "fullname" . }}
   labels:
-    app: {{ template "fullname" . }}
+    app: {{ template "appname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
   strategy:
     type: Recreate
+  selector:
+    matchLabels:
+      app: {{ template "appname" . }}
+      tier: drupal
   template:
     metadata:
       labels:
-        app: {{ template "fullname" . }}
-        tier: frontend
+        app: {{ template "appname" . }}
+        tier: drupal
     spec:
       containers:
-      - image: "{{ .Values.image }}"
-        imagePullPolicy: {{ default "" .Values.imagePullPolicy | quote }}
+      - image: "{{ .Values.drupal.image }}"
+        imagePullPolicy: {{ default "" .Values.drupal.imagePullPolicy | quote }}
         name: drupal
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/bash", "-c", "cd / && ./minio {{ .Values.minio.hostname }}"]
         env:
         - name: MYSQL_PASSWORD
           valueFrom:
@@ -33,9 +41,27 @@ spec:
         - containerPort: 9000
           name: drupal
         volumeMounts:
-        - name: pvc-drupal
-          mountPath: {{ .Values.volumeMounts.drupal.mountPath }}
+{{- if (eq "d7" .Values.drupal.version) }}
+        - mountPath: /var/www/html/sites/default/settings.php
+          name: cm-drupal
+          subPath: d7.settings.php
+{{- else }}
+        - mountPath: /var/www/html/sites/default/settings.php
+          name: cm-drupal
+          subPath: d8.settings.php
+{{- end }}
+        - mountPath: /minio
+          name: cm-minio
+          subPath: minio
+      {{- if .Values.drupal.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.drupal.imagePullSecrets | indent 8 }}
+      {{- end }}
       volumes:
-      - name: pvc-drupal
-        persistentVolumeClaim:
-          claimName: {{ template "fullname" . }}
+      - name: cm-drupal
+        configMap:
+          name: {{ template "fullname" . }}
+      - name: cm-minio
+        configMap:
+          defaultMode: 0777
+          name: {{ template "fullname" . }}-minio

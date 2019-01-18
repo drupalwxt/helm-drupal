@@ -1,17 +1,12 @@
 apiVersion: v1
-kind: Service
+kind: ConfigMap
 metadata:
-  name: {{ template "fullname" . }}-mysql
+  name: {{ template "fullname" . }}-minio
   labels:
     app: {{ template "appname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
-spec:
-  ports:
-    - port: 3306
-  selector:
-    app: {{ template "appname" . }}
-    tier: mysql
-  type:  {{ .Values.serviceType }}
-
+data:
+  minio: |-
+{{ include (print $.Template.BasePath "/_helper_extra_hosts.txt") . | indent 4 }}

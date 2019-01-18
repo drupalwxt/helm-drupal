@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "fullname" . }}
+  name: {{ template "fullname" . }}-nginx
   labels:
-    app: {{ template "fullname" . }}
+    app: {{ template "appname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
@@ -54,7 +54,7 @@ data:
           index index.php index.html index.htm;
 
           # Make site accessible from http://drupal.dev;
-          server_name drupal.dev;
+          server_name {{ .Values.ingress.domain }};
 
           location / {
               # First attempt to serve request as file, then
@@ -71,6 +71,16 @@ data:
             fastcgi_param SCRIPT_FILENAME $request_filename;
             fastcgi_intercept_errors on;
             fastcgi_pass {{ template "fullname" . }}:9000;
+          }
+
+          location ~* ^/(s3fs-css|s3fs-js|sites/default/files)/(.*) {
+            set $s3_base_path {{ .Values.nginx.s3BasePath | quote }};
+            set $file_path $2;
+
+            resolver {{ .Values.nginx.resolver }} valid=5s ipv6=off;
+            resolver_timeout 5s;
+
+            proxy_pass https://$s3_base_path/$file_path;
           }
 
           location ~ /\.ht {

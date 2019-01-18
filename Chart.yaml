@@ -1,6 +1,6 @@
-name: drupalwxt
-version: 0.0.1
-appVersion: 2.0.0-beta1
+name: drupal
+version: 0.0.2
+appVersion: 8.5.3
 description: Drupal 8 variant of the Web Experience Toolkit (WxT).
 keywords:
 - drupal
@@ -11,10 +11,10 @@ keywords:
 - application
 - php
 home: http://www.drupal.org/project/wxt
-icon: https://www.drupal.org/files/project-images/logo_144.png
+icon: https://bitnami.com/assets/stacks/drupal/img/drupal-stack-220x234.png
 sources:
 - https://github.com/drupalwxt/wxt
 maintainers:
-- name: William Hearn
-  email: sylus1984@gmail.com
+- name: sylus
+  email: william.hearn@canada.ca
 engine: gotpl

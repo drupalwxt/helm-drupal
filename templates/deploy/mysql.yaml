@@ -1,24 +1,24 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: {{ template "fullname" . }}-mysql
+  name: {{ include "drupal.fullname" . }}-mysql
   labels:
-    app: {{ template "appname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/name: {{ include "drupal.name" . }}
+    helm.sh/chart: {{ include "drupal.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: {{ template "appname" . }}
-      tier: mysql
+      app.kubernetes.io/name: {{ include "drupal.name" . }}
+      tier: db
   template:
     metadata:
       labels:
-        app: {{ template "appname" . }}
-        tier: mysql
+        app.kubernetes.io/name: {{ include "drupal.name" . }}
+        tier: db
     spec:
       containers:
       - image: "{{ .Values.mysql.image }}"
@@ -29,7 +29,7 @@ spec:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              name: {{ include "drupal.fullname" . }}
               key: mysql-password
         ports:
         - containerPort: 3306
@@ -37,8 +37,8 @@ spec:
         volumeMounts:
         - name: pvc-drupal-mysql
           mountPath: /var/lib/mysql
-        - mountPath: /etc/mysql/conf.d/overrides.cnf
-          name: cm-mysql
+        - name: cm-mysql
+          mountPath: /etc/mysql/conf.d/overrides.cnf
           subPath: my.cnf
       {{- if .Values.mysql.imagePullSecrets }}
       imagePullSecrets:
@@ -47,7 +47,7 @@ spec:
       volumes:
       - name: pvc-drupal-mysql
         persistentVolumeClaim:
-          claimName: {{ template "fullname" . }}-mysql
+          claimName: {{ include "drupal.name" . }}-mysql
       - name: cm-mysql
         configMap:
-          name: {{ template "fullname" . }}-mysql
+          name: {{ include "drupal.name" . }}-mysql

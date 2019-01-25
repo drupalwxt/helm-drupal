@@ -1,27 +1,27 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: {{ template "fullname" . }}
+  name: {{ include "drupal.fullname" . }}
   labels:
-    app: {{ template "appname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/name: {{ include "drupal.name" . }}
+    helm.sh/chart: {{ include "drupal.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: {{ template "appname" . }}
+      app.kubernetes.io/name: {{ include "drupal.name" . }}
       tier: drupal
   template:
     metadata:
       labels:
-        app: {{ template "appname" . }}
+        app.kubernetes.io/name: {{ include "drupal.name" . }}
         tier: drupal
     spec:
       containers:
-      - image: "{{ .Values.drupal.image }}"
+      - image: "{{ .Values.drupal.image }}:{{ default .Chart.AppVersion .Values.drupal.tag }}"
         imagePullPolicy: {{ default "" .Values.drupal.imagePullPolicy | quote }}
         name: drupal
         lifecycle:
@@ -32,7 +32,7 @@ spec:
         - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              name: {{ include "drupal.fullname" . }}
               key: password
 {{- if .Values.extraVars }}
 {{ toYaml .Values.extraVars | indent 8 }}
@@ -42,26 +42,29 @@ spec:
           name: drupal
         volumeMounts:
 {{- if (eq "d7" .Values.drupal.version) }}
-        - mountPath: /var/www/html/sites/default/settings.php
-          name: cm-drupal
+        - name: cm-drupal
+          mountPath: /var/www/html/sites/default/settings.php
           subPath: d7.settings.php
 {{- else }}
-        - mountPath: /var/www/html/sites/default/settings.php
-          name: cm-drupal
+        - name: cm-drupal
+          mountPath: /var/www/html/sites/default/settings.php
           subPath: d8.settings.php
 {{- end }}
-        - mountPath: /minio
-          name: cm-minio
+        - name: cm-minio
+          mountPath: /minio
           subPath: minio
       {{- if .Values.drupal.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.drupal.imagePullSecrets | indent 8 }}
       {{- end }}
+      # Allow non-root user to access PersistentVolume
+      securityContext:
+        fsGroup: {{ .Values.drupal.securityContext.fsGroup }}
       volumes:
       - name: cm-drupal
         configMap:
-          name: {{ template "fullname" . }}
+          name: {{ include "drupal.fullname" . }}
       - name: cm-minio
         configMap:
           defaultMode: 0777
-          name: {{ template "fullname" . }}-minio
+          name: {{ include "drupal.fullname" . }}-minio

@@ -1,17 +1,15 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "fullname" . }}
+  name: {{ include "drupal.fullname" . }}
   labels:
-    app: {{ template "appname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/name: {{ include "drupal.name" . }}
+    helm.sh/chart: {{ include "drupal.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
   d8.settings.php: |
     <?php
-
-    // @codingStandardsIgnoreFile
 
     /**
     * @file
@@ -99,12 +97,15 @@ data:
     * );
     * @endcode
     */
-    $databases['default']['default'] = array(
-      'driver' => 'mysql',
+    $databases['default']['default'] = array (
       'database' => '{{ .Values.mysql.db }}',
       'username' => 'root',
-      'password' => 'WxT@2017',
-      'host' => "{{ template "fullname" . }}-mysql",
+      'password' => '{{ .Values.drupal.password }}',
+      'prefix' => '',
+      'host' => '{{ template "drupal.fullname" . }}-mysql',
+      'port' => '3306',
+      'namespace' => 'Drupal\Core\Database\Driver\mysql',
+      'driver' => 'mysql',
     );
 
     /**
@@ -163,11 +164,6 @@ data:
     * @code
     *   'prefix' => 'main_',
     * @endcode
-    *
-    * Per-table prefixes are deprecated as of Drupal 8.2, and will be removed in
-    * Drupal 9.0. After that, only a single prefix for all tables will be
-    * supported.
-    *
     * To provide prefixes for specific tables, set 'prefix' as an array.
     * The array's keys are the table names and the values are the prefixes.
     * The 'default' element is mandatory and holds the prefix for any tables
@@ -289,11 +285,6 @@ data:
     * by the user.
     *
     * @see install_select_profile()
-    *
-    * @deprecated in Drupal 8.3.0 and will be removed before Drupal 9.0.0. The
-    *   install profile is written to the core.extension configuration. If a
-    *   service requires the install profile use the 'install_profile' container
-    *   parameter. Functional code can use \Drupal::installProfile().
     */
     # $settings['install_profile'] = '';
 
@@ -354,6 +345,9 @@ data:
     *
     * You can also define an array of host names that can be accessed directly,
     * bypassing the proxy, in $settings['http_client_config']['proxy']['no'].
+    *
+    * If these settings are not configured, the system environment variables
+    * HTTP_PROXY, HTTPS_PROXY, and NO_PROXY on the web server will be used instead.
     */
     # $settings['http_client_config']['proxy']['http'] = 'http://proxy_user:proxy_pass@example.com:8080';
     # $settings['http_client_config']['proxy']['https'] = 'http://proxy_user:proxy_pass@example.com:8080';
@@ -445,29 +439,6 @@ data:
     * getting cached pages from the proxy.
     */
     # $settings['omit_vary_cookie'] = TRUE;
-
-
-    /**
-    * Cache TTL for client error (4xx) responses.
-    *
-    * Items cached per-URL tend to result in a large number of cache items, and
-    * this can be problematic on 404 pages which by their nature are unbounded. A
-    * fixed TTL can be set for these items, defaulting to one hour, so that cache
-    * backends which do not support LRU can purge older entries. To disable caching
-    * of client error responses set the value to 0. Currently applies only to
-    * page_cache module.
-    */
-    # $settings['cache_ttl_4xx'] = 3600;
-
-    /**
-    * Expiration of cached forms.
-    *
-    * Drupal's Form API stores details of forms in a cache and these entries are
-    * kept for at least 6 hours by default. Expired entries are cleared by cron.
-    *
-    * @see \Drupal\Core\Form\FormCache::setCache()
-    */
-    # $settings['form_cache_expiration'] = 21600;
 
     /**
     * Class Loader.
@@ -671,7 +642,6 @@ data:
     * configuration values in settings.php will not fire any of the configuration
     * change events.
     */
-    # $config['system.file']['path']['temporary'] = '/tmp';
     # $config['system.site']['name'] = 'My Drupal site';
     # $config['system.theme']['default'] = 'stark';
     # $config['user.settings']['anonymous'] = 'Visitor';
@@ -706,7 +676,7 @@ data:
     /**
     * Load services definition file.
     */
-    $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
+    $settings['container_yamls'][] = __DIR__ . '/services.yml';
 
     /**
     * Override the default service container class.
@@ -716,15 +686,6 @@ data:
     * to test a service container that throws an exception.
     */
     # $settings['container_base_class'] = '\Drupal\Core\DependencyInjection\Container';
-
-    /**
-    * Override the default yaml parser class.
-    *
-    * Provide a fully qualified class name here if you would like to provide an
-    * alternate implementation YAML parser. The class must implement the
-    * \Drupal\Component\Serialization\SerializationInterface interface.
-    */
-    # $settings['yaml_parser_class'] = NULL;
 
     /**
     * Trusted host configuration.
@@ -764,29 +725,25 @@ data:
     */
 
     /**
-    * The default list of directories that will be ignored by Drupal's file API.
+    * Get environment settings.
     *
-    * By default ignore node_modules and bower_components folders to avoid issues
-    * with common frontend tools and recursive scanning of directories looking for
-    * extensions.
-    *
-    * @see file_scan_directory()
-    * @see \Drupal\Core\Extension\ExtensionDiscovery::scanDirectory()
+    * Production (default): normal production settings.
+    * Development: Use development settings.
     */
-    $settings['file_scan_ignore_directories'] = [
-      'node_modules',
-      'bower_components',
-    ];
+    $drupal_settings = 'production';
+    if (isset($_ENV['DRUPAL_SETTINGS'])) {
+      $drupal_settings = $_ENV['DRUPAL_SETTINGS'];
+    }
+
+    /** Todo: create better patterns on production sites */
+    if ($drupal_settings !== 'production') {
+      $settings['trusted_host_patterns'] = array('[\s\S]*');
+    }
 
     /**
-    * The default number of entities to update in a batch process.
-    *
-    * This is used by update and post-update functions that need to go through and
-    * change all the entities on a site, so it is useful to increase this number
-    * if your hosting configuration (i.e. RAM allocation, CPU speed) allows for a
-    * larger number of entities to be processed in a single batch run.
+    * Set private file path directory.
     */
-    $settings['entity_update_batch_size'] = 50;
+    $settings['file_private_path'] =  '/var/www/files_private';
 
     /**
     * Load local development override configuration, if available.
@@ -798,34 +755,17 @@ data:
     *
     * Keep this code block at the end of this file to take full effect.
     */
-    #
-    # if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
-    #   include $app_root . '/' . $site_path . '/settings.local.php';
-    # }
+    if ($drupal_settings === 'development' && file_exists(__DIR__ . '/settings.local.php')) {
+      include __DIR__ . '/settings.local.php';
+    }
+
+    /** Everything after here is added by the installation process.
+    *
+    * TODO: improve the installtion by putting the settings.local part below these
+    * settings.
+    */
 
     $config_directories[CONFIG_SYNC_DIRECTORY] = 'sites/default/sync';
-
-    // Minio with S3FS
-    $settings['s3fs.access_key'] = 'AKIAIOSFODNN7EXAMPLE';
-    $settings['s3fs.secret_key'] = 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY';
-
-    $settings['s3fs.bucket'] = 'drupal';
-    $settings['s3fs.region'] = 'us-east-1';
-
-    $settings['s3fs.use_https'] = FALSE;
-    $settings['s3fs.no_rewrite_cssjs'] = FALSE;
-
-    $settings['s3fs.use_cname'] = TRUE;
-    $settings['s3fs.domain'] = "{{ .Values.minio.domain }}";
-
-    $settings['s3fs.use_customhost'] = TRUE;
-    $settings['s3fs.hostname'] = "{{ .Values.minio.hostname }}:9000";
-
-    $settings['s3fs.use_s3_for_public'] = TRUE;
-    $settings['s3fs.use_s3_for_private'] = TRUE;
-
-    $settings['s3fs.public_folder'] = 'drupal-public';
-    $settings['s3fs.private_folder'] = 'drupal-private';
   d7.settings.php: |
     <?php
 
@@ -1080,8 +1020,8 @@ data:
         array (
           'database' => '{{ .Values.mysql.db }}',
           'username' => 'root',
-          'password' => 'WxT@2017',
-          'host' => '{{ template "fullname" . }}-mysql',
+          'password' => '{{ .Values.drupal.password }}',
+          'host' => '{{ template "drupal.fullname" . }}-mysql',
           'port' => '3306',
           'driver' => 'mysql',
           'prefix' => '',

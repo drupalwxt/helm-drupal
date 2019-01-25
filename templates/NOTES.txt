@@ -5,32 +5,31 @@
 
 1. Get the Drupal URL:
 
-{{- if .Values.ingress.hostname }}
-
-  You should be able to access your new Drupal WxT installation through
-
-  http://{{- .Values.ingress.hostname }}/
-
-{{- else if contains "LoadBalancer" .Values.serviceType }}
+{{- if contains "LoadBalancer" .Values.serviceType }}
 
   NOTE: It may take a few minutes for the LoadBalancer IP to be available.
-        Watch the status with: 'kubectl get svc --namespace {{ .Release.Namespace }} -w {{ template "fullname" . }}'
+        Watch the status with: 'kubectl get svc --namespace {{ .Release.Namespace }} -w {{ template "drupal.fullname" . }}'
 
-  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "drupal.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+
   echo http://$SERVICE_IP/
+
 {{- else if contains "ClusterIP"  .Values.serviceType }}
 
-  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app={{ template "fullname" . }}" -o jsonpath="{.items[0].metadata.name}")
-  echo http://127.0.0.1:8080/
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ template "drupal.fullname" . }},tier=frontend" -o jsonpath="{.items[0].metadata.name}")
+
   kubectl port-forward $POD_NAME 8080:80
+
 {{- end }}
 
 {{- if contains "NodePort" .Values.serviceType }}
 
   Or running:
 
-  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ template "fullname" . }})
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ template "drupal.fullname" . }})
+
   export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+
   echo http://$NODE_IP:$NODE_PORT/
 
 {{- end }}
@@ -38,20 +37,43 @@
 2. Login with the following credentials
 
   echo Username: {{ .Values.drupal.username }}
-  echo Password: $(kubectl get secret --namespace {{ .Release.Namespace }} {{ template "fullname" . }} -o jsonpath="{.data.password}" | base64 --decode)
+
+  echo Password: $(kubectl get secret --namespace {{ .Release.Namespace }} {{ template "drupal.fullname" . }} -o jsonpath="{.data.password}" | base64 --decode)
 
 3. Optionally run the site installation through Drush
 
-  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app={{ template "fullname" . }}-drupal" -o jsonpath="{.items[0].metadata.name}")
-  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush si stc \
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ template "drupal.fullname" . }},tier=drupal" -o jsonpath="{.items[0].metadata.name}")
+
+  # Drupal Site installation
+  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush si wxt \
     --sites-subdir=default \
-    --db-url=mysql://root:WxT%402017@{{ template "fullname" . }}-mysql:3306/wxt \
+    --db-url=mysql://root:{{ .Values.mysql.password }}@{{ template "drupal.fullname" . }}-mysql:3306/{{ .Values.mysql.db }} \
     --account-name=admin \
-    --account-pass=Drupal@2018 \
+    --account-pass={{ .Values.drupal.password }} \
     --site-mail=admin@example.com \
-    --site-name="Drupal Install Profile (STC)" \
+    --site-name="Drupal Install Profile (WxT)" \
     install_configure_form.update_status_module='array(FALSE,FALSE)' \
     --yes
-    kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- chown -R root:www-data /var/www/html/sites/default/files
-    kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush en wxt_s3fs -y
-    kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush cr
+
+  # Perms
+  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- chown -R root:www-data /var/www/html/sites/default/files
+  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush cr
+
+  # Need to do this until s3fs is enabled and configured so stateful assets work across nginx + php-fpm
+  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush -y config-set system.performance css.preprocess 0
+  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush -y config-set system.performance js.preprocess 0
+
+  # Baseline migrations
+  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import wxt_file
+  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import wxt_media
+  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import wxt_media_slideshow
+  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import wxt_node_page
+  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import wxt_menu_link
+  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush php-eval 'node_access_rebuild();'
+
+  # Extra steps
+  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush en wxt_s3fs -y
+
+  # Port Forward if no Ingress setup
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ template "drupal.fullname" . }},tier=frontend" -o jsonpath="{.items[0].metadata.name}")
+  kubectl port-forward $POD_NAME 8080:80

@@ -2,7 +2,6 @@
 ## For minikube, set this to NodePort, elsewhere use LoadBalancer
 ## Use ClusterIP if your setup includes ingress controller
 ##
-
 serviceType: ClusterIP
 servicePort: 80
 
@@ -11,22 +10,25 @@ servicePort: 80
 ## ref: http://kubernetes.io/docs/user-guide/ingress/
 ##
 ingress:
-  enabled: true
-  apiVersion: apps/v1
-  annotations:
-  # kubernetes.io/ingress.class: nginx
-  # kubernetes.io/tls-acme: "true"
-  TLS:
-  # - secretName: drupal.cluster.local
-  #   hosts:
-  #     - drupal.cluster.local
-  domain: drupal.cluster.local
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  path: /
+  hosts:
+    - chart-example.local
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
 
 drupal:
   ## Drupal image version
-  ## ref: https://hub.docker.com/r/library/drupal/tags/
+  ## ref: https://hub.docker.com/drupalwxt/site-wxt/tags/
   ##
-  image: drupalwxt/site-wxt:minio
+  image: drupalwxt/site-wxt
+  ## Note that by default we use appVersion to get image tag
+  # tag: 2.2.x
 
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -46,11 +48,11 @@ drupal:
 
   ## Application password
   ##
-  password: WxT@2017
+  password: WxT2019
 
   ## Version of the application
   ##
-  version: d7
+  version: d8
 
   persistence:
     enabled: false
@@ -78,6 +80,10 @@ drupal:
     #    name: nothing
     #    readOnly: true
 
+  securityContext:
+    enabled: true
+    fsGroup: 82
+
 minio:
   domain: minio
   hostname: minio-wcms
@@ -101,11 +107,11 @@ mysql:
   imagePullPolicy: IfNotPresent
 
   ## Database
-  db: stc
+  db: wxt
 
   ## Application password
   ##
-  password: WxT@2017
+  password: WxT2019
 
   persistence:
     enabled: true
@@ -134,7 +140,11 @@ mysql:
     #    readOnly: true
 
 nginx:
-  image: drupalwxt/nginx:wxt
+  ## Nginx image version
+  ## ref: https://hub.docker.com/drupalwxt/site-wxt/tags/
+  image: drupalwxt/site-wxt
+  ## Note that by default we use appVersion to get image tag
+  # tag: 2.2.x-nginx
 
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -148,9 +158,9 @@ nginx:
   ##
   imagePullPolicy: IfNotPresent
 
+  domain: drupal.cluster.local
   resolver: 10.0.0.10
-
-  s3BasePath: stcdrupal.blob.core.windows.net/drupal-public
+  s3BasePath: drupal.blob.core.windows.net/drupal-public
 
   persistence:
     enabled: false
@@ -177,3 +187,7 @@ nginx:
     #  - mountPath: /var/nothing
     #    name: nothing
     #    readOnly: true
+
+  securityContext:
+    enabled: true
+    fsGroup: 33

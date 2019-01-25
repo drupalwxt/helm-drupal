@@ -4,4 +4,4 @@ set -e
 function getip() { ping -w 1 -c 1 -t 1 $1 | head -1 | cut -d ' ' -f 3 | tr -d '()' | tr -d : ; }
 
 ip=$(getip $1)
-echo "$ip     stcdrupal.minio-wcms" >> /etc/hosts
+echo "$ip     drupal.minio-wcms" >> /etc/hosts

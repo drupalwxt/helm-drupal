@@ -6,12 +6,12 @@ metadata:
   annotations:
 {{ toYaml .Values.mysql.persistence.annotations | indent 4 }}
 {{- end }}
-  name: {{ template "fullname" . }}-mysql
+  name: {{ include "drupal.fullname" . }}-mysql
   labels:
-    app: {{ template "appname" . }}-mysql
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/name: {{ include "drupal.name" . }}-mysql
+    helm.sh/chart: {{ include "drupal.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   accessModes:
     - {{ .Values.mysql.persistence.accessMode | quote }}

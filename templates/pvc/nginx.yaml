@@ -6,12 +6,12 @@ metadata:
   annotations:
 {{ toYaml .Values.nginx.persistence.annotations | indent 4 }}
 {{- end }}
-  name: {{ template "fullname" . }}-nginx
+  name: {{ include "drupal.fullname" . }}-nginx
   labels:
-    app: {{ template "appname" . }}-nginx
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/name: {{ include "drupal.name" . }}-nginx
+    helm.sh/chart: {{ include "drupal.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   accessModes:
     - {{ .Values.nginx.persistence.accessMode | quote }}

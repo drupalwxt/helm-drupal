@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "fullname" . }}-nginx
+  name: {{ include "drupal.fullname" . }}-nginx
   labels:
-    app: {{ template "appname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/name: {{ include "drupal.name" . }}
+    helm.sh/chart: {{ include "drupal.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
   nginx.conf: |
     error_log /proc/self/fd/2;
@@ -54,7 +54,7 @@ data:
           index index.php index.html index.htm;
 
           # Make site accessible from http://drupal.dev;
-          server_name {{ .Values.ingress.domain }};
+          server_name {{ .Values.nginx.domain }};
 
           location / {
               # First attempt to serve request as file, then
@@ -70,7 +70,7 @@ data:
             fastcgi_read_timeout 120;
             fastcgi_param SCRIPT_FILENAME $request_filename;
             fastcgi_intercept_errors on;
-            fastcgi_pass {{ template "fullname" . }}:9000;
+            fastcgi_pass {{ template "drupal.fullname" . }}:9000;
           }
 
           location ~* ^/(s3fs-css|s3fs-js|sites/default/files)/(.*) {

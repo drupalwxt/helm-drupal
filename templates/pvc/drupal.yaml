@@ -6,12 +6,12 @@ metadata:
   annotations:
 {{ toYaml .Values.drupal.persistence.annotations | indent 4 }}
 {{- end }}
-  name: {{ template "fullname" . }}-drupal
+  name: {{ include "drupal.fullname" . }}-drupal
   labels:
-    app: {{ template "appname" . }}-drupal
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/name: {{ include "drupal.name" . }}-drupal
+    helm.sh/chart: {{ include "drupal.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   accessModes:
     - {{ .Values.drupal.persistence.accessMode | quote }}

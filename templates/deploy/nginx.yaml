@@ -1,26 +1,26 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: {{ template "fullname" . }}-nginx
+  name: {{ include "drupal.fullname" . }}-nginx
   labels:
-    app: {{ template "appname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/name: {{ include "drupal.name" . }}
+    helm.sh/chart: {{ include "drupal.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ template "appname" . }}
+      app.kubernetes.io/name: {{ include "drupal.name" . }}
       tier: frontend
   template:
     metadata:
       labels:
-        app: {{ template "appname" . }}
+        app.kubernetes.io/name: {{ include "drupal.name" . }}
         tier: frontend
     spec:
       containers:
-      - image: "{{ .Values.nginx.image }}"
+      - image: "{{ .Values.drupal.image }}:{{ default .Chart.AppVersion .Values.drupal.tag }}-nginx"
         name: nginx
         ports:
         - name: http
@@ -37,12 +37,16 @@ spec:
         volumeMounts:
         - mountPath: /etc/nginx/nginx.conf
           name: cm-nginx
+          readOnly: false
           subPath: nginx.conf
       {{- if .Values.nginx.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.nginx.imagePullSecrets | indent 8 }}
       {{- end }}
+      # Allow non-root user to access PersistentVolume
+      securityContext:
+        fsGroup: {{ .Values.nginx.securityContext.fsGroup }}
       volumes:
       - name: cm-nginx
         configMap:
-          name: {{ template "fullname" . }}-nginx
+          name: {{ include "drupal.fullname" . }}-nginx

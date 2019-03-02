@@ -1,7 +1,7 @@
 Helm Chart: Drupal WxT
 ======================
 
-A Helm chart for Drupal WxT using Minio for stateful data.
+A [Helm chart](https://helm.sh/) for [Drupal WxT](http://drupalwxt.org/) using [Minio](https://minio.io/) for stateful data.
 
 ## Installation
 

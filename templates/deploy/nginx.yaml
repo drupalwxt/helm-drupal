@@ -20,7 +20,7 @@ spec:
         tier: frontend
     spec:
       containers:
-      - image: "{{ .Values.drupal.image }}:{{ default .Chart.AppVersion .Values.drupal.tag }}-nginx"
+      - image: "{{ .Values.nginx.image }}:{{ default .Chart.AppVersion .Values.nginx.tag }}"
         name: nginx
         ports:
         - name: http

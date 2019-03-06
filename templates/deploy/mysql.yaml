@@ -47,7 +47,7 @@ spec:
       volumes:
       - name: pvc-drupal-mysql
         persistentVolumeClaim:
-          claimName: {{ include "drupal.name" . }}-mysql
+          claimName: {{ include "drupal.fullname" . }}-mysql
       - name: cm-mysql
         configMap:
-          name: {{ include "drupal.name" . }}-mysql
+          name: {{ include "drupal.fullname" . }}-mysql

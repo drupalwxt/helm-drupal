@@ -54,6 +54,11 @@ drupal:
   ##
   version: d8
 
+  ## Extra settings.php settings
+  ##
+  #extraSettings: |-
+  #  $base_url = 'https://example.com';
+
   persistence:
     enabled: false
     ## A manually managed Persistent Volume and Claim

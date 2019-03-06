@@ -50,6 +50,10 @@ spec:
           mountPath: /var/www/html/sites/default/settings.php
           subPath: d8.settings.php
 {{- end }}
+        - name: cm-drupal
+          mountPath: /var/www/html/sites/default/extra.settings.php
+          subPath: extra.settings.php
+          optional: true
         - name: cm-minio
           mountPath: /minio
           subPath: minio

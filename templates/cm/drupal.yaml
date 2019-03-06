@@ -766,6 +766,10 @@ data:
     */
 
     $config_directories[CONFIG_SYNC_DIRECTORY] = 'sites/default/sync';
+
+    if (file_exists(__DIR__ . '/extra.settings.php')) {
+      include __DIR__ . '/extra.settings.php';
+    }
   d7.settings.php: |
     <?php
 
@@ -1202,13 +1206,13 @@ data:
     * Be aware, however, that it is likely that this would allow IP
     * address spoofing unless more advanced precautions are taken.
     */
-    # $conf['reverse_proxy'] = TRUE;
+    $conf['reverse_proxy'] = TRUE;
 
     /**
     * Specify every reverse proxy IP address in your environment.
     * This setting is required if $conf['reverse_proxy'] is TRUE.
     */
-    # $conf['reverse_proxy_addresses'] = array('a.b.c.d', ...);
+    $conf['reverse_proxy_addresses'] = array('0.0.0.0/0');
 
     /**
     * Set this value if your proxy server sends the client IP in a header
@@ -1441,3 +1445,14 @@ data:
     if ($drupal_settings === 'development' && file_exists(__DIR__ . '/settings.local.php')) {
       include __DIR__ . '/settings.local.php';
     }
+
+    if (file_exists(__DIR__ . '/extra.settings.php')) {
+      include __DIR__ . '/extra.settings.php';
+    }
+
+{{- if .Values.drupal.extraSettings }}
+  extra.settings.php:
+    <?php
+    
+    {{- toYaml .Values.drupal.extraSettings | nindent 4}}
+{{- end }}

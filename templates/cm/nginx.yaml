@@ -75,7 +75,7 @@ data:
 
           location ~ ^(?:/eng|/fra)?(?:/s3/files/|/sites/.*/files/)((styles|imagecache)/.*) {
             expires max;
-            set $s3_base_path "stcdrupal.blob.core.windows.net/drupal-public-prod";
+            set $s3_base_path {{ .Values.nginx.s3BasePath | quote }};
             set $file_path $1;
 
             resolver {{ .Values.nginx.resolver }} valid=5s ipv6=off;

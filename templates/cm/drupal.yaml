@@ -384,13 +384,13 @@ data:
     * Be aware, however, that it is likely that this would allow IP
     * address spoofing unless more advanced precautions are taken.
     */
-    # $settings['reverse_proxy'] = TRUE;
+    $settings['reverse_proxy'] = TRUE;
 
     /**
     * Specify every reverse proxy IP address in your environment.
     * This setting is required if $settings['reverse_proxy'] is TRUE.
     */
-    # $settings['reverse_proxy_addresses'] = array('a.b.c.d', ...);
+    $settings['reverse_proxy_addresses'] = array('0.0.0.0/0');
 
     /**
     * Set this value if your proxy server sends the client IP in a header
@@ -766,6 +766,28 @@ data:
     */
 
     $config_directories[CONFIG_SYNC_DIRECTORY] = 'sites/default/sync';
+
+    // Minio with S3FS
+    $settings['s3fs.access_key'] = "{{ .Values.minio.accesskey }}";
+    $settings['s3fs.secret_key'] = "{{ .Values.minio.secretkey }}";
+
+    $settings['s3fs.bucket'] = "{{ .Values.minio.bucket }}";
+    $settings['s3fs.region'] = 'us-east-1';
+
+    $settings['s3fs.use_https'] = FALSE;
+    $settings['s3fs.no_rewrite_cssjs'] = FALSE;
+
+    $settings['s3fs.use_cname'] = TRUE;
+    $settings['s3fs.domain'] = "{{ .Values.minio.domain }}";
+
+    $settings['s3fs.use_customhost'] = TRUE;
+    $settings['s3fs.hostname'] = "{{ .Values.minio.hostname }}:9000";
+
+    $settings['s3fs.use_s3_for_public'] = TRUE;
+    $settings['s3fs.use_s3_for_private'] = TRUE;
+
+    $settings['s3fs.public_folder'] = "{{ .Values.minio.public }}";
+    $settings['s3fs.private_folder'] = "{{ .Values.minio.private }}";
 
     if (file_exists(__DIR__ . '/extra.settings.php')) {
       include __DIR__ . '/extra.settings.php';
@@ -1453,6 +1475,6 @@ data:
 {{- if .Values.drupal.extraSettings }}
   extra.settings.php:
     <?php
-    
+
     {{- toYaml .Values.drupal.extraSettings | nindent 4}}
 {{- end }}

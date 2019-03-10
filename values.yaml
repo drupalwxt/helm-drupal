@@ -91,7 +91,7 @@ drupal:
 
 minio:
   domain: minio
-  hostname: minio-wcms
+  hostname: minio
 
 mysql:
   ## MySQL image version

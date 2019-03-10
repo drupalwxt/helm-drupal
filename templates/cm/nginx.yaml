@@ -73,7 +73,7 @@ data:
             fastcgi_pass {{ template "drupal.fullname" . }}:9000;
           }
 
-          location ~ ^(?:/eng|/fra)?(?:/s3/files/|/sites/.*/files/)((styles|imagecache)/.*) {
+          location ~ ^(?:/eng|/fra|/en|/fr)?(?:/s3/files/|/sites/.*/files/)((styles|imagecache)/.*) {
             expires max;
             set $s3_base_path {{ .Values.nginx.s3BasePath | quote }};
             set $file_path $1;

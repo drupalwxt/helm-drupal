@@ -1,0 +1,26 @@
+ingress:
+  enabled: true
+  hosts:
+    - d8.example.ca
+
+drupal:
+  image: drupalwxt/site-canada
+  tag: 0.0.3
+  version: d8
+  extraSettings: |-
+    $base_url = 'https://d8.example.ca';
+
+minio:
+  bucket: d8-example-ca
+  domain: drupal.blob.core.windows.net/d8-example-ca
+  hostname: minio
+  accesskey: accesskey
+  secretkey: secretkey
+  public: public
+  private: private
+
+nginx:
+  image: drupalwxt/site-canada
+  tag: 0.0.3-nginx
+  domain: d8.example.ca
+  s3BasePath: drupal.blob.core.windows.net/d8-govcloud-ca

@@ -73,6 +73,7 @@ data:
             fastcgi_pass {{ template "drupal.fullname" . }}:9000;
           }
 
+{{- if (eq "d7" .Values.drupal.version) }}
           location ~ ^(?:/eng|/fra|/en|/fr)?(?:/s3/files/|/sites/.*/files/)((styles|imagecache)/.*) {
             expires max;
             set $s3_base_path {{ .Values.nginx.s3BasePath | quote }};
@@ -83,6 +84,7 @@ data:
 
             proxy_pass https://$s3_base_path/$file_path;
           }
+{{- end }}
 
           location ~* ^/(s3fs-css|s3fs-js|sites/default/files)/(.*) {
             set $s3_base_path {{ .Values.nginx.s3BasePath | quote }};

@@ -4,8 +4,8 @@ ingress:
     - d8.example.ca
 
 drupal:
-  image: drupalwxt/site-canada
-  tag: 0.0.3
+  image: drupalwxt/site-wxt
+  tag: latest
   version: d8
   extraSettings: |-
     $base_url = 'https://d8.example.ca';
@@ -20,7 +20,7 @@ minio:
   private: private
 
 nginx:
-  image: drupalwxt/site-canada
-  tag: 0.0.3-nginx
+  image: drupalwxt/site-wxt
+  tag: latest-nginx
   domain: d8.example.ca
-  s3BasePath: drupal.blob.core.windows.net/d8-govcloud-ca
+  s3BasePath: drupal.blob.core.windows.net/d8-govcloud-ca/public

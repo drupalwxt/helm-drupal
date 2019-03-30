@@ -1,6 +1,6 @@
 name: drupal
 version: 0.0.2
-appVersion: 2.2.16
+appVersion: 2.2.17
 description: Drupal 8 variant of the Web Experience Toolkit (WxT).
 keywords:
 - drupal

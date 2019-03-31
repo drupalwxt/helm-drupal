@@ -3,6 +3,12 @@
 *** PLEASE BE PATIENT: Drupal WxT may take a few minutes to install ***
 ***********************************************************************
 
+Pre-Requisites:
+
+* Azure Blob Storage
+* Minio is installed in cluster
+* Patch to wxt_ext_migrate => wxt_file migration
+
 1. Get the Drupal URL:
 
 {{- if contains "LoadBalancer" .Values.serviceType }}
@@ -34,13 +40,7 @@
 
 {{- end }}
 
-2. Login with the following credentials
-
-  echo Username: {{ .Values.drupal.username }}
-
-  echo Password: $(kubectl get secret --namespace {{ .Release.Namespace }} {{ template "drupal.fullname" . }} -o jsonpath="{.data.password}" | base64 --decode)
-
-3. Optionally run the site installation through Drush
+2. Run the site installation through Drush
 
   export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ template "drupal.fullname" . }},tier=drupal" -o jsonpath="{.items[0].metadata.name}")
 
@@ -55,25 +55,29 @@
     install_configure_form.update_status_module='array(FALSE,FALSE)' \
     --yes
 
+  # Install S3FS for WxT
+  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush en wxt_ext_s3fs -y
+
   # Perms
   kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- chown -R root:www-data /var/www/html/sites/default/files
   kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush cr
 
-  # Need to do this until s3fs is enabled and configured so stateful assets work across nginx + php-fpm
+  # Only if s3fs is not properly configured so stateful assets work across nginx + php-fpm
   kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush -y config-set system.performance css.preprocess 0
   kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush -y config-set system.performance js.preprocess 0
 
-  # Baseline migrations
+  # Baseline migrations for Canada.ca
   kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import wxt_file
-  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import wxt_media
-  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import wxt_media_slideshow
-  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import wxt_node_page
-  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import wxt_menu_link
+  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush s3fs-refresh-cache
+  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import --group wxt --tag 'Core'
+  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import --group gcweb --tag 'Core'
+  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import --group gcweb --tag 'Menu'
+
+  # Group migration
+  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import --group gcweb --tag 'Menu'
   kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush php-eval 'node_access_rebuild();'
 
-  # Extra steps
-  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush en wxt_s3fs -y
+3. Login with the following credentials
 
-  # Port Forward if no Ingress setup
-  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ template "drupal.fullname" . }},tier=frontend" -o jsonpath="{.items[0].metadata.name}")
-  kubectl port-forward $POD_NAME 8080:80
+  echo Username: {{ .Values.drupal.username }}
+  echo Password: $(kubectl get secret --namespace {{ .Release.Namespace }} {{ template "drupal.fullname" . }} -o jsonpath="{.data.password}" | base64 --decode)

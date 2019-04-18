@@ -56,8 +56,8 @@ drupal:
 
   ## Extra settings.php settings
   ##
-  #extraSettings: |-
-  #  $base_url = 'https://example.com';
+  # extraSettings: |-
+  #   $base_url = 'https://example.com';
 
   persistence:
     enabled: false

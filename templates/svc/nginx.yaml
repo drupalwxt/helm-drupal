@@ -18,4 +18,4 @@ spec:
   selector:
     app.kubernetes.io/name: {{ include "drupal.name" . }}
     tier: frontend
-  type:  {{ .Values.serviceType }}
+  type:  {{ .Values.nginx.serviceType }}

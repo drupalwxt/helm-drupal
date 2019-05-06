@@ -13,4 +13,4 @@ spec:
   selector:
     app.kubernetes.io/name: {{ include "drupal.name" . }}
     tier: drupal
-  type:  {{ .Values.serviceType }}
+  type:  {{ .Values.drupal.serviceType }}

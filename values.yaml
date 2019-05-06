@@ -1,10 +1,3 @@
-## Kubernetes configuration
-## For minikube, set this to NodePort, elsewhere use LoadBalancer
-## Use ClusterIP if your setup includes ingress controller
-##
-serviceType: ClusterIP
-servicePort: 80
-
 ## Configure Ingress resource that allow you to access the Drupal installation
 ## Set up the URL
 ## ref: http://kubernetes.io/docs/user-guide/ingress/
@@ -58,6 +51,8 @@ drupal:
   ##
   #extraSettings: |-
   #  $base_url = 'https://example.com';
+
+  serviceType: ClusterIP
 
   persistence:
     enabled: false
@@ -118,6 +113,8 @@ mysql:
   ##
   password: WxT2019
 
+  serviceType: ClusterIP
+
   persistence:
     enabled: true
     ## A manually managed Persistent Volume and Claim
@@ -166,6 +163,8 @@ nginx:
   domain: drupal.cluster.local
   resolver: 10.0.0.10
   s3BasePath: drupal.blob.core.windows.net/drupal-public
+
+  serviceType: ClusterIP
 
   persistence:
     enabled: false

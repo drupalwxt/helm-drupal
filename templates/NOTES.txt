@@ -11,16 +11,16 @@ Pre-Requisites:
 
 1. Get the Drupal URL:
 
-{{- if contains "LoadBalancer" .Values.serviceType }}
+{{- if contains "LoadBalancer" .Values.nginx.serviceType }}
 
   NOTE: It may take a few minutes for the LoadBalancer IP to be available.
         Watch the status with: 'kubectl get svc --namespace {{ .Release.Namespace }} -w {{ template "drupal.fullname" . }}'
 
-  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "drupal.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "drupal.fullname" . }}-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
   echo http://$SERVICE_IP/
 
-{{- else if contains "ClusterIP"  .Values.serviceType }}
+{{- else if contains "ClusterIP"  .Values.nginx.serviceType }}
 
   export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ template "drupal.fullname" . }},tier=frontend" -o jsonpath="{.items[0].metadata.name}")
 
@@ -28,11 +28,11 @@ Pre-Requisites:
 
 {{- end }}
 
-{{- if contains "NodePort" .Values.serviceType }}
+{{- if contains "NodePort" .Values.nginx.serviceType }}
 
   Or running:
 
-  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ template "drupal.fullname" . }})
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ template "drupal.fullname" . }})-nginx
 
   export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
 

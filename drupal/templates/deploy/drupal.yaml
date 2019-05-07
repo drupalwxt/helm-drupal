@@ -48,8 +48,10 @@ spec:
         - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ include "drupal.fullname" . }}
-              key: password
+              # This is not ideal, but calling {{ include "mysql.secretName" . }}
+              # was returning the wrong result.
+              name: "{{ .Release.Name }}-mysql"
+              key: mysql-password
 {{- if .Values.extraVars }}
 {{ toYaml .Values.extraVars | indent 8 }}
 {{- end }}

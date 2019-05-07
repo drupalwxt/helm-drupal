@@ -98,11 +98,11 @@ data:
     * @endcode
     */
     $databases['default']['default'] = array (
-      'database' => '{{ .Values.mysql.db }}',
-      'username' => 'root',
-      'password' => '{{ .Values.drupal.password }}',
+      'database' => '{{ .Values.mysql.mysqlDatabase }}',
+      'username' => '{{ .Values.mysql.mysqlUser }}',
+      'password' => getenv('MYSQL_PASSWORD') ?: '',
       'prefix' => '',
-      'host' => '{{ template "drupal.fullname" . }}-mysql',
+      'host' => '{{ .Release.Name }}-mysql',
       'port' => '3306',
       'namespace' => 'Drupal\Core\Database\Driver\mysql',
       'driver' => 'mysql',
@@ -1044,10 +1044,10 @@ data:
       array (
         'default' =>
         array (
-          'database' => '{{ .Values.mysql.db }}',
-          'username' => 'root',
-          'password' => '{{ .Values.drupal.password }}',
-          'host' => '{{ template "drupal.fullname" . }}-mysql',
+          'database' => '{{ .Values.mysql.mysqlDatabase }}',
+          'username' => '{{ .Values.mysql.mysqlUser }}',
+          'password' => getenv('MYSQL_PASSWORD') ?: '',
+          'host' => '{{ .Release.Name }}-mysql',
           'port' => '3306',
           'driver' => 'mysql',
           'prefix' => '',

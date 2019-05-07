@@ -91,63 +91,6 @@ drupal:
     enabled: true
     fsGroup: 82
 
-minio:
-  domain: minio
-  hostname: minio
-
-mysql:
-  ## MySQL image version
-  ## ref: https://hub.docker.com/r/library/mysql/tags/
-  ##
-  image: mysql:5.6
-
-  ## Optionally specify an array of imagePullSecrets.
-  ## Secrets must be manually created in the namespace.
-  ## ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
-  ##
-  # imagePullSecrets:
-  #   - name: myRegistryKeySecretName
-
-  ## Specify a imagePullPolicy
-  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
-  ##
-  imagePullPolicy: IfNotPresent
-
-  ## Database
-  db: wxt
-
-  ## Application password
-  ##
-  password: WxT2019
-
-  serviceType: ClusterIP
-
-  persistence:
-    enabled: true
-    ## A manually managed Persistent Volume and Claim
-    ## Requires persistence.enabled: true
-    ## If defined, PVC must be created manually before volume will be bound
-    # existingClaim:
-
-    ## Mysql data Persistent Volume Storage Class
-    ## If defined, storageClassName: <storageClass>
-    ## If set to "-", storageClassName: "", which disables dynamic provisioning
-    ## If undefined (the default) or set to null, no storageClassName spec is
-    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-    ##   GKE, AWS & OpenStack)
-    ##
-    # storageClass: "-"
-    annotations: {}
-    accessMode: ReadWriteOnce
-    size: 8Gi
-    volumes:
-    #  - name: nothing
-    #    emptyDir: {}
-    mounts:
-    #  - mountPath: /var/nothing
-    #    name: nothing
-    #    readOnly: true
-
 nginx:
   ## Nginx image version
   ## ref: https://hub.docker.com/drupalwxt/site-wxt/tags/
@@ -204,3 +147,61 @@ nginx:
   securityContext:
     enabled: true
     fsGroup: 33
+
+mysql:
+  ## mysql image version
+  ## ref: https://hub.docker.com/r/library/mysql/tags/
+  ##
+  image: "mysql"
+  imageTag: "5.7.26"
+
+  ## Specify password for root user
+  ##
+  ## Default: random 10 character string
+  # mysqlRootPassword: testing
+
+  ## Create a database user
+  ##
+  mysqlUser: wxt
+  ## Default: random 10 character string
+  # mysqlPassword:
+
+  ## Allow unauthenticated access, uncomment to enable
+  ##
+  # mysqlAllowEmptyPassword: true
+
+  ## Create a database
+  ##
+  mysqlDatabase: wxt
+
+  ## Specify an imagePullPolicy (Required)
+  ## It's recommended to change this to 'Always' if the image tag is 'latest'
+  ## ref: http://kubernetes.io/docs/user-guide/images/#updating-images
+  ##
+  imagePullPolicy: IfNotPresent
+
+  ## Persist data to a persistent volume
+  persistence:
+    enabled: true
+    # storageClass: "-"
+    accessMode: ReadWriteOnce
+    size: 8Gi
+    annotations: {}
+
+  ## Configure resource requests and limits
+  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ##
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+
+  # Custom mysql configuration files used to override default mysql settings
+  configurationFiles:
+   mysql.cnf: |-
+     [mysqld]
+     max_allowed_packet = 256M
+
+minio:
+  domain: minio
+  hostname: minio

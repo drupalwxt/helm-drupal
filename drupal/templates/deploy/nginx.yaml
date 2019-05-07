@@ -24,7 +24,7 @@ spec:
         tier: frontend
     spec:
       containers:
-      - image: "{{ .Values.nginx.image }}:{{ default .Chart.AppVersion .Values.nginx.tag }}"
+      - image: "{{ .Values.nginx.image }}:{{ default (print .Chart.AppVersion "-nginx") .Values.nginx.tag }}"
         name: nginx
         ports:
         - name: http

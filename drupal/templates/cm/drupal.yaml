@@ -789,7 +789,7 @@ data:
     $settings['s3fs.public_folder'] = "{{ .Values.minio.public }}";
     $settings['s3fs.private_folder'] = "{{ .Values.minio.private }}";
 
-    if (file_exists(__DIR__ . '/extra.settings.php')) {
+    if (is_file(__DIR__ . '/extra.settings.php')) {
       include __DIR__ . '/extra.settings.php';
     }
   d7.settings.php: |
@@ -1468,7 +1468,7 @@ data:
       include __DIR__ . '/settings.local.php';
     }
 
-    if (file_exists(__DIR__ . '/extra.settings.php')) {
+    if (is_file(__DIR__ . '/extra.settings.php')) {
       include __DIR__ . '/extra.settings.php';
     }
 

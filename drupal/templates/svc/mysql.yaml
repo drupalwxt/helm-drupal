@@ -12,6 +12,7 @@ spec:
     - port: 3306
   selector:
     app.kubernetes.io/name: {{ include "drupal.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
     tier: db
   type:  {{ .Values.mysql.serviceType }}
 

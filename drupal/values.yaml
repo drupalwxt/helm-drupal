@@ -21,7 +21,7 @@ drupal:
   ##
   image: drupalwxt/site-wxt
   ## Note that by default we use appVersion to get image tag
-  # tag: 2.2.x
+  tag: latest
 
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -34,6 +34,8 @@ drupal:
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
   imagePullPolicy: IfNotPresent
+
+  replicas: 1
 
   ## User of the application
   ##
@@ -51,6 +53,11 @@ drupal:
   ##
   # extraSettings: |-
   #   $base_url = 'https://example.com';
+
+  # php-fpm healthcheck
+  # Requires https://github.com/renatomefi/php-fpm-healthcheck in the container.
+  healthcheck:
+    enabled: false
 
   serviceType: ClusterIP
 
@@ -146,7 +153,7 @@ nginx:
   ## ref: https://hub.docker.com/drupalwxt/site-wxt/tags/
   image: drupalwxt/site-wxt
   ## Note that by default we use appVersion to get image tag
-  # tag: 2.2.x-nginx
+  tag: latest-nginx
 
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -159,6 +166,8 @@ nginx:
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
   imagePullPolicy: IfNotPresent
+
+  replicas: 1
 
   domain: drupal.cluster.local
   resolver: 10.0.0.10

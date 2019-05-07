@@ -9,8 +9,11 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   ports:
-    - port: 9000
+    - name: tcp-php-fpm
+      port: 9000
+      protocol: TCP
   selector:
     app.kubernetes.io/name: {{ include "drupal.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
     tier: drupal
   type:  {{ .Values.drupal.serviceType }}

@@ -8,15 +8,19 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.nginx.replicas }}
+  strategy:
+    type: RollingUpdate
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "drupal.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
       tier: frontend
   template:
     metadata:
       labels:
         app.kubernetes.io/name: {{ include "drupal.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
         tier: frontend
     spec:
       containers:
@@ -25,8 +29,22 @@ spec:
         ports:
         - name: http
           containerPort: 80
+          protocol: TCP
         - name: https
           containerPort: 443
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /_healthz
+            port: 80
+          initialDelaySeconds: 0
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /_healthz
+            port: 80
+          initialDelaySeconds: 1
+          periodSeconds: 5
         resources:
           requests:
             memory: "200Mi"
@@ -37,7 +55,7 @@ spec:
         volumeMounts:
         - mountPath: /etc/nginx/nginx.conf
           name: cm-nginx
-          readOnly: false
+          readOnly: true
           subPath: nginx.conf
       {{- if .Values.nginx.imagePullSecrets }}
       imagePullSecrets:

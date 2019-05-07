@@ -9,15 +9,17 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   strategy:
-    type: Recreate
+    type: RollingUpdate
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "drupal.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
       tier: drupal
   template:
     metadata:
       labels:
         app.kubernetes.io/name: {{ include "drupal.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
         tier: drupal
     spec:
       containers:
@@ -28,6 +30,20 @@ spec:
           postStart:
             exec:
               command: ["/bin/bash", "-c", "cd / && ./minio {{ .Values.minio.hostname }}"]
+{{- if .Values.drupal.healthcheck.enabled }}
+        livenessProbe:
+          exec:
+            command:
+              - php-fpm-healthcheck
+          initialDelaySeconds: 0
+          periodSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+              - php-fpm-healthcheck
+          initialDelaySeconds: 1
+          periodSeconds: 5
+{{- end  }}
         env:
         - name: MYSQL_PASSWORD
           valueFrom:
@@ -39,24 +55,29 @@ spec:
 {{- end }}
         ports:
         - containerPort: 9000
-          name: drupal
+          name: tcp-php-fpm
+          protocol: TCP
         volumeMounts:
 {{- if (eq "d7" .Values.drupal.version) }}
         - name: cm-drupal
           mountPath: /var/www/html/sites/default/settings.php
           subPath: d7.settings.php
+          readOnly: true
 {{- else }}
         - name: cm-drupal
           mountPath: /var/www/html/sites/default/settings.php
           subPath: d8.settings.php
+          readOnly: true
 {{- end }}
         - name: cm-drupal
           mountPath: /var/www/html/sites/default/extra.settings.php
           subPath: extra.settings.php
           optional: true
+          readOnly: true
         - name: cm-minio
           mountPath: /minio
           subPath: minio
+          readOnly: true
       {{- if .Values.drupal.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.drupal.imagePullSecrets | indent 8 }}

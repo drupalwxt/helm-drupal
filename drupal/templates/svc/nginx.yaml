@@ -17,5 +17,6 @@ spec:
     targetPort: https
   selector:
     app.kubernetes.io/name: {{ include "drupal.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
     tier: frontend
   type:  {{ .Values.nginx.serviceType }}

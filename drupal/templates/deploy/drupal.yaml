@@ -26,10 +26,6 @@ spec:
       - image: "{{ .Values.drupal.image }}:{{ default .Chart.AppVersion .Values.drupal.tag }}"
         imagePullPolicy: {{ default "" .Values.drupal.imagePullPolicy | quote }}
         name: drupal
-        lifecycle:
-          postStart:
-            exec:
-              command: ["/bin/bash", "-c", "cd / && ./minio {{ .Values.minio.hostname }}"]
 {{- if .Values.drupal.healthcheck.enabled }}
         livenessProbe:
           exec:
@@ -52,6 +48,29 @@ spec:
               # was returning the wrong result.
               name: "{{ .Release.Name }}-mysql"
               key: mysql-password
+{{- if eq .Values.files.provider "minio" }}
+        - name: S3_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Release.Name }}-minio"
+              key: accesskey
+        - name: S3_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Release.Name }}-minio"
+              key: secretkey
+{{- else if eq .Values.files.provider "s3" }}
+        - name: S3_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Release.Name }}-s3"
+              key: accesskey
+        - name: S3_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Release.Name }}-s3"
+              key: secretkey
+{{- end }}
 {{- if .Values.extraVars }}
 {{ toYaml .Values.extraVars | indent 8 }}
 {{- end }}
@@ -60,26 +79,17 @@ spec:
           name: tcp-php-fpm
           protocol: TCP
         volumeMounts:
-{{- if (eq "d7" .Values.drupal.version) }}
         - name: cm-drupal
           mountPath: /var/www/html/sites/default/settings.php
-          subPath: d7.settings.php
+          subPath: settings.php
           readOnly: true
-{{- else }}
-        - name: cm-drupal
-          mountPath: /var/www/html/sites/default/settings.php
-          subPath: d8.settings.php
-          readOnly: true
-{{- end }}
         - name: cm-drupal
           mountPath: /var/www/html/sites/default/extra.settings.php
           subPath: extra.settings.php
           optional: true
           readOnly: true
-        - name: cm-minio
-          mountPath: /minio
-          subPath: minio
-          readOnly: true
+        - name: twig-cache
+          mountPath: /cache/twig
       {{- if .Values.drupal.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.drupal.imagePullSecrets | indent 8 }}
@@ -91,7 +101,5 @@ spec:
       - name: cm-drupal
         configMap:
           name: {{ include "drupal.fullname" . }}
-      - name: cm-minio
-        configMap:
-          defaultMode: 0777
-          name: {{ include "drupal.fullname" . }}-minio
+      - name: twig-cache
+        emptyDir: {}

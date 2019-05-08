@@ -81,3 +81,16 @@ Pre-Requisites:
 
   echo Username: {{ .Values.drupal.username }}
   echo Password: $(kubectl get secret --namespace {{ .Release.Namespace }} {{ template "drupal.fullname" . }} -o jsonpath="{.data.password}" | base64 --decode)
+
+*** Istio ***
+
+Running with Istio sidecar injection?
+
+1. The MySQL service will not function due to $BUG. Rename it with:
+
+   kubectl -n {{ .Release.Namespace }} patch service {{ .Release.Name }}-mysql --type=json -p='[{"op":"replace", "path":"/spec/ports/0/name", "value":"tcp-mysql"}]'
+
+2. The create bucket job won't finish, so you'll need to run once the pod reaches 1/2 ready:
+
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app=minio,job-name={{ .Release.Name }}-minio-make-bucket-job" -o jsonpath="{.items[0].metadata.name}")
+  kubectl exec -it $POD_NAME -n default -c istio-proxy -- kill -INT 1

@@ -41,6 +41,7 @@ data:
       server_tokens off;
       tcp_nopush on;
       types_hash_max_size 2048;
+      proxy_http_version 1.1;
 
       server {
           #IPv4
@@ -54,7 +55,7 @@ data:
           index index.php index.html index.htm;
 
           # Make site accessible from http://drupal.dev;
-          server_name {{ .Values.nginx.domain }};
+          server_name _;
 
           # Nginx health
           location /_healthz {
@@ -94,14 +95,18 @@ data:
 {{- end }}
 
           location ~* ^/(s3fs-css|s3fs-js|sites/default/files)/(.*) {
-            set $s3_base_path {{ .Values.nginx.s3BasePath | quote }};
+{{- if eq "minio" .Values.files.provider }}
+            set $s3_base_path {{ print "http://" .Release.Name "-minio." .Release.Namespace ".svc." .Values.minio.clusterDomain ":" .Values.minio.service.port "/" .Values.minio.defaultBucket.name "/" .Values.files.folders.public | quote }};
+{{- else }}
+            set $s3_base_path 'https://empty.example.com';
+{{- end }}
             set $file_path $2;
 
             resolver {{ .Values.nginx.resolver }} valid=5s ipv6=off;
             resolver_timeout 5s;
 
             proxy_http_version 1.1;
-            proxy_pass http://$s3_base_path/$file_path;
+            proxy_pass $s3_base_path/$file_path;
           }
 
           location ~ /\.ht {

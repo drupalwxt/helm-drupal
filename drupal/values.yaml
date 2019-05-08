@@ -112,9 +112,7 @@ nginx:
 
   replicas: 1
 
-  domain: drupal.cluster.local
   resolver: 10.0.0.10
-  s3BasePath: drupal.blob.core.windows.net/drupal-public
 
   serviceType: ClusterIP
 
@@ -149,12 +147,6 @@ nginx:
     fsGroup: 33
 
 mysql:
-  ## mysql image version
-  ## ref: https://hub.docker.com/r/library/mysql/tags/
-  ##
-  image: "mysql"
-  imageTag: "5.7.26"
-
   ## Specify password for root user
   ##
   ## Default: random 10 character string
@@ -166,35 +158,14 @@ mysql:
   ## Default: random 10 character string
   # mysqlPassword:
 
-  ## Allow unauthenticated access, uncomment to enable
-  ##
-  # mysqlAllowEmptyPassword: true
-
   ## Create a database
   ##
   mysqlDatabase: wxt
 
-  ## Specify an imagePullPolicy (Required)
-  ## It's recommended to change this to 'Always' if the image tag is 'latest'
-  ## ref: http://kubernetes.io/docs/user-guide/images/#updating-images
-  ##
-  imagePullPolicy: IfNotPresent
-
   ## Persist data to a persistent volume
   persistence:
     enabled: true
-    # storageClass: "-"
-    accessMode: ReadWriteOnce
     size: 8Gi
-    annotations: {}
-
-  ## Configure resource requests and limits
-  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
-  ##
-  resources:
-    requests:
-      memory: 256Mi
-      cpu: 100m
 
   # Custom mysql configuration files used to override default mysql settings
   configurationFiles:
@@ -202,6 +173,61 @@ mysql:
      [mysqld]
      max_allowed_packet = 256M
 
+
+# Files: object storage
+#
+# Use Minio for object storage by default.
+# You can use any S3 compatible object storage.
+# Also:
+#   - s3
+files:
+  provider: minio
+  cname:
+    enabled: false
+    hostname: object.example.com
+  folders:
+    public: files-public
+    private: files-private
+
+s3:
+  accessKey: abc
+  secretKey: abc
+  bucket: mybucketname
+  region: us-east-1
+
+  customHost:
+    enabled: false
+    hostname: host.example.com
+
+# Note: Even if you set the defaultBucket.enabled to false,
+# you still need to set the defaultBucket.name to the desired bucket.
 minio:
-  domain: minio
-  hostname: minio
+  enabled: true
+  ## set kubernetes cluster domain where minio is running
+  ##
+  clusterDomain: cluster.local
+
+  ## minio server mode, i.e. standalone or distributed.
+  ## Distributed Minio ref: https://docs.minio.io/docs/distributed-minio-quickstart-guide
+  ##
+  mode: standalone
+
+  ## Set default accesskey, secretkey, Minio config file path, volume mount path and
+  ## number of nodes (only used for Minio distributed mode)
+  ## Distributed Minio ref: https://docs.minio.io/docs/distributed-minio-quickstart-guide
+  ##
+  existingSecret: ""
+  accessKey: "AKIAIOSFODNN7EXAMPLE"
+  secretKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+  replicas: 4
+
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  persistence:
+    enabled: true
+    size: 10Gi
+
+  defaultBucket:
+    enabled: true
+    name: wxt

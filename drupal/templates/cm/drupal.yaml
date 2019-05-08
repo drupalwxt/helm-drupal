@@ -744,7 +744,7 @@ data:
     /**
     * Set private file path directory.
     */
-    $settings['file_private_path'] =  '/var/www/files_private';
+    // $settings['file_private_path'] =  '/var/www/files_private';
 
     /**
     * Load local development override configuration, if available.
@@ -766,7 +766,7 @@ data:
     * settings.
     */
 
-    $config_directories[CONFIG_SYNC_DIRECTORY] = 'sites/default/sync';
+    $config_directories[CONFIG_SYNC_DIRECTORY] = '/config/sync';
 
     // S3FS
     $settings['s3fs.access_key'] = getenv('S3_ACCESS_KEY') ?: '';
@@ -1474,7 +1474,7 @@ data:
     /**
     * Set private file path directory.
     */
-    $conf['file_private_path'] =  '/var/www/files_private';
+    $conf['file_private_path'] =  '/var/www/private';
 
     /**
     * Load local development override configuration, if available.

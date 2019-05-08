@@ -90,6 +90,14 @@ spec:
           readOnly: true
         - name: twig-cache
           mountPath: /cache/twig
+        - name: config-sync
+          mountPath: /config/sync
+        - name: files
+          mountPath: /var/www/html/sites/default/files
+          subPath: public
+        - name: files
+          mountPath: /var/www/private
+          subPath: private
       {{- if .Values.drupal.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.drupal.imagePullSecrets | indent 8 }}
@@ -102,4 +110,9 @@ spec:
         configMap:
           name: {{ include "drupal.fullname" . }}
       - name: twig-cache
+        emptyDir: {}
+      - name: config-sync
+        emptyDir: {}
+      - name: files
+        mode: 0777
         emptyDir: {}

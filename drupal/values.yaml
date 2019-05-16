@@ -51,8 +51,21 @@ drupal:
 
   ## Extra settings.php settings
   ##
-  # extraSettings: |-
-  #   $base_url = 'https://example.com';
+  extraSettings: ''
+  #  |-
+  #  $base_url = 'https://example.com';
+
+  # Install Drupal automatically
+  install: true
+
+  # Run migrations for default content
+  migrate: true
+
+  # Reconfigure on upgrade
+  reconfigure: true
+
+  # Default WxT Library theme (only used if install and/or reconfigure are enabled)
+  wxtTheme: theme-wet-boew
 
   # php-fpm healthcheck
   # Requires https://github.com/renatomefi/php-fpm-healthcheck in the container.
@@ -88,8 +101,9 @@ drupal:
     #    readOnly: true
 
   securityContext:
-    enabled: true
     fsGroup: 82
+    runAsUser: 82
+    runAsGroup: 82
 
 nginx:
   ## Nginx image version
@@ -147,6 +161,8 @@ nginx:
     fsGroup: 33
 
 mysql:
+  imageTag: 5.7.26
+
   ## Specify password for root user
   ##
   ## Default: random 10 character string

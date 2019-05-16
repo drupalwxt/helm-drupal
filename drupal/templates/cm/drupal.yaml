@@ -772,38 +772,8 @@ data:
     $settings['s3fs.access_key'] = getenv('S3_ACCESS_KEY') ?: '';
     $settings['s3fs.secret_key'] = getenv('S3_SECRET_KEY') ?: '';
 
-    $settings['s3fs.bucket'] = "{{ .Values.minio.bucket }}";
-    $settings['s3fs.region'] = '{{ .Values.minio.region }}';
-
-    {{- if eq .Values.files.provider "minio" }}
-    $settings['s3fs.use_https'] = FALSE;
-    {{- else }}
-    $settings['s3fs.use_https'] = TRUE;
-    {{ end }}
-
-    $settings['s3fs.no_rewrite_cssjs'] = FALSE;
-
-    {{- if .Values.files.cname.enabled }}
-    $settings['s3fs.use_cname'] = TRUE;
-    $settings['s3fs.domain'] = "{{ .Values.files.cname.hostname }}";
-    {{- else }}
-    $settings['s3fs.use_cname'] = FALSE;
-    {{- end }}
-
-    {{- if eq .Values.files.provider "minio" }}
-    $settings['s3fs.use_customhost'] = TRUE;
-    $settings['s3fs.hostname'] = "{{ .Release.Name }}-minio:{{ .Values.minio.service.port }}";
-    {{- else if and (eq .Values.files.provider "s3") .Values.s3.customHost.enabled }}
-    $settings['s3fs.use_customhost'] = TRUE;
-    $settings['s3fs.hostname'] = "{{ .Values.s3.customHost.hostname }}";
-    {{- else }}
-    {{- end }}
-
     $settings['s3fs.use_s3_for_public'] = TRUE;
     $settings['s3fs.use_s3_for_private'] = TRUE;
-
-    $settings['s3fs.public_folder'] = "{{ .Values.files.folders.public }}";
-    $settings['s3fs.private_folder'] = "{{ .Values.files.folders.private }}";
 
     // As recommended in the S3FS docs, change the twig storage directory
     $settings['php_storage']['twig']['directory'] = '/cache/twig';

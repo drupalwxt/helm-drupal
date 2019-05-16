@@ -62,6 +62,9 @@ spec:
               {{- if .Values.files.cname.enabled }}
               drush -y config:set s3fs.settings use_cname 1
               drush -y config:set s3fs.settings domain '{{ .Values.files.cname.hostname }}'
+              {{- else if eq .Values.files.provider "minio" }}
+              drush -y config:set s3fs.settings use_cname 1
+              drush -y config:set s3fs.settings domain '/{{ .Values.minio.defaultBucket.name }}/{{ .Values.files.folders.public }}'
               {{- else }}
               drush -y config:set s3fs.settings use_cname 0
               {{- end }}

@@ -109,6 +109,16 @@ data:
             proxy_pass $s3_base_path/$file_path;
           }
 
+{{- if and (eq .Values.files.provider "minio") (not .Values.files.cname.enabled) }}
+          location ~* ^/{{ .Values.minio.defaultBucket.name }}/{{ .Values.files.folders.public }}/(.*) {
+            set $s3_base_path {{ print "http://" .Release.Name "-minio." .Release.Namespace ".svc." .Values.minio.clusterDomain ":" .Values.minio.service.port "/" .Values.minio.defaultBucket.name "/" .Values.files.folders.public | quote }};
+            set $file_path $1;
+            resolver {{ .Values.nginx.resolver }} valid=5s ipv6=off;
+            resolver_timeout 5s;
+            proxy_pass $s3_base_path/$file_path;
+          }
+{{- end }}
+
           location ~ /\.ht {
             deny all;
           }

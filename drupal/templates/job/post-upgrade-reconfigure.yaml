@@ -42,6 +42,12 @@ spec:
               # Check Drush status
               drush status
 
+              # Run database updates
+              drush -y updatedb
+
+              # Run entity updates
+              drush -y entity:updates
+
               # Configure s3fs
               {{- if eq .Values.files.provider "minio" }}
               drush -y config:set s3fs.settings bucket '{{ .Values.minio.defaultBucket.name }}'

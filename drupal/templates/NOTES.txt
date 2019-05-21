@@ -1,17 +1,40 @@
 
-***********************************************************************
-*** PLEASE BE PATIENT: Drupal WxT may take a few minutes to install ***
-***********************************************************************
+{{- if .Values.drupal.install }}
 
-Pre-Requisites:
+**********************
+** CONGRATULATIONS! **
+**********************
 
-* Azure Blob Storage
-* Minio is installed in cluster
-* Patch to wxt_ext_migrate => wxt_file migration
+Your Drupal site has been installed.
 
-1. Get the Drupal URL:
+{{- else }}
 
-{{- if contains "LoadBalancer" .Values.nginx.serviceType }}
+Drupal was not installed. You may now restore a Drupal site or setup a new one with:
+
+export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/instance={{ .Release.name }},tier=drupal" -o jsonpath="{.items[0].metadata.name}")
+
+# Run drush site:install
+kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush si {{ .Values.drupal.profile }} \
+    --sites-subdir=default \
+    --db-url={{ print "mysql://" .Values.mysql.mysqlUser ":YOUR_MYSQL_PASSWORD@" .Release.name "-mysql:3306/ " .Values.mysql.mysqlDatabase | quote }} \
+    --account-name={{ .Values.drupal.username | quote }} \
+    --account-pass=YOUR_ACCOUNT_PASSWORD \
+    --site-mail={{ .Values.drupal.siteEmail | quote }} \
+    --site-name={{ .Values.drupal.siteName | quote }} \
+    install_configure_form.update_status_module='array(FALSE,FALSE)' \
+    --yes
+
+# Enable the S3FS module
+kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush en s3fs -y
+{{- end }}
+
+** To access your Drupal site
+
+{{- if .Values.ingress.enable }}
+
+  Visit http://{{ index .Values.ingress.hosts 0 }}{{ .Values.ingress.path }}
+
+{{- else if contains "LoadBalancer" .Values.nginx.serviceType }}
 
   NOTE: It may take a few minutes for the LoadBalancer IP to be available.
         Watch the status with: 'kubectl get svc --namespace {{ .Release.Namespace }} -w {{ template "drupal.fullname" . }}'
@@ -22,13 +45,10 @@ Pre-Requisites:
 
 {{- else if contains "ClusterIP"  .Values.nginx.serviceType }}
 
-  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ template "drupal.fullname" . }},tier=frontend" -o jsonpath="{.items[0].metadata.name}")
-
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/instance={{ .Release.Name }},tier=frontend" -o jsonpath="{.items[0].metadata.name}")
   kubectl port-forward $POD_NAME 8080:80
 
-{{- end }}
-
-{{- if contains "NodePort" .Values.nginx.serviceType }}
+{{- else if contains "NodePort" .Values.nginx.serviceType }}
 
   Or running:
 
@@ -40,31 +60,11 @@ Pre-Requisites:
 
 {{- end }}
 
-2. Run the site installation through Drush
+** Migrations
 
-  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ template "drupal.fullname" . }},tier=drupal" -o jsonpath="{.items[0].metadata.name}")
+{{- if or (not .Values.drupal.migrate) (not .Values.drupal.install) (not .Values.drupal.reconfigure) }}
 
-  # Drupal Site installation
-  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush si wxt \
-    --sites-subdir=default \
-    --db-url=mysql://root:{{ .Values.mysql.password }}@{{ template "drupal.fullname" . }}-mysql:3306/{{ .Values.mysql.db }} \
-    --account-name=admin \
-    --account-pass={{ .Values.drupal.password }} \
-    --site-mail=admin@example.com \
-    --site-name="Drupal Install Profile (WxT)" \
-    install_configure_form.update_status_module='array(FALSE,FALSE)' \
-    --yes
-
-  # Install S3FS for WxT
-  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush en wxt_ext_s3fs -y
-
-  # Perms
-  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- chown -R root:www-data /var/www/html/sites/default/files
-  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush cr
-
-  # Only if s3fs is not properly configured so stateful assets work across nginx + php-fpm
-  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush -y config-set system.performance css.preprocess 0
-  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush -y config-set system.performance js.preprocess 0
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/instance={{ .Release.name }},tier=drupal" -o jsonpath="{.items[0].metadata.name}")
 
   # Baseline migrations for Canada.ca
   kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import wxt_file
@@ -77,20 +77,35 @@ Pre-Requisites:
   kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import --group gcweb --tag 'Menu'
   kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush php-eval 'node_access_rebuild();'
 
-3. Login with the following credentials
+{{- else }}
+
+  Default Canada.ca content migrations have been run.
+
+  To perform additional migrations, run:
+
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/instance={{ .Release.name }},tier=drupal" -o jsonpath="{.items[0].metadata.name}")
+  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import $MIGRATION
+
+{{- end }}
+
+** Login
 
   echo Username: {{ .Values.drupal.username }}
   echo Password: $(kubectl get secret --namespace {{ .Release.Namespace }} {{ template "drupal.fullname" . }} -o jsonpath="{.data.password}" | base64 --decode)
 
-*** Istio ***
+** Running Drush commands
+
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/instance={{ .Release.name }},tier=drupal" -o jsonpath="{.items[0].metadata.name}")
+  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush $YOUR_COMMAND
+
+** Istio
 
 Running with Istio sidecar injection?
 
-1. The MySQL service will not function due to $BUG. Rename it with:
+1. The MySQL service will not function due to https://github.com/istio/istio/issues/13484. Rename it with:
 
-   kubectl -n {{ .Release.Namespace }} patch service {{ .Release.Name }}-mysql --type=json -p='[{"op":"replace", "path":"/spec/ports/0/name", "value":"tcp-mysql"}]'
+  kubectl --namespace {{ .Release.Namespace }} patch service {{ .Release.Name }}-mysql --type=json -p='[{"op":"replace", "path":"/spec/ports/0/name", "value":"tcp-mysql"}]'
 
-2. The create bucket job won't finish, so you'll need to run once the pod reaches 1/2 ready:
+2. The jobs won't finish, so you'll need to monitor the pods and once they reach 1/2 ready, terminate the proxy:
 
-  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app=minio,job-name={{ .Release.Name }}-minio-make-bucket-job" -o jsonpath="{.items[0].metadata.name}")
-  kubectl exec -it $POD_NAME -n default -c istio-proxy -- kill -INT 1
+  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -c istio-proxy -- kill -INT 1

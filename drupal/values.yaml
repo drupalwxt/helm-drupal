@@ -45,6 +45,15 @@ drupal:
   ##
   password: WxT2019
 
+  ## Site configuration
+  ##
+  profile: wxt
+  siteEmail: admin@example.com
+  siteName: Drupal Install Profile (WxT)
+
+  # Default WxT Library theme (only used if install and/or reconfigure are enabled)
+  # wxtTheme: theme-wet-boew
+
   ## Version of the application
   ##
   ## Supported versions: d8
@@ -65,9 +74,6 @@ drupal:
 
   # Reconfigure on upgrade
   reconfigure: true
-
-  # Default WxT Library theme (only used if install and/or reconfigure are enabled)
-  wxtTheme: theme-wet-boew
 
   # php-fpm healthcheck
   # Requires https://github.com/renatomefi/php-fpm-healthcheck in the container.

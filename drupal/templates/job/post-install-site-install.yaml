@@ -38,14 +38,13 @@ spec:
               drush status
 
               # Run site install
-              drush site:install wxt \
-                -vvv \
+              drush site:install {{ .Values.drupal.profile }} \
                 --sites-subdir=default \
                 --db-url="mysql://{{ .Values.mysql.mysqlUser }}:$MYSQL_PASSWORD@{{ .Release.Name }}-mysql:{{ .Values.mysql.service.port }}/{{ .Values.mysql.mysqlDatabase }}" \
                 --account-name={{ .Values.drupal.username }} \
                 --account-pass=$DRUPAL_ADMIN_PASSWORD \
-                --site-mail=admin@example.com \
-                --site-name="Web Experience Toolkit (WxT)" \
+                --site-mail={{ .Values.drupal.siteEmail | quote }} \
+                --site-name={{ .Values.drupal.siteName | quote }} \
                 install_configure_form.update_status_module='array(FALSE,FALSE)' \
                 --yes
 

@@ -21,7 +21,7 @@ drupal:
   ##
   image: drupalwxt/site-wxt
   ## Note that by default we use appVersion to get image tag
-  # tag: 2.2.x
+  #tag: 2.2.17
 
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -35,6 +35,8 @@ drupal:
   ##
   imagePullPolicy: IfNotPresent
 
+  replicas: 1
+
   ## User of the application
   ##
   username: admin
@@ -43,14 +45,40 @@ drupal:
   ##
   password: WxT2019
 
+  ## Site configuration
+  ##
+  profile: wxt
+  siteEmail: admin@example.com
+  siteName: Drupal Install Profile (WxT)
+
+  # Default WxT Library theme (only used if install and/or reconfigure are enabled)
+  # wxtTheme: theme-wet-boew
+
   ## Version of the application
+  ##
+  ## Supported versions: d8
   ##
   version: d8
 
   ## Extra settings.php settings
   ##
-  # extraSettings: |-
-  #   $base_url = 'https://example.com';
+  extraSettings: ''
+  #  |-
+  #  $base_url = 'https://example.com';
+
+  # Install Drupal automatically
+  install: true
+
+  # Run migrations for default content
+  migrate: false
+
+  # Reconfigure on upgrade
+  reconfigure: true
+
+  # php-fpm healthcheck
+  # Requires https://github.com/renatomefi/php-fpm-healthcheck in the container.
+  healthcheck:
+    enabled: false
 
   serviceType: ClusterIP
 
@@ -81,72 +109,16 @@ drupal:
     #    readOnly: true
 
   securityContext:
-    enabled: true
     fsGroup: 82
-
-minio:
-  domain: minio
-  hostname: minio
-
-mysql:
-  ## MySQL image version
-  ## ref: https://hub.docker.com/r/library/mysql/tags/
-  ##
-  image: mysql:5.6
-
-  ## Optionally specify an array of imagePullSecrets.
-  ## Secrets must be manually created in the namespace.
-  ## ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
-  ##
-  # imagePullSecrets:
-  #   - name: myRegistryKeySecretName
-
-  ## Specify a imagePullPolicy
-  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
-  ##
-  imagePullPolicy: IfNotPresent
-
-  ## Database
-  db: wxt
-
-  ## Application password
-  ##
-  password: WxT2019
-
-  serviceType: ClusterIP
-
-  persistence:
-    enabled: true
-    ## A manually managed Persistent Volume and Claim
-    ## Requires persistence.enabled: true
-    ## If defined, PVC must be created manually before volume will be bound
-    # existingClaim:
-
-    ## Mysql data Persistent Volume Storage Class
-    ## If defined, storageClassName: <storageClass>
-    ## If set to "-", storageClassName: "", which disables dynamic provisioning
-    ## If undefined (the default) or set to null, no storageClassName spec is
-    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-    ##   GKE, AWS & OpenStack)
-    ##
-    # storageClass: "-"
-    annotations: {}
-    accessMode: ReadWriteOnce
-    size: 8Gi
-    volumes:
-    #  - name: nothing
-    #    emptyDir: {}
-    mounts:
-    #  - mountPath: /var/nothing
-    #    name: nothing
-    #    readOnly: true
+    runAsUser: 82
+    runAsGroup: 82
 
 nginx:
   ## Nginx image version
   ## ref: https://hub.docker.com/drupalwxt/site-wxt/tags/
   image: drupalwxt/site-wxt
   ## Note that by default we use appVersion to get image tag
-  # tag: 2.2.x-nginx
+  #tag: 2.2.17-nginx
 
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -160,9 +132,9 @@ nginx:
   ##
   imagePullPolicy: IfNotPresent
 
-  domain: drupal.cluster.local
+  replicas: 1
+
   resolver: 10.0.0.10
-  s3BasePath: drupal.blob.core.windows.net/drupal-public
 
   serviceType: ClusterIP
 
@@ -195,3 +167,92 @@ nginx:
   securityContext:
     enabled: true
     fsGroup: 33
+
+mysql:
+  imageTag: 5.7.26
+
+  ## Specify password for root user
+  ##
+  ## Default: random 10 character string
+  # mysqlRootPassword: testing
+
+  ## Create a database user
+  ##
+  mysqlUser: wxt
+  ## Default: random 10 character string
+  # mysqlPassword:
+
+  ## Create a database
+  ##
+  mysqlDatabase: wxt
+
+  ## Persist data to a persistent volume
+  persistence:
+    enabled: true
+    size: 8Gi
+
+  # Custom mysql configuration files used to override default mysql settings
+  configurationFiles:
+   mysql.cnf: |-
+     [mysqld]
+     max_allowed_packet = 256M
+
+
+# Files: object storage
+#
+# Use Minio for object storage by default.
+# You can use any S3 compatible object storage.
+# Also:
+#   - s3
+files:
+  provider: minio
+  cname:
+    enabled: false
+    hostname: object.example.com
+  folders:
+    public: files-public
+    private: files-private
+
+s3:
+  accessKey: abc
+  secretKey: abc
+  bucket: mybucketname
+  region: us-east-1
+
+  customHost:
+    enabled: false
+    hostname: host.example.com
+    pathBased: true
+
+# Note: Even if you set the defaultBucket.enabled to false,
+# you still need to set the defaultBucket.name to the desired bucket.
+minio:
+  enabled: true
+  ## set kubernetes cluster domain where minio is running
+  ##
+  clusterDomain: cluster.local
+
+  ## minio server mode, i.e. standalone or distributed.
+  ## Distributed Minio ref: https://docs.minio.io/docs/distributed-minio-quickstart-guide
+  ##
+  mode: standalone
+
+  ## Set default accesskey, secretkey, Minio config file path, volume mount path and
+  ## number of nodes (only used for Minio distributed mode)
+  ## Distributed Minio ref: https://docs.minio.io/docs/distributed-minio-quickstart-guide
+  ##
+  existingSecret: ""
+  accessKey: "AKIAIOSFODNN7EXAMPLE"
+  secretKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+  replicas: 4
+
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  persistence:
+    enabled: true
+    size: 10Gi
+
+  defaultBucket:
+    enabled: true
+    name: wxt

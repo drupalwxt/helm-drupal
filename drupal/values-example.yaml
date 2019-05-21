@@ -1,26 +1,75 @@
-ingress:
-  enabled: true
-  hosts:
-    - d8.example.ca
-
 drupal:
-  image: drupalwxt/site-wxt
   tag: latest
-  version: d8
-  extraSettings: |-
-    $base_url = 'https://d8.example.ca';
 
-minio:
-  bucket: d8-example-ca
-  domain: drupal.blob.core.windows.net/d8-example-ca
-  hostname: minio
-  accesskey: accesskey
-  secretkey: secretkey
-  public: public
-  private: private
+  # php-fpm healthcheck
+  # Requires https://github.com/renatomefi/php-fpm-healthcheck in the container.
+  # (note: official images do not contain this feature yet)
+  healthcheck:
+    enabled: true
+
+  # Switch to canada.ca theme
+  # Common options include: theme-wet-boew, theme-gcweb-legacy
+  wxtTheme: theme-gcweb
+
+  # Run the site install
+  install: true
+
+  # Run the default migrations
+  migrate: true
+
+  # Reconfigure the site
+  reconfigure: true
 
 nginx:
-  image: drupalwxt/site-wxt
-  tag: latest-nginx
-  domain: d8.example.ca
-  s3BasePath: drupal.blob.core.windows.net/d8-govcloud-ca/public
+  # Set your cluster's DNS resolution service here
+  resolver: 10.0.0.10
+
+mysql:
+  imageTag: 5.7.26
+
+  mysqlPassword: SUPERsecureMYSQLpassword
+  mysqlRootPassword: SUPERsecureMYSQLrootPASSWORD
+  persistence:
+    enabled: true
+
+##
+## MINIO-ONLY EXAMPLE
+##
+minio:
+  persistence:
+    enabled: true
+  defaultBucket:
+    enabled: true
+
+##
+## AZURE EXAMPLE
+##
+# files:
+#   cname:
+#     enabled: true
+#     hostname: wxt.blob.core.windows.net
+
+# minio:
+#   clusterDomain: cluster.cumulonimbus.zacharyseguin.ca
+#   # Enable the Azure Gateway mode
+#   azuregateway:
+#     enabled: true
+
+#   # Access Key should be set to the Azure Storage Account name
+#   # Secret Key should be set to the Azure Storage Account access key
+#   accessKey: STORAGE_ACCOUNT_NAME
+#   secretKey: STORAGE_ACCOUNT_ACCESS_KEY
+
+#   # Disable creation of default bucket.
+#   # You should pre-create the bucket in Azure.
+#   defaultBucket:
+#     enabled: false
+#     name: wxt
+
+#   # We want a cluster ip assigned
+#   service:
+#     clusterIP: ''
+
+#   # We don't need a persistent volume, since it's stored in Azure
+#   persistence:
+#     enabled: false

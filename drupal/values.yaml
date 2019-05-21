@@ -47,6 +47,8 @@ drupal:
 
   ## Version of the application
   ##
+  ## Supported versions: d8
+  ##
   version: d8
 
   ## Extra settings.php settings
@@ -59,7 +61,7 @@ drupal:
   install: true
 
   # Run migrations for default content
-  migrate: true
+  migrate: false
 
   # Reconfigure on upgrade
   reconfigure: true

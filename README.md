@@ -1,7 +1,7 @@
 Helm Chart: Drupal WxT
 ======================
 
-A Helm chart for Drupal WxT using Minio for stateful data.
+A [Helm chart](https://helm.sh/) for [Drupal WxT](http://drupalwxt.org/) using [Minio](https://minio.io/) for stateful data. These are the instructions for a Kubernetes package manager to set up Drupal and it's environment. You can use this to build a local development environment or a cloud native implementation.  
 
 ## Installation
 

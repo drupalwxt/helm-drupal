@@ -70,7 +70,7 @@ spec:
               drush -y config:set s3fs.settings domain '{{ .Values.files.cname.hostname }}'
               {{- else if eq .Values.files.provider "minio" }}
               drush -y config:set s3fs.settings use_cname 1
-              drush -y config:set s3fs.settings domain '/{{ .Values.minio.defaultBucket.name }}/{{ .Values.files.folders.public }}'
+              drush -y config:set s3fs.settings domain '/{{ .Values.minio.defaultBucket.name }}'
               {{- else }}
               drush -y config:set s3fs.settings use_cname 0
               {{- end }}
@@ -78,11 +78,18 @@ spec:
               {{- if eq .Values.files.provider "minio" }}
               drush -y config:set s3fs.settings use_customhost 1
               drush -y config:set s3fs.settings hostname '{{ .Release.Name }}-minio:{{ .Values.minio.service.port }}'
+              drush -y config:set s3fs.settings use_path_style_endpoint 1
               {{- else if and (eq .Values.files.provider "s3") .Values.s3.customHost.enabled }}
               drush -y config:set s3fs.settings use_customhost 1
               drush -y config:set s3fs.settings hostname '{{ .Values.s3.customHost.hostname }}'
+              {{- if .Values.s3.customHost.pathBased }}
+              drush -y config:set s3fs.settings use_path_style_endpoint 1
+              {{- else }}
+              drush -y config:set s3fs.settings use_path_style_endpoint 0
+              {{- end }}
               {{- else }}
               drush -y config:set s3fs.settings use_customhost 0
+              drush -y config:set s3fs.settings use_path_style_endpoint 0
               {{- end }}
 
               drush -y config:set s3fs.settings use_s3_for_public 1

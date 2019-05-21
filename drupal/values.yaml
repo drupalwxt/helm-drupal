@@ -214,6 +214,7 @@ s3:
   customHost:
     enabled: false
     hostname: host.example.com
+    pathBased: true
 
 # Note: Even if you set the defaultBucket.enabled to false,
 # you still need to set the defaultBucket.name to the desired bucket.

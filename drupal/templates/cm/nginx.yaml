@@ -95,8 +95,10 @@ data:
 {{- end }}
 
           location ~* ^/(s3fs-css|s3fs-js|sites/default/files)/(.*) {
-{{- if eq "minio" .Values.files.provider }}
+{{- if and (eq "minio" .Values.files.provider) (not .Values.files.cname.enabled) }}
             set $s3_base_path {{ print "http://" .Release.Name "-minio." .Release.Namespace ".svc." .Values.minio.clusterDomain ":" .Values.minio.service.port "/" .Values.minio.defaultBucket.name "/" .Values.files.folders.public | quote }};
+{{- else if eq "minio" .Values.files.provider }}
+            set $s3_base_path {{ print "https://" .Values.files.cname.hostname "/" .Values.minio.defaultBucket.name "/" .Values.files.folders.public | quote }};
 {{- else }}
             set $s3_base_path 'https://empty.example.com';
 {{- end }}

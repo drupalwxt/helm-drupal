@@ -3,9 +3,9 @@ entries:
   drupal:
   - apiVersion: v1
     appVersion: 2.2.17
-    created: 2019-05-22T04:05:52.949719744Z
+    created: 2019-05-22T13:02:09.884113475Z
     description: Drupal 8 variant of the Web Experience Toolkit (WxT).
-    digest: 6c1483b3f329fe667886d3f80f54d4c822535898af80ef713645b5412dea5604
+    digest: fb99874a243c288b94249384506f908faf93ee77aed156d40d438559f670ae6d
     engine: gotpl
     home: http://www.drupal.org/project/wxt
     icon: https://bitnami.com/assets/stacks/drupal/img/drupal-stack-220x234.png
@@ -28,4 +28,4 @@ entries:
     urls:
     - https://drupalwxt.github.io/helm-drupal/drupal-0.1.0.tgz
     version: 0.1.0
-generated: 2019-05-22T04:05:52.945919682Z
+generated: 2019-05-22T13:02:09.880393465Z

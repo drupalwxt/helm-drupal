@@ -11,12 +11,12 @@ Your Drupal site has been installed.
 
 Drupal was not installed. You may now restore a Drupal site or setup a new one with:
 
-export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/instance={{ .Release.name }},tier=drupal" -o jsonpath="{.items[0].metadata.name}")
+export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/instance={{ .Release.Name }},tier=drupal" -o jsonpath="{.items[0].metadata.name}")
 
 # Run drush site:install
 kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush si {{ .Values.drupal.profile }} \
     --sites-subdir=default \
-    --db-url={{ print "mysql://" .Values.mysql.mysqlUser ":YOUR_MYSQL_PASSWORD@" .Release.name "-mysql:3306/ " .Values.mysql.mysqlDatabase | quote }} \
+    --db-url={{ print "mysql://" .Values.mysql.mysqlUser ":YOUR_MYSQL_PASSWORD@" .Release.Name "-mysql:3306/ " .Values.mysql.mysqlDatabase | quote }} \
     --account-name={{ .Values.drupal.username | quote }} \
     --account-pass=YOUR_ACCOUNT_PASSWORD \
     --site-mail={{ .Values.drupal.siteEmail | quote }} \
@@ -64,7 +64,7 @@ kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush en s3fs -y
 
 {{- if or (not .Values.drupal.migrate) (not .Values.drupal.install) (not .Values.drupal.reconfigure) }}
 
-  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/instance={{ .Release.name }},tier=drupal" -o jsonpath="{.items[0].metadata.name}")
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/instance={{ .Release.Name }},tier=drupal" -o jsonpath="{.items[0].metadata.name}")
 
   # Baseline migrations for Canada.ca
   kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import wxt_file
@@ -83,7 +83,7 @@ kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush en s3fs -y
 
   To perform additional migrations, run:
 
-  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/instance={{ .Release.name }},tier=drupal" -o jsonpath="{.items[0].metadata.name}")
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/instance={{ .Release.Name }},tier=drupal" -o jsonpath="{.items[0].metadata.name}")
   kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import $MIGRATION
 
 {{- end }}
@@ -95,7 +95,7 @@ kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush en s3fs -y
 
 ** Running Drush commands
 
-  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/instance={{ .Release.name }},tier=drupal" -o jsonpath="{.items[0].metadata.name}")
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/instance={{ .Release.Name }},tier=drupal" -o jsonpath="{.items[0].metadata.name}")
   kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush $YOUR_COMMAND
 
 ** Istio

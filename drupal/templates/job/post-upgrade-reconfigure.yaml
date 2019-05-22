@@ -38,9 +38,15 @@ spec:
               drush status
 
               # Run database updates
+              drush -y cache:rebuild
               drush -y updatedb
 
+              # Lightning updates
+              drush -y cache:rebuild
+              drush -y update:lightning
+
               # Run entity updates
+              drush -y cache:rebuild
               drush -y entity:updates
 
               # Configure s3fs

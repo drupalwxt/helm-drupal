@@ -1,5 +1,5 @@
-Helm Chart: Drupal WxT
-======================
+Helm Chart: Drupal
+==================
 
 A [Helm chart](https://helm.sh/) for [Drupal WxT](http://drupalwxt.org/) using [Minio](https://minio.io/) for stateful data. These are the instructions for a Kubernetes package manager to set up Drupal and its environment. You can use this to build a local development environment or a cloud native implementation.
 
@@ -10,8 +10,8 @@ A [Helm chart](https://helm.sh/) for [Drupal WxT](http://drupalwxt.org/) using [
 2. Git clone the helm chart.
 
 ```sh
-git clone https://github.com/drupalwxt/helm-drupalwxt
-cd helm-drupalwxt/drupal
+git clone https://github.com/drupalwxt/helm-drupal
+cd helm-drupal/drupal
 cp values.yaml values-override.yaml
 ```
 

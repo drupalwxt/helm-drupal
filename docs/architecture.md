@@ -33,7 +33,7 @@ Without going to in-depth Kubernetes is the defacto winner of the orchestration 
 
 The whole Drupal application stack can easily be installed in a highly distributed fashion in mere minutes using either our helm chart or the via the Drupal Operator (recommended) which facilitates a more managed service workflow (rolling updates, cronjobs, health checks, auto-scaling, etc). The operator is currently being used at Statistics Canada.
 
-1. Helm chart: [https://github.com/drupalwxt/helm-drupalwxt](https://github.com/drupalwxt/helm-drupalwxt)
+1. Helm chart: [https://github.com/drupalwxt/helm-drupal](https://github.com/drupalwxt/helm-drupal)
 2. Drupal Operator: [https://github.com/sylus/drupal-operator](https://github.com/sylus/drupal-operator)
 
 ## Ingress controller

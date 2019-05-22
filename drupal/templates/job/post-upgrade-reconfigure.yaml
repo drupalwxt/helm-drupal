@@ -107,6 +107,7 @@ spec:
 
               {{- if .Values.drupal.migrate }}
               # Migrate content
+              drush -y config:set migrate_plus.migration.wxt_file process.uri uri
               drush -y migrate:import wxt_file
               drush -y s3fs-refresh-cache
               drush -y migrate:import --group wxt --tag 'Core'

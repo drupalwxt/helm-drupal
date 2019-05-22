@@ -30,7 +30,7 @@ kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush en s3fs -y
 
 ** To access your Drupal site
 
-{{- if .Values.ingress.enable }}
+{{- if .Values.ingress.enabled }}
 
   Visit http://{{ index .Values.ingress.hosts 0 }}{{ .Values.ingress.path }}
 

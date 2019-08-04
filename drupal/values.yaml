@@ -64,7 +64,7 @@ drupal:
   ##
   extraSettings: ''
   #  |-
-  #  $base_url = 'https://example.com';
+  #  $settings['trusted_host_patterns'] = ['^example\.com$'];
 
   # Install Drupal automatically
   install: true

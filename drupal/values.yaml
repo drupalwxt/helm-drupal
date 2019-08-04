@@ -75,6 +75,15 @@ drupal:
   # Reconfigure on upgrade
   reconfigure: true
 
+  # Configure the Drupal cron
+  cron:
+    # When enabled, a CronJob will run the job based on the schedule
+    enabled: true
+
+    # CronJob schedule (standard cron syntax)
+    # Defaults to once an hour
+    schedule: '0 * * * *'
+
   # php-fpm healthcheck
   # Requires https://github.com/renatomefi/php-fpm-healthcheck in the container.
   healthcheck:

@@ -1,0 +1,118 @@
+{{- if .Values.drupal.cron.enabled }}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "drupal.fullname" . }}-drupal-cron
+  labels:
+    app.kubernetes.io/name: {{ include "drupal.name" . }}
+    helm.sh/chart: {{ include "drupal.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  schedule: "{{ .Values.drupal.cron.schedule }}"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: {{ include "drupal.name" . }}
+            helm.sh/chart: {{ include "drupal.chart" . }}
+            app.kubernetes.io/instance: {{ .Release.Name }}
+            app.kubernetes.io/managed-by: {{ .Release.Service }}
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: drush
+            image: "{{ .Values.drupal.image }}:{{ default .Chart.AppVersion .Values.drupal.tag }}"
+            imagePullPolicy: {{ default "" .Values.drupal.imagePullPolicy | quote }}
+            command:
+            - '/bin/sh'
+            - '-c'
+            - |
+                # Wait for MySQL to be available
+                until drush sql:query 'SHOW TABLES;'; do echo Waiting for MySQL; sleep 3; done
+                echo MySQL available
+
+                # Check Drush status
+                drush status
+
+                # Run cron
+                drush -y core-cron
+            env:
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  # This is not ideal, but calling {{ include "mysql.secretName" . }}
+                  # was returning the wrong result.
+                  name: "{{ .Release.Name }}-mysql"
+                  key: mysql-password
+            - name: DRUPAL_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  # This is not ideal, but calling {{ include "mysql.secretName" . }}
+                  # was returning the wrong result.
+                  name: "{{ include "drupal.fullname" . }}"
+                  key: password
+{{- if eq .Values.files.provider "minio" }}
+            - name: S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-minio"
+                  key: accesskey
+            - name: S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-minio"
+                  key: secretkey
+{{- else if eq .Values.files.provider "s3" }}
+            - name: S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-s3"
+                  key: accesskey
+            - name: S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-s3"
+                  key: secretkey
+{{- end }}
+{{- if .Values.extraVars }}
+{{ toYaml .Values.extraVars | indent 12 }}
+{{- end }}
+            volumeMounts:
+            - name: cm-drupal
+              mountPath: /var/www/html/sites/default/settings.php
+              subPath: settings.php
+              readOnly: true
+            - name: cm-drupal
+              mountPath: /var/www/html/sites/default/extra.settings.php
+              subPath: extra.settings.php
+              readOnly: true
+            - name: twig-cache
+              mountPath: /cache/twig
+            - name: config-sync
+              mountPath: /config/sync
+            - name: files
+              mountPath: /var/www/html/sites/default/files
+              subPath: public
+            - name: files
+              mountPath: /var/www/private
+              subPath: private
+{{- if .Values.drupal.imagePullSecrets }}
+          imagePullSecrets:
+{{ toYaml .Values.drupal.imagePullSecrets | indent 12 }}
+{{- end }}
+          # Allow non-root user to access PersistentVolume
+          securityContext:
+{{ toYaml .Values.drupal.securityContext | indent 12 }}
+          volumes:
+          - name: cm-drupal
+            configMap:
+              name: {{ include "drupal.fullname" . }}
+          - name: twig-cache
+            emptyDir: {}
+          - name: config-sync
+            emptyDir: {}
+          - name: files
+            emptyDir: {}
+{{- end }}

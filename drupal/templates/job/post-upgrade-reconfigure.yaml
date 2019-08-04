@@ -161,10 +161,6 @@ spec:
 {{- if .Values.extraVars }}
 {{ toYaml .Values.extraVars | indent 8 }}
 {{- end }}
-        ports:
-        - containerPort: 9000
-          name: tcp-php-fpm
-          protocol: TCP
         volumeMounts:
         - name: cm-drupal
           mountPath: /var/www/html/sites/default/settings.php

@@ -744,7 +744,7 @@ data:
     /**
     * Set private file path directory.
     */
-    // $settings['file_private_path'] =  '/var/www/files_private';
+    $settings['file_private_path'] =  '/var/www/private';
 
     /**
     * Load local development override configuration, if available.

@@ -1,0 +1,16 @@
+{{- if .Values.osba.enabled }}
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceInstance
+metadata:
+  name: {{ include "drupal.fullname" . }}-mysql
+  labels:
+    app.kubernetes.io/name: {{ include "drupal.name" . }}
+    helm.sh/chart: {{ include "drupal.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  clusterServiceClassExternalName: {{ .Values.osba.serviceClass }}
+  clusterServicePlanExternalName: {{ .Values.osba.servicePlan }}
+  parameters:
+{{ toYaml .Values.osba.parameters | indent 4 }}
+{{- end }}

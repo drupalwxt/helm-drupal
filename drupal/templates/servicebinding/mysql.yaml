@@ -1,0 +1,15 @@
+{{- if .Values.osba.enabled }}
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceBinding
+metadata:
+  name: {{ include "drupal.fullname" . }}-mysql
+  labels:
+    app.kubernetes.io/name: {{ include "drupal.name" . }}
+    helm.sh/chart: {{ include "drupal.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  instanceRef:
+    name: {{ include "drupal.fullname" . }}-mysql
+  secretName: {{ include "drupal.fullname" . }}-mysql
+{{- end }}

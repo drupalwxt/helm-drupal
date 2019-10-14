@@ -177,7 +177,25 @@ nginx:
     enabled: true
     fsGroup: 33
 
+# Use a managed instance from the Open Service Broker
+# (example here is for Azure)
+osba:
+  enabled: false
+  # Drupal DB driver
+  driver: mysql
+
+  serviceClass: azure-mysql-5-7
+  servicePlan: basic
+  parameters:
+    location: canadacentral
+    resourceGroup: rg-name
+    firewallRules:
+    - startIPAddress: "0.0.0.0"
+      endIPAddress: "255.255.255.255"
+      name: "AllowAll"
+
 mysql:
+  enabled: true
   imageTag: 5.7.26
 
   ## Specify password for root user

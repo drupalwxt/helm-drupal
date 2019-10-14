@@ -41,6 +41,33 @@ spec:
           periodSeconds: 5
 {{- end  }}
         env:
+{{- if .Values.osba.enabled }}
+        - name: OSBA_HOST
+          valueFrom:
+            secretKeyRef:
+              name: "{{ include "drupal.fullname" . }}-mysql"
+              key: host
+        - name: OSBA_PORT
+          valueFrom:
+            secretKeyRef:
+              name: "{{ include "drupal.fullname" . }}-mysql"
+              key: port
+        - name: OSBA_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: "{{ include "drupal.fullname" . }}-mysql"
+              key: database
+        - name: OSBA_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: "{{ include "drupal.fullname" . }}-mysql"
+              key: username
+        - name: OSBA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: "{{ include "drupal.fullname" . }}-mysql"
+              key: password
+{{- else if .Values.mysql.enabled }}
         - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -48,6 +75,7 @@ spec:
               # was returning the wrong result.
               name: "{{ .Release.Name }}-mysql"
               key: mysql-password
+{{- end }}
 {{- if eq .Values.files.provider "minio" }}
         - name: S3_ACCESS_KEY
           valueFrom:

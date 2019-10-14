@@ -98,16 +98,30 @@ data:
     * );
     * @endcode
     */
+
+{{- if .Values.osba.enabled }}
     $databases['default']['default'] = array (
-      'database' => '{{ .Values.mysql.mysqlDatabase }}',
-      'username' => '{{ .Values.mysql.mysqlUser }}',
+      'database' => getenv('OSBA_DATABASE') ?: '',
+      'username' => getenv('OSBA_USERNAME') ?: '',
       'password' => getenv('MYSQL_PASSWORD') ?: '',
+      'host' => getenv('OSBA_HOST') ?: '',
+      'port' => getenv('OSBA_PORT') ?: '',
       'prefix' => '',
-      'host' => '{{ .Release.Name }}-mysql',
-      'port' => '3306',
       'namespace' => 'Drupal\Core\Database\Driver\mysql',
       'driver' => 'mysql',
     );
+{{- else if .Values.mysql.enabled }}
+    $databases['default']['default'] = array (
+      'database' => {{ .Values.mysql.mysqlDatabase | quote }},
+      'username' => {{ .Values.mysql.mysqlUser | quote }},
+      'password' => getenv('MYSQL_PASSWORD') ?: '',
+      'host' => '{{ .Release.Name }}-mysql',
+      'port' => '3306',
+      'prefix' => '',
+      'namespace' => 'Drupal\Core\Database\Driver\mysql',
+      'driver' => 'mysql',
+    );
+{{- end }}
 
     /**
     * Customizing database settings.

@@ -159,8 +159,6 @@ spec:
         - name: DRUPAL_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
-              # This is not ideal, but calling {{ include "mysql.secretName" . }}
-              # was returning the wrong result.
               name: "{{ include "drupal.fullname" . }}"
               key: password
 {{- if eq .Values.files.provider "minio" }}

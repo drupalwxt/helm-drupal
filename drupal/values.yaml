@@ -185,7 +185,7 @@ osba:
   driver: mysql
 
   serviceClass: azure-mysql-5-7
-  servicePlan: basic
+  servicePlan: general-purpose
   parameters:
     location: canadacentral
     resourceGroup: rg-name

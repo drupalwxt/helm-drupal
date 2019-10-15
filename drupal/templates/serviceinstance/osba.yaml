@@ -1,16 +1,16 @@
-{{- if .Values.osba.enabled }}
+{{- if .Values.osb.enabled }}
 apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ServiceInstance
 metadata:
-  name: {{ include "drupal.fullname" . }}-osba
+  name: {{ include "drupal.fullname" . }}-osb
   labels:
     app.kubernetes.io/name: {{ include "drupal.name" . }}
     helm.sh/chart: {{ include "drupal.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  clusterServiceClassExternalName: {{ .Values.osba.serviceClass }}
-  clusterServicePlanExternalName: {{ .Values.osba.servicePlan }}
+  clusterServiceClassExternalName: {{ .Values.osb.serviceClass }}
+  clusterServicePlanExternalName: {{ .Values.osb.servicePlan }}
   parameters:
-{{ toYaml .Values.osba.parameters | indent 4 }}
+{{ toYaml .Values.osb.parameters | indent 4 }}
 {{- end }}

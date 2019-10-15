@@ -39,28 +39,28 @@ spec:
                 # Run cron
                 drush -y core-cron
             env:
-{{- if .Values.osba.enabled }}
-            - name: OSBA_HOST
+{{- if .Values.osb.enabled }}
+            - name: OSB_HOST
               valueFrom:
                 secretKeyRef:
                   name: "{{ include "drupal.fullname" . }}-mysql"
                   key: host
-            - name: OSBA_PORT
+            - name: OSB_PORT
               valueFrom:
                 secretKeyRef:
                   name: "{{ include "drupal.fullname" . }}-mysql"
                   key: port
-            - name: OSBA_DATABASE
+            - name: OSB_DATABASE
               valueFrom:
                 secretKeyRef:
                   name: "{{ include "drupal.fullname" . }}-mysql"
                   key: database
-            - name: OSBA_USERNAME
+            - name: OSB_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: "{{ include "drupal.fullname" . }}-mysql"
                   key: username
-            - name: OSBA_PASSWORD
+            - name: OSB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: "{{ include "drupal.fullname" . }}-mysql"

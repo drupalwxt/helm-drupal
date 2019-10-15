@@ -179,7 +179,7 @@ nginx:
 
 # Use a managed instance from the Open Service Broker
 # (example here is for Azure)
-osba:
+osb:
   enabled: false
   # Drupal DB driver
   driver: mysql

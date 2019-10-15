@@ -99,16 +99,16 @@ data:
     * @endcode
     */
 
-{{- if .Values.osba.enabled }}
+{{- if .Values.osb.enabled }}
     $databases['default']['default'] = array (
-      'database' => getenv('OSBA_DATABASE') ?: '',
-      'username' => getenv('OSBA_USERNAME') ?: '',
-      'password' => getenv('OSBA_PASSWORD') ?: '',
-      'host' => getenv('OSBA_HOST') ?: '',
-      'port' => getenv('OSBA_PORT') ?: '',
+      'database' => getenv('OSB_DATABASE') ?: '',
+      'username' => getenv('OSB_USERNAME') ?: '',
+      'password' => getenv('OSB_PASSWORD') ?: '',
+      'host' => getenv('OSB_HOST') ?: '',
+      'port' => getenv('OSB_PORT') ?: '',
       'prefix' => '',
-      'namespace' => 'Drupal\Core\Database\Driver\{{ .Values.osba.driver }}',
-      'driver' => '{{ .Values.osba.driver }}',
+      'namespace' => 'Drupal\Core\Database\Driver\{{ .Values.osb.driver }}',
+      'driver' => '{{ .Values.osb.driver }}',
     );
 {{- else if .Values.mysql.enabled }}
     $databases['default']['default'] = array (

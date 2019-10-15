@@ -103,12 +103,12 @@ data:
     $databases['default']['default'] = array (
       'database' => getenv('OSBA_DATABASE') ?: '',
       'username' => getenv('OSBA_USERNAME') ?: '',
-      'password' => getenv('MYSQL_PASSWORD') ?: '',
+      'password' => getenv('OSBA_PASSWORD') ?: '',
       'host' => getenv('OSBA_HOST') ?: '',
       'port' => getenv('OSBA_PORT') ?: '',
       'prefix' => '',
-      'namespace' => 'Drupal\Core\Database\Driver\mysql',
-      'driver' => 'mysql',
+      'namespace' => 'Drupal\Core\Database\Driver\{{ .Values.osba.driver }}',
+      'driver' => '{{ .Values.osba.driver }}',
     );
 {{- else if .Values.mysql.enabled }}
     $databases['default']['default'] = array (

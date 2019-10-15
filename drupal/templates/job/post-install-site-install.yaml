@@ -131,27 +131,27 @@ spec:
         - name: OSBA_HOST
           valueFrom:
             secretKeyRef:
-              name: "{{ include "drupal.fullname" . }}-mysql"
+              name: "{{ include "drupal.fullname" . }}-osba"
               key: host
         - name: OSBA_PORT
           valueFrom:
             secretKeyRef:
-              name: "{{ include "drupal.fullname" . }}-mysql"
+              name: "{{ include "drupal.fullname" . }}-osba"
               key: port
         - name: OSBA_DATABASE
           valueFrom:
             secretKeyRef:
-              name: "{{ include "drupal.fullname" . }}-mysql"
+              name: "{{ include "drupal.fullname" . }}-osba"
               key: database
         - name: OSBA_USERNAME
           valueFrom:
             secretKeyRef:
-              name: "{{ include "drupal.fullname" . }}-mysql"
+              name: "{{ include "drupal.fullname" . }}-osba"
               key: username
         - name: OSBA_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: "{{ include "drupal.fullname" . }}-mysql"
+              name: "{{ include "drupal.fullname" . }}-osba"
               key: password
 {{- else if .Values.mysql.enabled }}
         - name: MYSQL_PASSWORD

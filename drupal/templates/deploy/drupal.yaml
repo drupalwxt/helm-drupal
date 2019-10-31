@@ -115,6 +115,10 @@ spec:
           mountPath: /var/www/html/sites/default/extra.settings.php
           subPath: extra.settings.php
           readOnly: true
+        - name: ssmtp
+          mountPath: /etc/ssmtp/ssmtp.conf
+          subPath: ssmtp.conf
+          readOnly: true
         - name: twig-cache
           mountPath: /cache/twig
         - name: config-sync
@@ -136,6 +140,11 @@ spec:
       - name: cm-drupal
         configMap:
           name: {{ include "drupal.fullname" . }}
+      - name: ssmtp
+        secret:
+          secretName: {{ include "drupal.fullname" . }}-ssmtp
+        items:
+          - key: ssmtp.conf
       - name: twig-cache
         emptyDir: {}
       - name: config-sync

@@ -122,6 +122,17 @@ drupal:
     runAsUser: 82
     runAsGroup: 82
 
+  smtp:
+    host: mail
+    tls: true
+    starttls: true
+    auth:
+      enabled: false
+      user: ''
+      password: ''
+      # Note: sSMTP only supports LOGIN and CRAM-MD5
+      method: LOGIN
+
 nginx:
   ## Nginx image version
   ## ref: https://hub.docker.com/drupalwxt/site-wxt/tags/

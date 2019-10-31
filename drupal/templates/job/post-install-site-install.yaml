@@ -109,7 +109,9 @@ spec:
               drush -y config:set s3fs.settings private_folder '{{ .Values.files.folders.private }}'
 
               # Change WxT theme
+              {{- if .Values.drupal.wxtTheme }}
               drush -y config:set wxt_library.settings wxt.theme '{{ .Values.drupal.wxtTheme }}'
+              {{- end }}
 
               # Rebuild caches
               drush -y cache:rebuild

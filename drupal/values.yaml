@@ -109,13 +109,16 @@ drupal:
     annotations: {}
     accessMode: ReadWriteOnce
     size: 8Gi
-    volumes:
-    #  - name: nothing
-    #    emptyDir: {}
-    mounts:
-    #  - mountPath: /var/nothing
-    #    name: nothing
-    #    readOnly: true
+
+  # Allows custom /var/www/html/sites/default/files and /var/www/private mounts
+  disableDefaultFilesMount: false
+  volumes:
+  #  - name: nothing
+  #    emptyDir: {}
+  volumeMounts:
+  #  - mountPath: /var/nothing
+  #    name: nothing
+  #    readOnly: true
 
   securityContext:
     fsGroup: 82
@@ -176,13 +179,14 @@ nginx:
     annotations: {}
     accessMode: ReadWriteOnce
     size: 8Gi
-    volumes:
-    #  - name: nothing
-    #    emptyDir: {}
-    mounts:
-    #  - mountPath: /var/nothing
-    #    name: nothing
-    #    readOnly: true
+
+  volumes:
+  #  - name: nothing
+  #    emptyDir: {}
+  volumeMounts:
+  #  - mountPath: /var/nothing
+  #    name: nothing
+  #    readOnly: true
 
   securityContext:
     enabled: true

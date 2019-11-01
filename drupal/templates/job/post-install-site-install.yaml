@@ -215,12 +215,17 @@ spec:
           mountPath: /cache/twig
         - name: config-sync
           mountPath: /config/sync
+{{- if not .Values.drupal.disableDefaultFilesMount }}
         - name: files
           mountPath: /var/www/html/sites/default/files
           subPath: public
         - name: files
           mountPath: /var/www/private
           subPath: private
+{{- end }}
+{{- if .Values.drupal.volumeMounts }}
+{{ toYaml .Values.drupal.volumeMounts | indent 8 }}
+{{- end }}
       {{- if .Values.drupal.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.drupal.imagePullSecrets | indent 8 }}
@@ -240,8 +245,11 @@ spec:
       - name: files
         persistentVolumeClaim:
           claimName: {{ template "drupal.fullname" . }}-drupal
-{{- else }}
+{{- else if not .Values.drupal.disableDefaultFilesMount }}
       - name: files
         emptyDir: {}
+{{- end }}
+{{- if .Values.drupal.volumes }}
+{{ toYaml .Values.drupal.volumes | indent 6 }}
 {{- end }}
 {{- end }}

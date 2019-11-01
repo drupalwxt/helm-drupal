@@ -22,6 +22,13 @@ spec:
         app.kubernetes.io/name: {{ include "drupal.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
         tier: frontend
+{{- if .Values.nginx.podLabels }}
+{{ toYaml .Values.nginx.podLabels | indent 8 }}
+{{- end }}
+{{- if .Values.nginx.podAnnotations }}
+      annotations:
+{{ toYaml .Values.nginx.podAnnotations | indent 8 }}
+{{- end }}
     spec:
       containers:
       - image: "{{ .Values.nginx.image }}:{{ default (print .Chart.AppVersion "-nginx") .Values.nginx.tag }}"
@@ -57,6 +64,9 @@ spec:
           name: cm-nginx
           readOnly: true
           subPath: nginx.conf
+{{- if .Values.nginx.volumeMounts }}
+{{ toYaml .Values.nginx.volumeMounts | indent 8 }}
+{{- end }}
       {{- if .Values.nginx.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.nginx.imagePullSecrets | indent 8 }}
@@ -68,3 +78,6 @@ spec:
       - name: cm-nginx
         configMap:
           name: {{ include "drupal.fullname" . }}-nginx
+{{- if .Values.nginx.volumes }}
+{{ toYaml .Values.nginx.volumes | indent 6 }}
+{{- end }}

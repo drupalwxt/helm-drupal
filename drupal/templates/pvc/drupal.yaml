@@ -18,6 +18,9 @@ spec:
   resources:
     requests:
       storage: {{ .Values.drupal.persistence.size | quote }}
+      {{- if .Values.drupal.persistence.iops }}
+      iops: {{ .Values.drupal.persistence.iops | quote }}
+      {{- end }}
 {{- if .Values.drupal.persistence.storageClass }}
 {{- if (eq "-" .Values.drupal.persistence.storageClass) }}
   storageClassName: ""

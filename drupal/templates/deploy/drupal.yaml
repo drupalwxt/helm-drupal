@@ -22,6 +22,10 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
         tier: drupal
     spec:
+{{- if .Values.drupal.initContainers }}
+      initContainers:
+{{ toYaml .Values.drupal.initContainers | indent 8 }}
+{{- end }}
       containers:
       - image: "{{ .Values.drupal.image }}:{{ default .Chart.AppVersion .Values.drupal.tag }}"
         imagePullPolicy: {{ default "" .Values.drupal.imagePullPolicy | quote }}
@@ -149,5 +153,11 @@ spec:
         emptyDir: {}
       - name: config-sync
         emptyDir: {}
+{{- if .Values.drupal.persistence.enabled }}
+      - name: files
+        persistentVolumeClaim:
+          claimName: {{ template "drupal.fullname" . }}-drupal
+{{- else }}
       - name: files
         emptyDir: {}
+{{- end }}

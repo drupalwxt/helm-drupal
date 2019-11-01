@@ -22,6 +22,10 @@ spec:
         app.kubernetes.io/managed-by: {{ .Release.Service }}
     spec:
       restartPolicy: OnFailure
+{{- if .Values.drupal.initContainers }}
+      initContainers:
+{{ toYaml .Values.drupal.initContainers | indent 8 }}
+{{- end }}
       containers:
       - name: drush
         image: "{{ .Values.drupal.image }}:{{ default .Chart.AppVersion .Values.drupal.tag }}"
@@ -50,6 +54,7 @@ spec:
               drush -y entity:updates
 
               # Configure s3fs
+              {{- if not (eq .Values.files.provider "none") }}
               {{- if eq .Values.files.provider "minio" }}
               drush -y config:set s3fs.settings bucket '{{ .Values.minio.defaultBucket.name }}'
               drush -y config:set s3fs.settings region 'us-east-1'
@@ -102,6 +107,7 @@ spec:
 
               drush -y config:set s3fs.settings public_folder '{{ .Values.files.folders.public }}'
               drush -y config:set s3fs.settings private_folder '{{ .Values.files.folders.private }}'
+              {{- end }}
 
               # Change WxT theme
               {{- if .Values.drupal.wxtTheme }}
@@ -113,9 +119,13 @@ spec:
 
               {{- if .Values.drupal.migrate }}
               # Migrate content
+              {{- if not (eq .Values.files.provider "none") }}
               drush -y config:set migrate_plus.migration.wxt_file process.uri uri
+              {{- end }}
               drush -y migrate:import wxt_file
+              {{- if not (eq .Values.files.provider "none") }}
               drush -y s3fs-refresh-cache
+              {{- end }}
               drush -y migrate:import --group wxt --tag 'Core'
               drush -y migrate:import --group gcweb --tag 'Core'
               drush -y migrate:import --group gcweb --tag 'Menu'
@@ -221,6 +231,12 @@ spec:
         emptyDir: {}
       - name: config-sync
         emptyDir: {}
+{{- if .Values.drupal.persistence.enabled }}
+      - name: files
+        persistentVolumeClaim:
+          claimName: {{ template "drupal.fullname" . }}-drupal
+{{- else }}
       - name: files
         emptyDir: {}
+{{- end }}
 {{- end }}

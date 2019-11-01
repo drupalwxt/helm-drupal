@@ -22,6 +22,10 @@ spec:
         app.kubernetes.io/managed-by: {{ .Release.Service }}
     spec:
       restartPolicy: OnFailure
+{{- if .Values.drupal.initContainers }}
+      initContainers:
+{{ toYaml .Values.drupal.initContainers | indent 8 }}
+{{- end }}
       containers:
       - name: drush
         image: "{{ .Values.drupal.image }}:{{ default .Chart.AppVersion .Values.drupal.tag }}"
@@ -38,7 +42,7 @@ spec:
               drush status
 
               # Run site install
-              drush site:install {{ .Values.drupal.profile }} \
+              time drush site:install {{ .Values.drupal.profile }} \
                 --sites-subdir=default \
                 --db-url="mysql://{{ .Values.mysql.mysqlUser }}:$MYSQL_PASSWORD@{{ .Release.Name }}-mysql:{{ .Values.mysql.service.port }}/{{ .Values.mysql.mysqlDatabase }}" \
                 --account-name={{ .Values.drupal.username }} \
@@ -48,9 +52,7 @@ spec:
                 install_configure_form.update_status_module='array(FALSE,FALSE)' \
                 --yes
 
-              # Run entity updates
-              drush -y entity:updates
-
+              {{- if not (eq .Values.files.provider "none") }}
               # Enable s3fs
               drush -y pm:enable s3fs
 
@@ -107,6 +109,7 @@ spec:
 
               drush -y config:set s3fs.settings public_folder '{{ .Values.files.folders.public }}'
               drush -y config:set s3fs.settings private_folder '{{ .Values.files.folders.private }}'
+              {{- end }}
 
               # Change WxT theme
               {{- if .Values.drupal.wxtTheme }}
@@ -116,11 +119,15 @@ spec:
               # Rebuild caches
               drush -y cache:rebuild
 
-              {{- if .Values.drupal.migrate }}
               # Migrate content
+              {{- if .Values.drupal.migrate }}
+              {{- if not (eq .Values.files.provider "none") }}
               drush -y config:set migrate_plus.migration.wxt_file process.uri uri
+              {{- end }}
               drush -y migrate:import wxt_file
+              {{- if not (eq .Values.files.provider "none") }}
               drush -y s3fs-refresh-cache
+              {{- end }}
               drush -y migrate:import --group wxt --tag 'Core'
               drush -y migrate:import --group gcweb --tag 'Core'
               drush -y migrate:import --group gcweb --tag 'Menu'
@@ -229,6 +236,12 @@ spec:
         emptyDir: {}
       - name: config-sync
         emptyDir: {}
+{{- if .Values.drupal.persistence.enabled }}
+      - name: files
+        persistentVolumeClaim:
+          claimName: {{ template "drupal.fullname" . }}-drupal
+{{- else }}
       - name: files
         emptyDir: {}
+{{- end }}
 {{- end }}

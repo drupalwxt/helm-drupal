@@ -43,6 +43,7 @@ mysql:
 # You can use any S3 compatible object storage.
 # Also:
 #   - minio
+#   - s3
 #   - none
 files:
   provider: minio

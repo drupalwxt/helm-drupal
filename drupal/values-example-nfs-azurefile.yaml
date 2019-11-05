@@ -47,6 +47,7 @@ nginx:
   # Set your cluster's DNS resolution service here
   resolver: 10.0.0.10
 
+  # kubectl create secret generic drupal-storage --from-literal=azurestorageaccountname=$STORAGE_ACCOUNT_NAME --from-literal=azurestorageaccountkey=$STORAGE_KEY
   volumes:
     - name: files-public
       azureFile:

@@ -1,0 +1,85 @@
+drupal:
+  ## Site configuration
+  ##
+  profile: wxt
+  siteEmail: admin@example.com
+  siteName: Drupal Install Profile (WxT)
+
+  # Default WxT Library theme (only used if install and/or reconfigure are enabled)
+  # Common options include: theme-wet-boew, theme-gcweb-legacy, theme-gcweb, ...
+  wxtTheme: theme-gcweb
+
+  # Install Drupal automatically
+  install: true
+
+  # Run migrations for default content
+  migrate: true
+
+  # Reconfigure on upgrade
+  reconfigure: true
+
+  # php-fpm healthcheck
+  # Requires https://github.com/renatomefi/php-fpm-healthcheck in the container.
+  # (note: official images do not contain this feature yet)
+  healthcheck:
+    enabled: true
+
+  # Allows custom /var/www/html/sites/default/files and /var/www/private mounts
+  disableDefaultFilesMount: true
+
+  volumes:
+    - name: files-public
+      azureFile:
+        secretName: drupal-storage
+        shareName: drupal-public
+    - name: files-private
+      azureFile:
+        secretName: drupal-storage
+        shareName: drupal-private
+
+  volumeMounts:
+    - name: files-public
+      mountPath: /var/www/html/sites/default/files
+    - name: files-private
+      mountPath: /var/www/private
+
+nginx:
+  # Set your cluster's DNS resolution service here
+  resolver: 10.0.0.10
+
+  # kubectl create secret generic drupal-storage --from-literal=azurestorageaccountname=$STORAGE_ACCOUNT_NAME --from-literal=azurestorageaccountkey=$STORAGE_KEY
+  volumes:
+    - name: files-public
+      azureFile:
+        secretName: drupal-storage
+        shareName: drupal-public
+
+  volumeMounts:
+    - name: files-public
+      mountPath: /var/www/html/sites/default/files
+
+mysql:
+  imageTag: 5.7.26
+
+  mysqlPassword: SUPERsecureMYSQLpassword
+  mysqlRootPassword: SUPERsecureMYSQLrootPASSWORD
+
+  persistence:
+    enabled: true
+
+# Files: object storage
+#
+# Use Minio for object storage by default.
+# You can use any S3 compatible object storage.
+# Also:
+#   - minio
+#   - s3
+#   - none
+files:
+  provider: none
+
+##
+## MINIO
+##
+minio:
+  enabled: false

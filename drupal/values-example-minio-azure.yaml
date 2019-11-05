@@ -1,24 +1,28 @@
 drupal:
-  tag: latest
+  ## Site configuration
+  ##
+  profile: wxt
+  siteEmail: admin@example.com
+  siteName: Drupal Install Profile (WxT)
+
+  # Default WxT Library theme (only used if install and/or reconfigure are enabled)
+  # Common options include: theme-wet-boew, theme-gcweb-legacy, theme-gcweb, ...
+  wxtTheme: theme-gcweb
+
+  # Install Drupal automatically
+  install: true
+
+  # Run migrations for default content
+  migrate: true
+
+  # Reconfigure on upgrade
+  reconfigure: true
 
   # php-fpm healthcheck
   # Requires https://github.com/renatomefi/php-fpm-healthcheck in the container.
   # (note: official images do not contain this feature yet)
   healthcheck:
     enabled: true
-
-  # Switch to canada.ca theme
-  # Common options include: theme-wet-boew, theme-gcweb-legacy
-  wxtTheme: theme-gcweb
-
-  # Run the site install
-  install: true
-
-  # Run the default migrations
-  migrate: true
-
-  # Reconfigure the site
-  reconfigure: true
 
 nginx:
   # Set your cluster's DNS resolution service here
@@ -29,15 +33,30 @@ mysql:
 
   mysqlPassword: SUPERsecureMYSQLpassword
   mysqlRootPassword: SUPERsecureMYSQLrootPASSWORD
+
   persistence:
     enabled: true
 
+# Files: object storage
+#
+# Use Minio for object storage by default.
+# You can use any S3 compatible object storage.
+# Also:
+#   - minio
+#   - s3
+#   - none
+files:
+  provider: minio
+
 ##
-## MINIO-ONLY EXAMPLE
+## MINIO
 ##
 minio:
+  enabled: true
+
   persistence:
     enabled: true
+
   defaultBucket:
     enabled: true
 

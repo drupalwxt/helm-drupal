@@ -20,6 +20,7 @@ drupal:
   ## ref: https://hub.docker.com/drupalwxt/site-wxt/tags/
   ##
   image: drupalwxt/site-wxt
+
   ## Note that by default we use appVersion to get image tag
   #tag: 3.0.1
 
@@ -52,6 +53,7 @@ drupal:
   siteName: Drupal Install Profile (WxT)
 
   # Default WxT Library theme (only used if install and/or reconfigure are enabled)
+  # Common options include: theme-wet-boew, theme-gcweb-legacy, theme-gcweb, ...
   # wxtTheme: theme-wet-boew
 
   ## Version of the application
@@ -157,6 +159,7 @@ nginx:
 
   replicas: 1
 
+  # Set your cluster's DNS resolution service here
   resolver: 10.0.0.10
 
   serviceType: ClusterIP
@@ -245,7 +248,9 @@ mysql:
 # Use Minio for object storage by default.
 # You can use any S3 compatible object storage.
 # Also:
+#   - minio
 #   - s3
+#   - none
 files:
   provider: minio
   cname:
@@ -270,6 +275,7 @@ s3:
 # you still need to set the defaultBucket.name to the desired bucket.
 minio:
   enabled: true
+
   ## set kubernetes cluster domain where minio is running
   ##
   clusterDomain: cluster.local
@@ -286,7 +292,7 @@ minio:
   existingSecret: ""
   accessKey: "AKIAIOSFODNN7EXAMPLE"
   secretKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-  replicas: 4
+  replicas: 1
 
   ## Enable persistence using Persistent Volume Claims
   ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/

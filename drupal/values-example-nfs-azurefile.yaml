@@ -59,7 +59,7 @@ nginx:
       mountPath: /var/www/html/sites/default/files
 
 mysql:
-  imageTag: 5.7.26
+  imageTag: 5.7.28
 
   mysqlPassword: SUPERsecureMYSQLpassword
   mysqlRootPassword: SUPERsecureMYSQLrootPASSWORD

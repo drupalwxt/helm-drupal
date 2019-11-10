@@ -29,7 +29,7 @@ nginx:
   resolver: 10.0.0.10
 
 mysql:
-  imageTag: 5.7.26
+  imageTag: 5.7.28
 
   mysqlPassword: SUPERsecureMYSQLpassword
   mysqlRootPassword: SUPERsecureMYSQLrootPASSWORD

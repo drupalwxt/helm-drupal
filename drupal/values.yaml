@@ -214,7 +214,7 @@ osb:
 
 mysql:
   enabled: true
-  imageTag: 5.7.26
+  imageTag: 5.7.28
 
   ## Specify password for root user
   ##
@@ -241,7 +241,10 @@ mysql:
    mysql.cnf: |-
      [mysqld]
      max_allowed_packet = 256M
-
+     innodb_buffer_pool_size = 4096M
+     innodb_buffer_pool_instances = 4
+     table_definition_cache = 4096
+     table_open_cache = 8192
 
 # Files: object storage
 #

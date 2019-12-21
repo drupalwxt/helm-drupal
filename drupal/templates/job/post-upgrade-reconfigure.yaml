@@ -52,9 +52,9 @@ spec:
               drush -y cache:rebuild
               drush -y update:lightning
 
-              # Run entity updates
+              # WxT updates
               drush -y cache:rebuild
-              drush -y entity:updates
+              drush -y update:lightning
 
               # Configure s3fs
               {{- if not (eq .Values.files.provider "none") }}

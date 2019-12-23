@@ -5,9 +5,29 @@ drupal:
   siteEmail: admin@example.com
   siteName: Drupal Install Profile (WxT)
 
-  # Default WxT Library theme (only used if install and/or reconfigure are enabled)
-  # Common options include: theme-wet-boew, theme-gcweb-legacy, theme-gcweb, ...
+  ## User of the application
+  ##
+  username: admin
+
+  ## Application password
+  ##
+  ## password: password
+
+  # php-fpm healthcheck
+  # Requires https://github.com/renatomefi/php-fpm-healthcheck in the container.
+  # (note: official images do not contain this feature yet)
+  healthcheck:
+    enabled: false
+
+  # Switch to canada.ca theme (only used if install and/or reconfigure are enabled)
+  # Common options include: theme-wet-boew, theme-gcweb-legacy
   wxtTheme: theme-gcweb
+
+  ## Extra settings.php settings
+  ##
+  extraSettings: ''
+  #  |-
+  #  $settings['trusted_host_patterns'] = ['^example\.com$'];
 
   # Install Drupal automatically
   install: true
@@ -36,6 +56,8 @@ mysql:
 
   persistence:
     enabled: true
+    storageClass: managed-premium
+    size: 256Gi
 
 # Files: object storage
 #

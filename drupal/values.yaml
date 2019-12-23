@@ -89,7 +89,7 @@ drupal:
   # php-fpm healthcheck
   # Requires https://github.com/renatomefi/php-fpm-healthcheck in the container.
   healthcheck:
-    enabled: false
+    enabled: true
 
   serviceType: ClusterIP
 
@@ -234,7 +234,8 @@ mysql:
   ## Persist data to a persistent volume
   persistence:
     enabled: true
-    size: 8Gi
+    storageClass: managed-premium
+    size: 128Gi
 
   # Custom mysql configuration files used to override default mysql settings
   configurationFiles:
@@ -245,6 +246,7 @@ mysql:
      innodb_buffer_pool_instances = 4
      table_definition_cache = 4096
      table_open_cache = 8192
+     innodb_flush_log_at_trx_commit=2
 
 # Files: object storage
 #

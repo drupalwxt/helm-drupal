@@ -5,9 +5,29 @@ drupal:
   siteEmail: admin@example.com
   siteName: Drupal Install Profile (WxT)
 
-  # Default WxT Library theme (only used if install and/or reconfigure are enabled)
-  # Common options include: theme-wet-boew, theme-gcweb-legacy, theme-gcweb, ...
+  ## User of the application
+  ##
+  username: admin
+
+  ## Application password
+  ##
+  ## password: password
+
+  # php-fpm healthcheck
+  # Requires https://github.com/renatomefi/php-fpm-healthcheck in the container.
+  # (note: official images do not contain this feature yet)
+  healthcheck:
+    enabled: true
+
+  # Switch to canada.ca theme (only used if install and/or reconfigure are enabled)
+  # Common options include: theme-wet-boew, theme-gcweb-legacy
   wxtTheme: theme-gcweb
+
+  ## Extra settings.php settings
+  ##
+  extraSettings: ''
+  #  |-
+  #  $settings['trusted_host_patterns'] = ['^example\.com$'];
 
   # Install Drupal automatically
   install: true
@@ -27,6 +47,7 @@ drupal:
   # Allows custom /var/www/html/sites/default/files and /var/www/private mounts
   disableDefaultFilesMount: true
 
+  # kubectl create secret generic drupal-storage --from-literal=azurestorageaccountname=$STORAGE_ACCOUNT_NAME --from-literal=azurestorageaccountkey=$STORAGE_KEY -n drupal
   volumes:
     - name: files-public
       azureFile:
@@ -47,7 +68,7 @@ nginx:
   # Set your cluster's DNS resolution service here
   resolver: 10.0.0.10
 
-  # kubectl create secret generic drupal-storage --from-literal=azurestorageaccountname=$STORAGE_ACCOUNT_NAME --from-literal=azurestorageaccountkey=$STORAGE_KEY
+  # kubectl create secret generic drupal-storage --from-literal=azurestorageaccountname=$STORAGE_ACCOUNT_NAME --from-literal=azurestorageaccountkey=$STORAGE_KEY -n drupal
   volumes:
     - name: files-public
       azureFile:
@@ -66,6 +87,8 @@ mysql:
 
   persistence:
     enabled: true
+    storageClass: managed-premium
+    size: 256Gi
 
 # Files: object storage
 #

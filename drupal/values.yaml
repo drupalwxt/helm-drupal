@@ -212,6 +212,8 @@ osb:
       endIPAddress: "255.255.255.255"
       name: "AllowAll"
 
+## Configuration values for the MySQL dependency sub-chart
+## ref: https://github.com/kubernetes/charts/blob/master/stable/mysql/README.md
 mysql:
   enabled: true
   imageTag: 5.7.28
@@ -247,6 +249,32 @@ mysql:
      table_definition_cache = 4096
      table_open_cache = 8192
      innodb_flush_log_at_trx_commit=2
+
+## Configuration values for the PostgreSQL dependency sub-chart
+## ref: https://github.com/kubernetes/charts/blob/master/stable/postgresql/README.md
+postgresql:
+  enabled: false
+  image:
+    tag: 11.6.0-debian-9-r0
+  postgresqlUsername: wxt
+  postgresqlPassword: ""
+  postgresqlDatabase: wxt
+  postgresqlConfiguration:
+    listenAddresses: "'*'"
+    maxConnections: "1500"
+  persistence:
+    enabled: true
+    size: 50Gi
+  service:
+    port: 5432
+  resources: {}
+  #  requests:
+  #    memory: "512Mi"
+  #    cpu: "100m"
+  #  limits:
+  #    memory: "1Gi"
+  #    cpu: "500m"
+  nodeSelector: {}
 
 # Files: object storage
 #

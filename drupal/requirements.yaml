@@ -7,3 +7,7 @@ dependencies:
     version: 2.4.14
     repository: https://kubernetes-charts.storage.googleapis.com
     condition: minio.enabled
+  - name: postgresql
+    version: 7.0.1
+    repository: https://kubernetes-charts.storage.googleapis.com/
+    condition: postgresql.enabled

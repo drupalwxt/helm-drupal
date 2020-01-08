@@ -5,5 +5,8 @@ dependencies:
 - name: minio
   repository: https://kubernetes-charts.storage.googleapis.com
   version: 2.4.14
-digest: sha256:7dd5cef06c4f5887fa31803e1d219a322621bdfd36da4c82de49ba6d7d632c76
-generated: 2019-10-14T19:00:57.887939-04:00
+- name: postgresql
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  version: 7.0.1
+digest: sha256:da1fc46261c82a93a61a00b0d2311137213509f447a4b6315fcb5c86f182da10
+generated: 2020-01-08T18:10:49.308843-05:00

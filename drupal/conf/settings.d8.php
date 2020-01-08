@@ -109,6 +109,17 @@ $databases['default']['default'] = array (
   'namespace' => 'Drupal\Core\Database\Driver\mysql',
   'driver' => 'mysql',
 );
+{{- else if .Values.postgresql.enabled }}
+$databases['default']['default'] = array (
+  'database' => {{ .Values.postgresql.postgresqlDatabase | quote }},
+  'username' => {{ .Values.postgresql.postgresqlUsername | quote }},
+  'password' => getenv('POSTGRES_PASSWORD') ?: '',
+  'host' => '{{ .Release.Name }}-postgresql',
+  'port' => '5432',
+  'prefix' => '',
+  'namespace' => 'Drupal\Core\Database\Driver\pgsql',
+  'driver' => 'pgsql',
+);
 {{- end }}
 
 /**

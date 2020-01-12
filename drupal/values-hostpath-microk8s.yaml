@@ -1,0 +1,127 @@
+# When installing microk8s you need to currently install channel 1.15 
+# override file for use with microk8s
+# assumes that /mnt/drupal/drupal-public and /mnt/drupal/drupal-private directories exist with correct permissions
+# drupal folder should have the microk8s group with rw
+#
+# For example:
+#   sudo chgrp -R /mnt/drupal microk8s
+#   sudo chmod -R g+rw /mnt/drupal
+#
+# The above should work but microk8s might require
+#
+# sudo chmod -R a+rw /mnt/drupal
+# 
+# microk8s will need the following addons enabled: dns storage <helm>
+# Example:
+#   microk8s.enable dns storage helm
+
+drupal:
+  ## Site configuration
+  ##
+  profile: wxt
+  siteEmail: admin@example.com
+  siteName: Drupal Install Profile (WxT)
+
+  ## User of the application
+  ##
+  username: admin
+
+  ## Application password
+  ##
+  ## password: password
+
+  # php-fpm healthcheck
+  # Requires https://github.com/renatomefi/php-fpm-healthcheck in the container.
+  # (note: official images do not contain this feature yet)
+  healthcheck:
+    enabled: true
+
+  # Switch to canada.ca theme (only used if install and/or reconfigure are enabled)
+  # Common options include: theme-wet-boew, theme-gcweb-legacy
+  wxtTheme: theme-gcweb
+
+  ## Extra settings.php settings
+  ##
+  extraSettings: ''
+  #  |-
+  #  $settings['trusted_host_patterns'] = ['^example\.com$'];
+
+  # Install Drupal automatically
+  install: true
+
+  # Run migrations for default content
+  migrate: true
+
+  # Reconfigure on upgrade
+  reconfigure: true
+
+  # php-fpm healthcheck
+  # Requires https://github.com/renatomefi/php-fpm-healthcheck in the container.
+  # (note: official images do not contain this feature yet)
+  healthcheck:
+    enabled: true
+
+  # Allows custom /var/www/html/sites/default/files and /var/www/private mounts
+  disableDefaultFilesMount: true
+
+  
+  volumes:
+    - name: files-public
+      hostPath:
+        path: /mnt/drupal/drupal-public 
+    - name: files-private
+      hostPath:
+        path: /mnt/drupal/drupal-private
+
+  volumeMounts:
+    - name: files-public
+      mountPath: /var/www/html/sites/default/files
+    - name: files-private
+      mountPath: /var/www/private
+
+nginx:
+  # Set your cluster's DNS resolution service here
+  # default for microk8s is set, but may vary depending on installation.
+  # Run the following to get the IP
+  # kubectl get pod -l k8s-app='kube-dns' --namespace kube-system -o wide or
+  # microk8s.kubectl get pod -l k8s-app='kube-dns' --namespace kube-system -o wide
+  resolver: 10.1.1.4
+  
+
+  
+  volumes:
+    - name: files-public
+      hostPath:
+        path: /mnt/drupal/drupal-public
+
+  volumeMounts:
+    - name: files-public
+      mountPath: /var/www/html/sites/default/files
+
+mysql:
+  imageTag: 5.7.28
+
+  mysqlPassword: SUPERsecureMYSQLpassword
+  mysqlRootPassword: SUPERsecureMYSQLrootPASSWORD
+
+  persistence:
+    enabled: true
+    storageClass: microk8s-hostpath
+    size: 2Gi
+
+# Files: object storage
+#
+# Use Minio for object storage by default.
+# You can use any S3 compatible object storage.
+# Also:
+#   - minio
+#   - s3
+#   - none
+files:
+  provider: none
+
+##
+## MINIO
+##
+minio:
+  enabled: false

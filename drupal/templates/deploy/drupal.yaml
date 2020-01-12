@@ -152,8 +152,8 @@ spec:
       - name: ssmtp
         secret:
           secretName: {{ include "drupal.fullname" . }}-ssmtp
-        items:
-          - key: ssmtp.conf
+          items:
+            - key: ssmtp.conf
       - name: twig-cache
         emptyDir: {}
       - name: config-sync

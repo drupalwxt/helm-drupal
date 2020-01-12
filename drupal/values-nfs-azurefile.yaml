@@ -64,6 +64,18 @@ drupal:
     - name: files-private
       mountPath: /var/www/private
 
+  initContainers:
+    # Pre-create the media-icons folder
+    - name: init-media-icons-folder
+      image: alpine:3.10
+      command:
+        - mkdir
+        - -p
+        - /files/media-icons/generic
+      volumeMounts:
+        - name: files-public
+          mountPath: /files
+
 nginx:
   # Set your cluster's DNS resolution service here
   resolver: 10.0.0.10

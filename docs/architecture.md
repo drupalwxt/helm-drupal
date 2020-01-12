@@ -8,18 +8,24 @@ This document represents a high-level overview of how Drupal should be implement
 
 A key mandate is to follow the Open Source Directive as given by the Treasury Board Secretariat (C.2.3.8) which states where possible, use open standards and open source software first. Additionally, where possible expose all functionality as services (RESTFul) and leverage microservices via a containerized approach (C2.3.10).
 
-Key Criteria
+### Key Criteria
 
 - Ability to dynamically scale workloads based on custom metrics (CPU / memory)
 - Blue-Green, and Canary style deployments
 - Easily migrate workloads to different cloud providers or on-premise environments
 - Design networks to be compliant with ITSG-22
-- Follow the CIS Benchmarks for both Docker + Kubernetes
-- Facilitate a managed service model whereby a new deployment is done via a single YAML template
+- Follow the CIS Benchmarks for both Containers + Kubernetes
+- Facilitate a managed service model whereby a new department can be easily onboard
 
-For your convenience and to show we are actively interested in helping we have created a Drupal 8 &quot;Canada&quot; distribution where we provide all of the repository links at the end of this document. Should you wish to move this work to the canada-ca GitHub repository we will happily assist in moving it over and ensuring all the integration still works correctly.
+Provided below is the Terraform (infrastructure as code) necessarily to install the Azure Kubernetes Service Infrastructure as well as configure with optional platform components (RBAC, Service Mesh, Policies, etc).
 
-Finally, it should be mentioned we can easily spin up a site in either our production / innovation Kubernetes cluster should you wish to see how everything is set up in a live environment. We can also provide a demo and any additional information you may need about the infrastructure.
+* Terraform for Kubernetes Infrastructure: [https://github.com/canada-ca-terraform-modules/terraform-kubernetes-aks](https://github.com/canada-ca-terraform-modules/terraform-kubernetes-aks)
+* Terraform for Kubernetes Platform: [https://github.com/canada-ca-terraform-modules/terraform-kubernetes-aks-platform](https://github.com/canada-ca-terraform-modules/terraform-kubernetes-aks-platform)
+
+To highlight that this solution can run on any cloud service provider we are currently working on support for the IBM Kubernetes Services.
+
+* Terraform for Kubernetes Infrastructure: [https://github.com/canada-ca-terraform-modules/terraform-kubernetes-iks](https://github.com/canada-ca-terraform-modules/terraform-kubernetes-iks)
+* Terraform for Kubernetes Platform: [https://github.com/canada-ca-terraform-modules/terraform-kubernetes-iks-platform](https://github.com/canada-ca-terraform-modules/terraform-kubernetes-iks-platform)
 
 ## **Components**
 
@@ -29,16 +35,11 @@ The components are individually described below. The components perform the same
 
 **Recommendation:** [Kubernetes](https://kubernetes.io/)
 
-Without going to in-depth Kubernetes is the defacto winner of the orchestration wars and is supported by all cloud vendors including all offering a managed service and also works on both private / public infrastructure. The fact that most if not all cloud companies are centralizing around this solution also was a key decision point (Oracle, IBM, Pivotal, RedHat, VmWare, etc) along with the need to reduce vendor lock-in. Finally, the ability to move our workloads across cloud providers or even supporting a federated cluster across cloud providers for reliability was another key factor in the decision making.
+Kubernetes is quickly becoming the lingua franca of the cloud and is supported by all cloud vendors including all offering a managed service and also works on both private / public infrastructure. The fact that most if not all cloud companies are centralizing around this solution also was a key decision point (Oracle, IBM, Pivotal, RedHat, VmWare, etc) along with the need to reduce vendor lock-in. Finally, the ability to move our workloads across cloud providers or even supporting a federated cluster across cloud providers for reliability was another key factor in the decision making.
 
-The whole Drupal application stack can easily be installed in a highly distributed fashion in mere minutes using our helm chart which facilitates a managed service workflow (rolling updates, cronjobs, health checks, auto-scaling, etc).
+The whole Drupal application stack can easily be installed in a distributed fashion in minutes using our helm chart which facilitates a managed service workflow (rolling updates, cronjobs, health checks, auto-scaling, etc).
 
 * Helm chart: [https://github.com/drupalwxt/helm-drupal](https://github.com/drupalwxt/helm-drupal)
-
-We also provide the Terraform necessarily to install the Azure Kubernetes Service Infrastructure as well as configure with optional platform components (RBAC, Service Mesh, Policies, etc).
-
-* Terraform for Kubernetes Infrastructure: [https://github.com/canada-ca-terraform-modules/terraform-kubernetes-aks](https://github.com/canada-ca-terraform-modules/terraform-kubernetes-aks)
-* Terraform for Kubernetes Platform: [https://github.com/canada-ca-terraform-modules/terraform-kubernetes-aks-platform](https://github.com/canada-ca-terraform-modules/terraform-kubernetes-aks-platform)
 
 ## Ingress controller
 

@@ -87,7 +87,18 @@
 * @endcode
 */
 
-{{- if .Values.osb.enabled }}
+{{- if .Values.external.enabled }}
+$databases['default']['default'] = array (
+  'database' => {{ .Values.external.database | quote }},
+  'username' => {{ .Values.external.user | quote }},
+  'password' => getenv('EXTERNAL_PASSWORD') ?: '',
+  'host' => {{ .Values.external.host | quote }},
+  'port' => {{ .Values.external.port }},
+  'prefix' => '',
+  'namespace' => 'Drupal\Core\Database\Driver\{{ .Values.external.driver }}',
+  'driver' => '{{ .Values.external.driver }}',
+);
+{{- else if .Values.osb.enabled }}
 $databases['default']['default'] = array (
   'database' => getenv('OSB_DATABASE') ?: '',
   'username' => getenv('OSB_USERNAME') ?: '',

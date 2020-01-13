@@ -195,7 +195,21 @@ nginx:
     enabled: true
     fsGroup: 33
 
+# Specify an external database
+# Useful for managed offerings from your Cloud Provider
+external:
+  enabled: false
+  # Drupal DB driver
+  driver: mysql
+  port: 3306
+  host: mysql.example.org
+  # Credentials
+  database: wxt
+  user: wxt
+  password: password
+
 # Use a managed instance from the Open Service Broker
+# Due to limitations with provider we don't recommend this
 # (example here is for Azure)
 osb:
   enabled: false

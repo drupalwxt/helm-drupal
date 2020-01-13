@@ -134,6 +134,13 @@ spec:
               drush -y migrate:import --group gcweb --tag 'Menu'
               {{- end }}
         env:
+{{- if .Values.external.enabled }}
+        - name: EXTERNAL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "drupal.fullname" . }}
+              key: databasePassword
+{{- end }}
 {{- if .Values.osb.enabled }}
         - name: OSB_HOST
           valueFrom:

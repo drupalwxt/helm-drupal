@@ -139,6 +139,13 @@ spec:
               drush -y state:set system.maintenance_mode FALSE
               {{- end }}
         env:
+{{- if .Values.external.enabled }}
+        - name: EXTERNAL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "drupal.fullname" . }}
+              key: databasePassword
+{{- end }}
 {{- if .Values.osb.enabled }}
         - name: OSB_HOST
           valueFrom:

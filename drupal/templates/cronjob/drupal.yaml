@@ -42,7 +42,13 @@ spec:
                 # Run cron
                 drush -y core-cron
             env:
-{{- if .Values.osb.enabled }}
+{{- if .Values.external.enabled }}
+            - name: EXTERNAL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "drupal.fullname" . }}
+                  key: databasePassword
+{{- else if .Values.osb.enabled }}
             - name: OSB_HOST
               valueFrom:
                 secretKeyRef:

@@ -147,8 +147,7 @@ spec:
             secretKeyRef:
               name: {{ template "drupal.fullname" . }}
               key: databasePassword
-{{- end }}
-{{- if .Values.osb.enabled }}
+{{- else if .Values.osb.enabled }}
         - name: OSB_HOST
           valueFrom:
             secretKeyRef:

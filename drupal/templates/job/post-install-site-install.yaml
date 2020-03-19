@@ -49,7 +49,7 @@ spec:
                 --sites-subdir=default \
                 {{- if .Values.mysql.enabled }}
                 --db-url="mysql://{{ .Values.mysql.mysqlUser }}:$MYSQL_PASSWORD@{{ .Release.Name }}-mysql:{{ .Values.mysql.service.port }}/{{ .Values.mysql.mysqlDatabase }}" \
-                {{ end }}
+                {{- end }}
                 --account-name={{ .Values.drupal.username }} \
                 --account-pass=$DRUPAL_ADMIN_PASSWORD \
                 --site-mail={{ .Values.drupal.siteEmail | quote }} \

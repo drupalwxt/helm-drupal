@@ -137,14 +137,15 @@ spec:
               drush -y migrate:import --group gcweb --tag 'Core'
               drush -y migrate:import --group gcweb --tag 'Menu'
 
+              # Disable maintenance mode
+              drush -y state:set system.maintenance_mode FALSE
+              {{- end }}
+
               # Extra installation scripts
               {{- if .Values.drupal.extraInstallScripts }}
               {{- toYaml .Values.drupal.extraInstallScripts | nindent 14}}
               {{- end }}
 
-              # Disable maintenance mode
-              drush -y state:set system.maintenance_mode FALSE
-              {{- end }}
         env:
 {{- if .Values.external.enabled }}
         - name: EXTERNAL_PASSWORD

@@ -29,6 +29,13 @@ drupal:
   #  |-
   #  $settings['trusted_host_patterns'] = ['^example\.com$'];
 
+  ## Extra CLI scripts
+  ##
+  extraInstallScripts: ''
+  #  |-
+  #  drush config-set system.performance js.preprocess 0 -y;
+  #  drush config-set system.performance css.preprocess 0 -y;
+
   # Install Drupal automatically
   install: true
 

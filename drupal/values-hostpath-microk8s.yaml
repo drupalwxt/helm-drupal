@@ -1,4 +1,4 @@
-# When installing microk8s you need to currently install channel 1.15 
+# When installing microk8s you need to currently install channel 1.15
 # override file for use with microk8s
 # assumes that /mnt/drupal/drupal-public and /mnt/drupal/drupal-private directories exist with correct permissions
 # drupal folder should have the microk8s group with rw
@@ -10,7 +10,7 @@
 # The above should work but microk8s might require
 #
 # sudo chmod -R a+rw /mnt/drupal
-# 
+#
 # microk8s will need the following addons enabled: dns storage <helm>
 # Example:
 #   microk8s.enable dns storage helm
@@ -46,6 +46,13 @@ drupal:
   #  |-
   #  $settings['trusted_host_patterns'] = ['^example\.com$'];
 
+  ## Extra CLI scripts
+  ##
+  extraInstallScripts: ''
+  #  |-
+  #  drush config-set system.performance js.preprocess 0 -y;
+  #  drush config-set system.performance css.preprocess 0 -y;
+
   # Install Drupal automatically
   install: true
 
@@ -64,11 +71,11 @@ drupal:
   # Allows custom /var/www/html/sites/default/files and /var/www/private mounts
   disableDefaultFilesMount: true
 
-  
+
   volumes:
     - name: files-public
       hostPath:
-        path: /mnt/drupal/drupal-public 
+        path: /mnt/drupal/drupal-public
     - name: files-private
       hostPath:
         path: /mnt/drupal/drupal-private
@@ -86,9 +93,9 @@ nginx:
   # kubectl get pod -l k8s-app='kube-dns' --namespace kube-system -o wide or
   # microk8s.kubectl get pod -l k8s-app='kube-dns' --namespace kube-system -o wide
   resolver: 10.1.1.4
-  
 
-  
+
+
   volumes:
     - name: files-public
       hostPath:

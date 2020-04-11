@@ -1,13 +1,13 @@
 dependencies:
   - name: mysql
-    version: 0.19.0
+    version: 1.6.2
     repository: https://kubernetes-charts.storage.googleapis.com
     condition: mysql.enabled
   - name: minio
-    version: 2.4.14
+    version: 5.0.10
     repository: https://kubernetes-charts.storage.googleapis.com
     condition: minio.enabled
   - name: postgresql
-    version: 7.0.1
+    version: 8.6.4
     repository: https://kubernetes-charts.storage.googleapis.com/
     condition: postgresql.enabled

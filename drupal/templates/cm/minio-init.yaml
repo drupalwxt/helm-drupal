@@ -51,5 +51,5 @@ data:
     connectToMinio $scheme
 
     # Configure public files
-    mc policy download myminio/{{ .Values.minio.defaultBucket.name }}/{{ .Values.files.folders.public }}
+    mc policy set download myminio/{{ .Values.minio.defaultBucket.name }}/{{ .Values.files.folders.public }}
 {{- end }}

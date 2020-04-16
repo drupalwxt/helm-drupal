@@ -9,5 +9,5 @@ dependencies:
     condition: minio.enabled
   - name: postgresql
     version: 8.6.4
-    repository: https://kubernetes-charts.storage.googleapis.com/
+    repository: https://kubernetes-charts.storage.googleapis.com
     condition: postgresql.enabled

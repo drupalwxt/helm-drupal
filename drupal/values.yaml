@@ -167,7 +167,7 @@ nginx:
   replicas: 1
 
   # Set your cluster's DNS resolution service here
-  resolver: 10.0.0.10
+  resolver: kube-dns.kube-system.svc.cluster.local
 
   serviceType: ClusterIP
 

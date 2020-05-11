@@ -27,8 +27,8 @@ matrix:
   include:
     - language: generic
       env:
-        - KUBECTL_VERSION=v1.14.1
-        - HELM_VERSION=v2.13.1
+        - KUBECTL_VERSION=v1.18.2
+        - HELM_VERSION=v3.1.1
         - TARGET_BR=gh-pages
         - REPO_DIR=/home/travis/build/drupalwxt/helm-drupal
         - GH_URL=https://drupalwxt.github.io/helm-drupal
@@ -36,12 +36,12 @@ matrix:
       install:
         - wget https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl -O /tmp/kubectl
         - chmod +x /tmp/kubectl
-        - wget http://storage.googleapis.com/kubernetes-helm/helm-${HELM_VERSION}-linux-amd64.tar.gz -O /tmp/helm.tar.gz
+        - wget https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz -O /tmp/helm.tar.gz
         - tar xzf /tmp/helm.tar.gz -C /tmp --strip-components=1
         - chmod +x /tmp/helm
         - export PATH=$PATH:/tmp
       before_script:
-        - helm init --client-only
+        - helm init
         - helm repo add stable https://kubernetes-charts.storage.googleapis.com
         - |
           for chart in $(find . -name 'requirements.yaml'); do

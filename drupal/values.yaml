@@ -22,7 +22,7 @@ drupal:
   image: drupalwxt/site-wxt
 
   ## Note that by default we use appVersion to get image tag
-  #tag: 3.0.10
+  # tag: 3.0.10
 
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -150,7 +150,7 @@ nginx:
   ## ref: https://hub.docker.com/drupalwxt/site-wxt/tags/
   image: drupalwxt/site-wxt
   ## Note that by default we use appVersion to get image tag
-  #tag: 3.0.10-nginx
+  # tag: 3.0.10-nginx
 
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -262,14 +262,14 @@ mysql:
 
   # Custom mysql configuration files used to override default mysql settings
   configurationFiles:
-   mysql.cnf: |-
-     [mysqld]
-     max_allowed_packet = 256M
-     innodb_buffer_pool_size = 4096M
-     innodb_buffer_pool_instances = 4
-     table_definition_cache = 4096
-     table_open_cache = 8192
-     innodb_flush_log_at_trx_commit=2
+    mysql.cnf: |-
+      [mysqld]
+      max_allowed_packet = 256M
+      innodb_buffer_pool_size = 4096M
+      innodb_buffer_pool_instances = 4
+      table_definition_cache = 4096
+      table_open_cache = 8192
+      innodb_flush_log_at_trx_commit=2
 
 ## Configuration values for the PostgreSQL dependency sub-chart
 ## ref: https://github.com/kubernetes/charts/blob/master/stable/postgresql/README.md

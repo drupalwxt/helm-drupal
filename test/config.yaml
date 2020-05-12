@@ -1,0 +1,10 @@
+remote: github
+chart-dirs:
+  - .
+chart-repos:
+  - incubator=https://kubernetes-charts-incubator.storage.googleapis.com/
+  - istio=https://storage.googleapis.com/istio-release/releases/1.1.8/charts
+check-version-increment: true
+validate-maintainers: false
+excluded-charts:
+  - commmon

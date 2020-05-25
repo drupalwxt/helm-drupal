@@ -54,7 +54,7 @@ spec:
 
               # WxT updates
               drush -y cache:rebuild
-              drush -y update:lightning
+              drush -y update:wxt
 
               # Configure s3fs
               {{- if not (eq .Values.files.provider "none") }}

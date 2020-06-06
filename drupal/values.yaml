@@ -282,10 +282,20 @@ postgresql:
   postgresqlDatabase: wxt
   postgresqlConfiguration:
     listenAddresses: "'*'"
-    maxConnections: "1500"
+    maxConnections: "200"
+    sharedBuffers: 512MB
+    workMem: 2048MB
+    effectiveCacheSize: 512MB
+    maintenanceWorkMem: 32MB
+    minWalSize: 512MB
+    maxWalSize: 512MB
+    walBuffers: 8048kB
+    byteaOutput: "'escape'"
   persistence:
     enabled: true
     size: 50Gi
+  volumePermissions:
+    enabled: true
   service:
     port: 5432
   resources: {}

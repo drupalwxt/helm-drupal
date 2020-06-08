@@ -36,9 +36,9 @@ spec:
                 # Errors should fail the job
                 set -e
 
-                # Wait for MySQL to be available
-                until drush sql:query 'SHOW TABLES;'; do echo Waiting for MySQL; sleep 3; done
-                echo MySQL available
+                # Wait for DB to be available
+                until drush sql:query 'SHOW TABLES;'; do echo Waiting for DB; sleep 3; done
+                echo DB available
 
                 # Check Drush status
                 drush status

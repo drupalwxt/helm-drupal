@@ -37,18 +37,55 @@ spec:
               # Errors should fail the job
               set -e
 
-              # Wait for MySQL to be available
-              until drush sql:query 'SHOW TABLES;'; do echo Waiting for MySQL; sleep 3; done
-              echo MySQL available
+              # Wait for DB to be available
+              until drush sql:query 'SHOW TABLES;'; do echo Waiting for DB; sleep 3; done
+              echo DB available
 
               # Check Drush status
               drush status
 
               # Run site install
+              {{- if .Values.drupal.restore.enabled }}
+
+              # Check to see if using specific backup else use latest CHECK IF NAME SAYS LATEST
+              {{- if eq .Values.drupal.restore.name "latest"}}
+              BACKUPNAME=$(ls -td -- /backup/* | head -n 1 | sed -e "s/\/backup\///")
+              {{- else }}
+              BACKUPNAME='{{ .Values.drupal.restore.name }}'
+              {{- end }}
+
+              gunzip -c /backup/$BACKUPNAME/db.sql.gz | drush sql-cli
+
+              # Errors from deleting should not fail the job
+              # which method does Zach want to use: set +e; set -e; or || true
+              set +e
+              find sites/default/files/ -type f -print0 | xargs -0 rm
+              find sites/default/files/ -mindepth 1 -type d -print0 | xargs -0 rmdir
+              find /var/www/private/ -type f -print0 | xargs -0 rm
+              find /var/www/private/ -mindepth 1 -type d -print0 | xargs -0 rmdir
+              set -e
+
+              tar -zxf /backup/$BACKUPNAME/files.tar.gz --directory sites/default/files --no-acls --no-xattrs -m --no-same-permissions --no-overwrite-dir
+              tar -zxf /backup/$BACKUPNAME/private.tar.gz --directory /var/www/private --no-acls --no-xattrs -m --no-same-permissions --no-overwrite-dir
+
+              # Run database updates
+              drush -y cache:rebuild
+              drush -y updatedb
+
+              # Lightning updates
+              drush -y cache:rebuild
+              drush -y update:lightning
+
+              # WxT updates
+              drush -y cache:rebuild
+              drush -y update:wxt
+              {{- else }}
               time drush site:install {{ .Values.drupal.profile }} \
                 --sites-subdir=default \
                 {{- if .Values.mysql.enabled }}
                 --db-url="mysql://{{ .Values.mysql.mysqlUser }}:$MYSQL_PASSWORD@{{ .Release.Name }}-mysql:{{ .Values.mysql.service.port }}/{{ .Values.mysql.mysqlDatabase }}" \
+                {{- else if .Values.postgresql.enabled }}
+                --db-url="pgsql://{{ .Values.postgresql.postgresqlUsername }}:$POSTGRES_PASSWORD@{{ .Release.Name }}-postgresql:{{ .Values.postgresql.service.port }}/{{ .Values.postgresql.postgresqlDatabase }}" \
                 {{- end }}
                 --account-name={{ .Values.drupal.username }} \
                 --account-pass=$DRUPAL_ADMIN_PASSWORD \
@@ -56,6 +93,7 @@ spec:
                 --site-name={{ .Values.drupal.siteName | quote }} \
                 install_configure_form.update_status_module='array(FALSE,FALSE)' \
                 --yes
+              {{- end }}
 
               {{- if not (eq .Values.files.provider "none") }}
               # Enable s3fs
@@ -187,6 +225,12 @@ spec:
               # was returning the wrong result.
               name: "{{ .Release.Name }}-mysql"
               key: mysql-password
+{{- else if .Values.postgresql.enabled }}
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Release.Name }}-postgresql"
+              key: postgresql-password
 {{- end }}
         - name: DRUPAL_ADMIN_PASSWORD
           valueFrom:
@@ -232,6 +276,10 @@ spec:
           mountPath: /cache/twig
         - name: config-sync
           mountPath: /config/sync
+{{- if .Values.drupal.restore.enabled }}
+        - name: backup
+          mountPath: /backup
+{{- end }}
 {{- if not .Values.drupal.disableDefaultFilesMount }}
         - name: files
           mountPath: /var/www/html/sites/default/files
@@ -258,6 +306,10 @@ spec:
         emptyDir: {}
       - name: config-sync
         emptyDir: {}
+{{- if .Values.drupal.restore.enabled }}
+      - name: backup
+{{ toYaml .Values.drupal.backup.volume | indent 8 }}
+{{- end }}
 {{- if .Values.drupal.persistence.enabled }}
       - name: files
         persistentVolumeClaim:

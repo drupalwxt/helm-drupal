@@ -78,6 +78,14 @@ drupal:
   # Install Drupal automatically
   install: true
 
+  # Restore Drupal automatically
+  restore:
+    enabled: false
+    name: #{RESTORE_NAME}
+    # CHANGE THIS! Otherwise restore won't complete.
+    volume: nil
+      # emptyDir: {}
+
   # Run migrations for default content
   migrate: false
 
@@ -92,6 +100,19 @@ drupal:
     # CronJob schedule (standard cron syntax)
     # Defaults to once an hour
     schedule: '0 * * * *'
+
+  # Configure the Drupal backup cron
+  backup:
+    # When enabled, a CronJob will run the job based on the schedule
+    enabled: false
+
+    # CronJob schedule (standard cron syntax)
+    # Defaults to midnight
+    schedule: '0 0 * * *'
+
+    # CHANGE THIS! Otherwise your backups will go away when the pod is gone.
+    volume: nil
+      # emptyDir: {}
 
   # php-fpm healthcheck
   # Requires https://github.com/renatomefi/php-fpm-healthcheck in the container.

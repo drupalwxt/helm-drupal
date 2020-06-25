@@ -1,0 +1,183 @@
+{{- if .Values.drupal.backup.enabled }}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "drupal.fullname" . }}-drupal-backup
+  labels:
+    app.kubernetes.io/name: {{ include "drupal.name" . }}
+    helm.sh/chart: {{ include "drupal.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  schedule: "{{ .Values.drupal.backup.schedule }}"
+  startingDeadlineSeconds: 100
+  concurrencyPolicy: Replace
+  successfulJobsHistoryLimit: 5
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: {{ include "drupal.name" . }}
+            helm.sh/chart: {{ include "drupal.chart" . }}
+            app.kubernetes.io/instance: {{ .Release.Name }}
+            app.kubernetes.io/managed-by: {{ .Release.Service }}
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: drush
+            image: "{{ .Values.drupal.image }}:{{ default .Chart.AppVersion .Values.drupal.tag }}"
+            imagePullPolicy: {{ default "" .Values.drupal.imagePullPolicy | quote }}
+            command:
+            - '/bin/sh'
+            - '-c'
+            - |
+                # Errors should fail the job
+                set -e
+
+                # Wait for DB to be available
+                until drush sql:query 'SHOW TABLES;'; do echo Waiting for DB; sleep 3; done
+                echo DB available
+
+                # Check Drush status
+                drush status
+
+                # Run cron
+                BACKUPNAME=$(date +%Y%m%d.%H%M%S)
+                mkdir -p /backup/$BACKUPNAME
+                drush -y sql-dump | gzip > /backup/$BACKUPNAME/db.sql.gz
+                tar czvf /backup/$BACKUPNAME/files.tar.gz --directory=sites/default/files .
+                tar czvf /backup/$BACKUPNAME/private.tar.gz --directory=/var/www/private .
+            env:
+{{- if .Values.external.enabled }}
+            - name: EXTERNAL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "drupal.fullname" . }}
+                  key: databasePassword
+{{- else if .Values.osb.enabled }}
+            - name: OSB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ include "drupal.fullname" . }}-mysql"
+                  key: host
+            - name: OSB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ include "drupal.fullname" . }}-mysql"
+                  key: port
+            - name: OSB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ include "drupal.fullname" . }}-mysql"
+                  key: database
+            - name: OSB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ include "drupal.fullname" . }}-mysql"
+                  key: username
+            - name: OSB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ include "drupal.fullname" . }}-mysql"
+                  key: password
+{{- else if .Values.mysql.enabled }}
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  # This is not ideal, but calling {{ include "mysql.secretName" . }}
+                  # was returning the wrong result.
+                  name: "{{ .Release.Name }}-mysql"
+                  key: mysql-password
+{{- end }}
+            - name: DRUPAL_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ include "drupal.fullname" . }}"
+                  key: password
+{{- if eq .Values.files.provider "minio" }}
+            - name: S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-minio"
+                  key: accesskey
+            - name: S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-minio"
+                  key: secretkey
+{{- else if eq .Values.files.provider "s3" }}
+            - name: S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-s3"
+                  key: accesskey
+            - name: S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-s3"
+                  key: secretkey
+{{- end }}
+{{- if .Values.extraVars }}
+{{ toYaml .Values.extraVars | indent 12 }}
+{{- end }}
+            volumeMounts:
+            - name: cm-drupal
+              mountPath: /var/www/html/sites/default/settings.php
+              subPath: settings.php
+              readOnly: true
+            - name: cm-drupal
+              mountPath: /var/www/html/sites/default/extra.settings.php
+              subPath: extra.settings.php
+              readOnly: true
+            - name: twig-cache
+              mountPath: /cache/twig
+            - name: config-sync
+              mountPath: /config/sync
+            - name: backup
+              mountPath: /backup
+{{- if not .Values.drupal.disableDefaultFilesMount }}
+            - name: files
+              mountPath: /var/www/html/sites/default/files
+              subPath: public
+            - name: files
+              mountPath: /var/www/private
+              subPath: private
+{{- end }}
+{{- if .Values.drupal.volumeMounts }}
+{{ toYaml .Values.drupal.volumeMounts | indent 12 }}
+{{- end }}
+{{- if .Values.drupal.imagePullSecrets }}
+          imagePullSecrets:
+{{ toYaml .Values.drupal.imagePullSecrets | indent 12 }}
+{{- end }}
+          # Allow non-root user to access PersistentVolume
+          securityContext:
+{{ toYaml .Values.drupal.securityContext | indent 12 }}
+          volumes:
+          - name: cm-drupal
+            configMap:
+              name: {{ include "drupal.fullname" . }}
+          - name: twig-cache
+            emptyDir: {}
+          - name: config-sync
+            emptyDir: {}
+          - name: backup
+{{- if .Values.drupal.backup.volume }}
+{{ toYaml .Values.drupal.backup.volume | indent 12 }}
+{{- else }}
+            emptyDir: {}
+{{- end }}
+{{- if .Values.drupal.persistence.enabled }}
+          - name: files
+            persistentVolumeClaim:
+              claimName: {{ template "drupal.fullname" . }}-drupal
+{{- else if not .Values.drupal.disableDefaultFilesMount }}
+          - name: files
+            emptyDir: {}
+{{- end }}
+{{- if .Values.drupal.volumes }}
+{{ toYaml .Values.drupal.volumes | indent 10 }}
+{{- end }}
+{{- end }}

@@ -3,7 +3,34 @@ entries:
   drupal:
   - apiVersion: v1
     appVersion: 3.0.12
-    created: "2020-06-19T18:53:44.989456691Z"
+    created: "2020-06-26T00:25:51.182024938Z"
+    description: Drupal 8 variant of the Web Experience Toolkit (WxT).
+    digest: 84e7cfa9b40c3aea6858c7423a7e52aa43062014906924e6d51a7452acf607df
+    engine: gotpl
+    home: http://www.drupal.org/project/wxt
+    icon: https://bitnami.com/assets/stacks/drupal/img/drupal-stack-220x234.png
+    keywords:
+    - drupal
+    - cms
+    - wxt
+    - http
+    - web
+    - application
+    - php
+    maintainers:
+    - email: william.hearn@canada.ca
+      name: sylus
+    - email: zachary.seguin@canada.ca
+      name: zachomedia
+    name: drupal
+    sources:
+    - https://github.com/drupalwxt/wxt
+    urls:
+    - https://drupalwxt.github.io/helm-drupal/drupal-0.3.2.tgz
+    version: 0.3.2
+  - apiVersion: v1
+    appVersion: 3.0.12
+    created: "2020-06-26T00:25:51.17591192Z"
     description: Drupal 8 variant of the Web Experience Toolkit (WxT).
     digest: 18ca965956e47ccf15675059f9862cac413724721d582dd5af8d76b36619abaa
     engine: gotpl
@@ -28,4 +55,4 @@ entries:
     urls:
     - https://drupalwxt.github.io/helm-drupal/drupal-0.3.1.tgz
     version: 0.3.1
-generated: "2020-06-19T18:53:44.983932193Z"
+generated: "2020-06-26T00:25:51.170408004Z"

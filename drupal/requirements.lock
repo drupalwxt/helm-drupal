@@ -8,5 +8,8 @@ dependencies:
 - name: postgresql
   repository: https://kubernetes-charts.storage.googleapis.com
   version: 8.6.4
-digest: sha256:c31fc76d4c248eb0b78b4b0142260382c9578f4da41df5c135ef5859a92ff529
-generated: 2020-05-12T00:16:53.434997-04:00
+- name: varnish
+  repository: https://statcan.github.io/charts
+  version: 0.0.2
+digest: sha256:ab5a5667b8e16a2ffe8c84638dbd8c3a9f7da3675b8f725f73f106e8ba27dde7
+generated: 2020-06-25T20:23:23.307378-04:00

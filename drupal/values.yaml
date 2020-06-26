@@ -368,3 +368,25 @@ minio:
   defaultBucket:
     enabled: true
     name: wxt
+
+## Configuration values for the Varnish dependency sub-chart
+## ref: https://github.com/StatCan/charts/blob/master/stable/varnish/README.md
+varnish:
+  enabled: false
+  varnishd:
+    image: varnish
+    tag: 6.4.0
+    imagePullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+  resources: {}
+  #  requests:
+  #    memory: "512Mi"
+  #    cpu: "100m"
+  #  limits:
+  #    memory: "1Gi"
+  #    cpu: "500m"
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}

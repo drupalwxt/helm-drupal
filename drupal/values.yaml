@@ -81,7 +81,7 @@ drupal:
   # Restore Drupal automatically
   restore:
     enabled: false
-    name: #{RESTORE_NAME}
+    name: latest
     # CHANGE THIS! Otherwise restore won't complete.
     volume: nil
       # emptyDir: {}

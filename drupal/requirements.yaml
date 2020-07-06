@@ -11,3 +11,7 @@ dependencies:
     version: 8.6.4
     repository: https://kubernetes-charts.storage.googleapis.com
     condition: postgresql.enabled
+  - name: varnish
+    version: 0.0.2
+    repository: https://statcan.github.io/charts
+    condition: varnish.enabled

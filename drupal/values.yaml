@@ -83,7 +83,7 @@ drupal:
     enabled: false
     name: latest
     # CHANGE THIS! Otherwise restore won't complete.
-    volume: nil
+    volume: {}
       # emptyDir: {}
 
   # Run migrations for default content
@@ -111,7 +111,7 @@ drupal:
     schedule: '0 0 * * *'
 
     # CHANGE THIS! Otherwise your backups will go away when the pod is gone.
-    volume: nil
+    volume: {}
       # emptyDir: {}
 
   # php-fpm healthcheck

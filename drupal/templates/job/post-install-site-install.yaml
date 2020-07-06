@@ -307,7 +307,7 @@ spec:
         emptyDir: {}
 {{- if .Values.drupal.restore.enabled }}
       - name: backup
-{{ toYaml .Values.drupal.backup.volume | indent 8 }}
+{{ toYaml .Values.drupal.restore.volume | indent 8 }}
 {{- end }}
 {{- if .Values.drupal.persistence.enabled }}
       - name: files

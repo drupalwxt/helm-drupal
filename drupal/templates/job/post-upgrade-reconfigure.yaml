@@ -133,6 +133,11 @@ spec:
               drush -y migrate:import --group gcweb --tag 'Core'
               drush -y migrate:import --group gcweb --tag 'Menu'
               {{- end }}
+
+              # Extra Upgrade scripts
+              {{- if .Values.drupal.extraUpgradeScripts }}
+              {{- toYaml .Values.drupal.extraUpgradeScripts | nindent 14}}
+              {{- end }}
         env:
 {{- if .Values.external.enabled }}
         - name: EXTERNAL_PASSWORD

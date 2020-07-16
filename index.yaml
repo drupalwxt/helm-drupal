@@ -3,7 +3,34 @@ entries:
   drupal:
   - apiVersion: v1
     appVersion: 3.0.13
-    created: "2020-07-16T02:03:57.129683522Z"
+    created: "2020-07-16T13:29:46.028917458Z"
+    description: Drupal 8 variant of the Web Experience Toolkit (WxT).
+    digest: e8e8059e863187d13e8b0e9dcc166f7dcda1687f2fa6aff3a80c16172b4fc9d2
+    engine: gotpl
+    home: http://www.drupal.org/project/wxt
+    icon: https://bitnami.com/assets/stacks/drupal/img/drupal-stack-220x234.png
+    keywords:
+    - drupal
+    - cms
+    - wxt
+    - http
+    - web
+    - application
+    - php
+    maintainers:
+    - email: william.hearn@canada.ca
+      name: sylus
+    - email: zachary.seguin@canada.ca
+      name: zachomedia
+    name: drupal
+    sources:
+    - https://github.com/drupalwxt/wxt
+    urls:
+    - https://drupalwxt.github.io/helm-drupal/drupal-0.4.6.tgz
+    version: 0.4.6
+  - apiVersion: v1
+    appVersion: 3.0.13
+    created: "2020-07-16T13:29:46.024315641Z"
     description: Drupal 8 variant of the Web Experience Toolkit (WxT).
     digest: 1375b92a72328f1822a39859a9caffad233156757bdbf699136debb7b5c56b70
     engine: gotpl
@@ -30,7 +57,7 @@ entries:
     version: 0.4.5
   - apiVersion: v1
     appVersion: 3.0.13
-    created: "2020-07-16T02:03:57.124323475Z"
+    created: "2020-07-16T13:29:46.020440527Z"
     description: Drupal 8 variant of the Web Experience Toolkit (WxT).
     digest: 71a6c5ddf1bd7d81c08cdf7966c18c036e1e948fdc604d7511e3b1292f3c486e
     engine: gotpl
@@ -57,7 +84,7 @@ entries:
     version: 0.4.4
   - apiVersion: v1
     appVersion: 3.0.13
-    created: "2020-07-16T02:03:57.117603839Z"
+    created: "2020-07-16T13:29:46.015654709Z"
     description: Drupal 8 variant of the Web Experience Toolkit (WxT).
     digest: 368376f3c11ea30a24a1fc56328eb880d280852b611ca8c419d3d96bf60a552b
     engine: gotpl
@@ -84,7 +111,7 @@ entries:
     version: 0.4.3
   - apiVersion: v1
     appVersion: 3.0.13
-    created: "2020-07-16T02:03:57.112658919Z"
+    created: "2020-07-16T13:29:46.011878195Z"
     description: Drupal 8 variant of the Web Experience Toolkit (WxT).
     digest: ed7f36ee8530c7536ef719d9b7d7d43782cbbe479532477955a908586834932a
     engine: gotpl
@@ -111,7 +138,7 @@ entries:
     version: 0.4.2
   - apiVersion: v1
     appVersion: 3.0.12
-    created: "2020-07-16T02:03:57.107015753Z"
+    created: "2020-07-16T13:29:46.007247078Z"
     description: Drupal 8 variant of the Web Experience Toolkit (WxT).
     digest: 6023cf78a68ff600175aeebdcf722c5a02c8497dd880bf2e9d8997017679080f
     engine: gotpl
@@ -138,7 +165,7 @@ entries:
     version: 0.4.1
   - apiVersion: v1
     appVersion: 3.0.12
-    created: "2020-07-16T02:03:57.102596067Z"
+    created: "2020-07-16T13:29:46.003690865Z"
     description: Drupal 8 variant of the Web Experience Toolkit (WxT).
     digest: c5a9fcd971e8c69f8e67781b89ed24f072078b50fcefe2b552a37ec18f05ce6b
     engine: gotpl
@@ -165,7 +192,7 @@ entries:
     version: 0.4.0
   - apiVersion: v1
     appVersion: 3.0.12
-    created: "2020-07-16T02:03:57.097381229Z"
+    created: "2020-07-16T13:29:45.99935865Z"
     description: Drupal 8 variant of the Web Experience Toolkit (WxT).
     digest: 84e7cfa9b40c3aea6858c7423a7e52aa43062014906924e6d51a7452acf607df
     engine: gotpl
@@ -192,7 +219,7 @@ entries:
     version: 0.3.2
   - apiVersion: v1
     appVersion: 3.0.12
-    created: "2020-07-16T02:03:57.091558352Z"
+    created: "2020-07-16T13:29:45.994608933Z"
     description: Drupal 8 variant of the Web Experience Toolkit (WxT).
     digest: 18ca965956e47ccf15675059f9862cac413724721d582dd5af8d76b36619abaa
     engine: gotpl
@@ -217,4 +244,4 @@ entries:
     urls:
     - https://drupalwxt.github.io/helm-drupal/drupal-0.3.1.tgz
     version: 0.3.1
-generated: "2020-07-16T02:03:57.086021594Z"
+generated: "2020-07-16T13:29:45.988633712Z"

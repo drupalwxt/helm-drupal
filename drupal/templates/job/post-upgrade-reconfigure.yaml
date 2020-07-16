@@ -42,7 +42,7 @@ spec:
               echo DB available
 
               # Check Drush status
-              drush status
+              drush status || true
 
               # Run database updates
               {{- if .Values.drupal.cacheRebuildBeforeDatabaseMigration }}

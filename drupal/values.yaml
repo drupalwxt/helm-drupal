@@ -96,6 +96,7 @@ drupal:
 
   # Reconfigure on upgrade
   reconfigure: true
+  cacheRebuildBeforeDatabaseMigration: true
 
   # Configure the Drupal cron
   cron:

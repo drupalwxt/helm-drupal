@@ -45,7 +45,9 @@ spec:
               drush status
 
               # Run database updates
+              {{- if .Values.drupal.cacheRebuildBeforeDatabaseMigration }}
               drush -y cache:rebuild
+              {{- end }}
               drush -y updatedb
 
               # Lightning updates

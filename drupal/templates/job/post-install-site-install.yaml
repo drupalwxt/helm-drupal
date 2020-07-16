@@ -68,7 +68,9 @@ spec:
               tar -zxf /backup/$BACKUPNAME/private.tar.gz --directory /var/www/private --no-acls --no-xattrs -m --no-same-permissions --no-overwrite-dir
 
               # Run database updates
+              {{- if .Values.drupal.cacheRebuildBeforeDatabaseMigration }}
               drush -y cache:rebuild
+              {{- end }}
               drush -y updatedb
 
               # Lightning updates

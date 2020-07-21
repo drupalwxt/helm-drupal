@@ -182,7 +182,7 @@ spec:
 
               # Extra installation scripts
               {{- if .Values.drupal.extraInstallScripts }}
-              {{- toYaml .Values.drupal.extraInstallScripts | nindent 14}}
+              {{ .Values.drupal.extraInstallScripts | nindent 14}}
               {{- end }}
 
         env:

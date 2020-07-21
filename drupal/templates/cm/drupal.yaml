@@ -20,8 +20,8 @@ data:
 {{- end }}
 
 {{- if .Values.drupal.extraSettings }}
-  extra.settings.php:
+  extra.settings.php: |
     <?php
 
-    {{- toYaml .Values.drupal.extraSettings | nindent 4}}
+    {{ .Values.drupal.extraSettings | nindent 4}}
 {{- end }}

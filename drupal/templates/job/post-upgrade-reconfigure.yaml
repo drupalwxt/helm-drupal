@@ -138,7 +138,7 @@ spec:
 
               # Extra Upgrade scripts
               {{- if .Values.drupal.extraUpgradeScripts }}
-              {{- toYaml .Values.drupal.extraUpgradeScripts | nindent 14}}
+              {{ .Values.drupal.extraUpgradeScripts | nindent 14}}
               {{- end }}
         env:
 {{- if .Values.external.enabled }}

@@ -284,7 +284,7 @@ mysql:
   ## Persist data to a persistent volume
   persistence:
     enabled: true
-    storageClass: managed-premium
+    # storageClass: managed-premium
     size: 128Gi
 
   # Custom mysql configuration files used to override default mysql settings

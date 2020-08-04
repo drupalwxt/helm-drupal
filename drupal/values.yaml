@@ -44,7 +44,7 @@ drupal:
 
   ## Application password
   ##
-  password: WxT2019
+  ## password: WxT2020
 
   ## Site configuration
   ##

@@ -69,7 +69,7 @@ The Canadian Digital Services (CDS) develops all of their applications to run in
 
 #### Others
 
-Many others across the Government of Canada, municipalities and internal Government agencies are actively and/or investigating Kubernetes. This includes Shared Services Canada (SSC) through their investigation into a managed cloud platform powered by OpenShift (Kubernetes) for use by other departments. The Communication Security Establishment (CSE) is leveraging Kubernetes in their on-premise computing environment, running cloud native technologies in a restricted environment. The Royal Canadian Mounted Police kick started their Kubernetes adoption through the Report a Cyber Crime application developed by CDS.
+Many others across the Government of Canada, municipalities and internal Government agencies are actively and/or investigating Kubernetes. This includes Shared Services Canada (SSC) through their investigation into a managed cloud platform powered by OpenShift (Kubernetes) for use by other departments. The Communication Security Establishment (CSE) is leveraging Kubernetes in their on-premise computing environment, running cloud native technologies in a restricted environment.
 
 To highlight a few more:
 

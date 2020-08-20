@@ -54,6 +54,8 @@ spec:
               BACKUPNAME='{{ .Values.drupal.restore.name }}'
               {{- end }}
 
+              echo "Restoring backup: $BACKUPNAME"
+
               gunzip -c /backup/$BACKUPNAME/db.sql.gz | drush sql-cli
 
               # Errors from deleting should not fail the job

@@ -5,6 +5,7 @@ chart-repos:
   - incubator=https://kubernetes-charts-incubator.storage.googleapis.com/
   - istio=https://storage.googleapis.com/istio-release/releases/1.1.8/charts
   - statcan=https://statcan.github.io/charts
+  - minio=https://helm.min.io/
 check-version-increment: true
 validate-maintainers: false
 excluded-charts:

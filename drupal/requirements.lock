@@ -3,13 +3,13 @@ dependencies:
   repository: https://kubernetes-charts.storage.googleapis.com
   version: 1.6.2
 - name: minio
-  repository: https://kubernetes-charts.storage.googleapis.com
-  version: 5.0.10
+  repository: https://helm.min.io/
+  version: 6.0.5
 - name: postgresql
   repository: https://kubernetes-charts.storage.googleapis.com
   version: 8.6.4
 - name: varnish
   repository: https://statcan.github.io/charts
   version: 0.0.2
-digest: sha256:ab5a5667b8e16a2ffe8c84638dbd8c3a9f7da3675b8f725f73f106e8ba27dde7
-generated: 2020-06-25T20:23:23.307378-04:00
+digest: sha256:23b4dd473600cc56d7cba55b92e2a86db028815e643f94330cdc463f9f15443a
+generated: 2020-09-13T03:02:52.677708-04:00

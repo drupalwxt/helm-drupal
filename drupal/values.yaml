@@ -172,6 +172,10 @@ drupal:
       # Note: sSMTP only supports LOGIN and CRAM-MD5
       method: LOGIN
 
+  # Use advanced configuration split logic
+  configSplit:
+    enabled: false
+
 nginx:
   ## Nginx image version
   ## ref: https://hub.docker.com/drupalwxt/site-wxt/tags/

@@ -232,6 +232,8 @@ nginx:
   securityContext:
     enabled: true
     fsGroup: 33
+  
+  client_max_body_size: 20m
 
 # Specify an external database
 # Useful for managed offerings from your Cloud Provider

@@ -14,5 +14,5 @@ dependencies:
 - name: varnish
   repository: https://statcan.github.io/charts
   version: 0.0.2
-digest: sha256:d7a9c9b8a6a01d0946d323cd7ff34ac3890c8d2c3c8c3d42962267a1253be425
-generated: 2020-10-21T17:56:32.549606-04:00
+digest: sha256:ac6a350dca1e571f9bccd68a5334be63bfa5f8c84fc9012be8ec0754fb54060e
+generated: "2020-10-26T22:39:42.395279852Z"

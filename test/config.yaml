@@ -4,7 +4,7 @@ chart-dirs:
 chart-repos:
   - bitnami=https://charts.bitnami.com/bitnami
   - incubator=https://kubernetes-charts-incubator.storage.googleapis.com/
-  - istio=https://storage.googleapis.com/istio-release/releases/1.1.8/charts
+  - stable=https://kubernetes-charts.storage.googleapis.com
   - statcan=https://statcan.github.io/charts
   - minio=https://helm.min.io/
 check-version-increment: true

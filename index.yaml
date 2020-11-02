@@ -3,7 +3,7 @@ entries:
   drupal:
   - apiVersion: v2
     appVersion: 3.0.15
-    created: "2020-11-02T17:22:00.167401183Z"
+    created: "2020-11-02T17:32:06.940716861Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -26,7 +26,7 @@ entries:
       repository: https://statcan.github.io/charts
       version: 0.0.2
     description: Drupal 8 variant of the Web Experience Toolkit (WxT).
-    digest: 83773d773ef1df692f26b5b3ba4e1e17b216fdb23d64a56f1bc4a20798d10a7f
+    digest: 5a8b94af393f59c63eb2d9e9324b2a605c09869baa9a6dfa645c5f7f83f3fdb5
     home: http://www.drupal.org/project/wxt
     icon: https://bitnami.com/assets/stacks/drupal/img/drupal-stack-220x234.png
     keywords:
@@ -51,7 +51,7 @@ entries:
     version: 0.5.13
   - apiVersion: v2
     appVersion: 3.0.15
-    created: "2020-11-02T17:22:00.153414137Z"
+    created: "2020-11-02T17:32:06.92729295Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -99,7 +99,7 @@ entries:
     version: 0.5.12
   - apiVersion: v2
     appVersion: 3.0.15
-    created: "2020-11-02T17:22:00.141022454Z"
+    created: "2020-11-02T17:32:06.915605754Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -147,7 +147,7 @@ entries:
     version: 0.5.11
   - apiVersion: v1
     appVersion: 3.0.15
-    created: "2020-11-02T17:22:00.052087087Z"
+    created: "2020-11-02T17:32:06.82768323Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -194,7 +194,7 @@ entries:
     version: 0.4.11
   - apiVersion: v1
     appVersion: 3.0.15
-    created: "2020-11-02T17:22:00.037179106Z"
+    created: "2020-11-02T17:32:06.813864117Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -241,7 +241,7 @@ entries:
     version: 0.4.10
   - apiVersion: v1
     appVersion: 3.0.14
-    created: "2020-11-02T17:22:00.127160214Z"
+    created: "2020-11-02T17:32:06.901875841Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -284,7 +284,7 @@ entries:
     version: 0.4.9
   - apiVersion: v1
     appVersion: 3.0.13
-    created: "2020-11-02T17:22:00.118883491Z"
+    created: "2020-11-02T17:32:06.891520356Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -327,7 +327,7 @@ entries:
     version: 0.4.8
   - apiVersion: v1
     appVersion: 3.0.13
-    created: "2020-11-02T17:22:00.108970205Z"
+    created: "2020-11-02T17:32:06.883216588Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -370,7 +370,7 @@ entries:
     version: 0.4.7
   - apiVersion: v1
     appVersion: 3.0.13
-    created: "2020-11-02T17:22:00.100815287Z"
+    created: "2020-11-02T17:32:06.87377201Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -413,7 +413,7 @@ entries:
     version: 0.4.6
   - apiVersion: v1
     appVersion: 3.0.13
-    created: "2020-11-02T17:22:00.091079107Z"
+    created: "2020-11-02T17:32:06.86531264Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -456,7 +456,7 @@ entries:
     version: 0.4.5
   - apiVersion: v1
     appVersion: 3.0.13
-    created: "2020-11-02T17:22:00.082807285Z"
+    created: "2020-11-02T17:32:06.854157748Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -499,7 +499,7 @@ entries:
     version: 0.4.4
   - apiVersion: v1
     appVersion: 3.0.13
-    created: "2020-11-02T17:22:00.071741654Z"
+    created: "2020-11-02T17:32:06.846749087Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -542,7 +542,7 @@ entries:
     version: 0.4.3
   - apiVersion: v1
     appVersion: 3.0.13
-    created: "2020-11-02T17:22:00.062631798Z"
+    created: "2020-11-02T17:32:06.836492303Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -585,7 +585,7 @@ entries:
     version: 0.4.2
   - apiVersion: v1
     appVersion: 3.0.12
-    created: "2020-11-02T17:22:00.024931329Z"
+    created: "2020-11-02T17:32:06.801851418Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -628,7 +628,7 @@ entries:
     version: 0.4.1
   - apiVersion: v1
     appVersion: 3.0.12
-    created: "2020-11-02T17:22:00.015243551Z"
+    created: "2020-11-02T17:32:06.793822852Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -671,7 +671,7 @@ entries:
     version: 0.4.0
   - apiVersion: v1
     appVersion: 3.0.12
-    created: "2020-11-02T17:22:00.007054532Z"
+    created: "2020-11-02T17:32:06.784527975Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -714,7 +714,7 @@ entries:
     version: 0.3.2
   - apiVersion: v1
     appVersion: 3.0.12
-    created: "2020-11-02T17:21:59.997785668Z"
+    created: "2020-11-02T17:32:06.777178215Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -751,4 +751,4 @@ entries:
     urls:
     - https://drupalwxt.github.io/helm-drupal/drupal-0.3.1.tgz
     version: 0.3.1
-generated: "2020-11-02T17:21:59.989959859Z"
+generated: "2020-11-02T17:32:06.767790537Z"

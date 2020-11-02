@@ -27,6 +27,29 @@ spec:
 {{ toYaml .Values.drupal.initContainers | indent 8 }}
 {{- end }}
       containers:
+{{- if .Values.postgresql.pgbouncer.enabled }}
+      - name: azure-pgbouncer-sidecar
+        image: mcr.microsoft.com/azure-oss-db-tools/pgbouncer-sidecar:latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 5432
+        volumeMounts:
+          - name: configfiles
+            mountPath: "/etc/pgbouncer"
+            readOnly: true
+        livenessProbe:
+          tcpSocket:
+            port: 5432
+          periodSeconds: 60
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "killall -INT pgbouncer && sleep 120"]
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ['all']
+{{- end  }}
       - name: drush
         image: "{{ .Values.drupal.image }}:{{ default .Chart.AppVersion .Values.drupal.tag }}"
         imagePullPolicy: {{ default "" .Values.drupal.imagePullPolicy | quote }}
@@ -321,6 +344,11 @@ spec:
 {{- else if not .Values.drupal.disableDefaultFilesMount }}
       - name: files
         emptyDir: {}
+{{- end }}
+{{- if .Values.postgresql.pgbouncer.enabled }}
+      - name: configfiles
+        secret:
+           secretName: {{ include "drupal.fullname" . }}-pgbouncer
 {{- end }}
 {{- if .Values.drupal.volumes }}
 {{ toYaml .Values.drupal.volumes | indent 6 }}

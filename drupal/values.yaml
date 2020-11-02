@@ -340,6 +340,12 @@ postgresql:
   #    cpu: "500m"
   nodeSelector: {}
 
+  pgbouncer:
+    enabled: false
+    host: mypgserver.postgres.database.azure.com
+    user: username@hostname
+    password: password
+
 # Files: object storage
 #
 # Use Minio for object storage by default.

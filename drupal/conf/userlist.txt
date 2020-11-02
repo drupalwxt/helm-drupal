@@ -1,0 +1,1 @@
+"{{ .Values.postgresql.pgbouncer.user }}" "{{ .Values.postgresql.pgbouncer.password }}"

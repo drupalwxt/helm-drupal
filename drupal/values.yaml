@@ -345,6 +345,8 @@ postgresql:
     host: mypgserver.postgres.database.azure.com
     user: username@hostname
     password: password
+    poolSize: 50
+    maxClientConnections: 400
 
 # Files: object storage
 #

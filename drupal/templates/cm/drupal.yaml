@@ -11,7 +11,8 @@ data:
   settings.php: |
 {{- if eq "d8" .Values.drupal.version }}
 {{ tpl (.Files.Get "conf/settings.d8.php") . | indent 4 }}
-
+{{- else if eq "d9" .Values.drupal.version }}
+{{ tpl (.Files.Get "conf/settings.d9.php") . | indent 4 }}
 {{- else }}
   settings.php:
     <?php

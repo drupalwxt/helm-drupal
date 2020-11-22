@@ -467,8 +467,8 @@ varnish:
     import directors;
 
     backend nginx {
-      .host = "#{NGINX}";
-      .host_header = "#{NGINX}";
+      .host = "{{ .Release.Name}}-nginx";
+      .host_header = "{{ .Release.Name}}-nginx";
       .port = "80";
     }
 
@@ -525,7 +525,7 @@ varnish:
 
     sub vcl_backend_fetch {
       # NEW
-      set bereq.http.Host = "#{NGINX}";
+      set bereq.http.Host = "{{ .Release.Name}}-nginx";
 
       # Don't add 127.0.0.1 to X-Forwarded-For
       set bereq.http.X-Forwarded-For = regsub(bereq.http.X-Forwarded-For, "(, )?127\.0\.0\.1$", "");

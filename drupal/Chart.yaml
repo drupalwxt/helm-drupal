@@ -1,7 +1,7 @@
 name: drupal
 apiVersion: v2
 type: application
-version: 0.5.15
+version: 0.5.16
 appVersion: 4.0.0-rc1
 description: Drupal 8 variant of the Web Experience Toolkit (WxT).
 keywords:
@@ -33,13 +33,13 @@ dependencies:
     condition: minio.enabled
   - name: postgresql
     version: 8.6.4
-    repository: https://kubernetes-charts.storage.googleapis.com
+    repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
   - name: redis
     version: 11.2.1
     repository: https://charts.bitnami.com/bitnami
     condition: redis.enabled
   - name: varnish
-    version: 0.0.2
+    version: 0.1.4
     repository: https://statcan.github.io/charts
     condition: varnish.enabled

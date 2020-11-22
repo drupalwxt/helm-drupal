@@ -34,6 +34,8 @@ helm install drupal -f values-override.yaml --timeout 2400 --wait .
 
 > **Note**: If you have `drupal.install` set to `true`, then a site install will take place before the `helm install` command finishes. The default timeout is `300` seconds (or 5 minutes) of which depending on your IOPS the install could take longer.
 
+> **Note**: The default installation with set the active them to the GCWeb variant and default content will also be installed. You can configure either of these settings in your own values-override.yaml file.
+
 4. Follow the steps presented to you once the helm install is completed.
 
 > **Note**: If you are working locally with Kind etc you might not have an ingress setup. In these situations you can simply use port-forward to access the service.

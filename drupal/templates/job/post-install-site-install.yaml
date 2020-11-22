@@ -118,7 +118,9 @@ spec:
                 --account-pass=$DRUPAL_ADMIN_PASSWORD \
                 --site-mail={{ .Values.drupal.siteEmail | quote }} \
                 --site-name={{ .Values.drupal.siteName | quote }} \
+                {{- if .Values.drupal.extensions.enabled }}
                 wxt_extension_configure_form.select_all='TRUE' \
+                {{- end }}
                 install_configure_form.update_status_module='array(FALSE,FALSE)' \
                 --yes
               {{- end }}

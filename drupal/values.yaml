@@ -125,6 +125,10 @@ drupal:
   healthcheck:
     enabled: true
 
+  # Enable all of the WxT extension modules
+  extensions:
+    enabled: true
+
   serviceType: ClusterIP
 
   persistence:

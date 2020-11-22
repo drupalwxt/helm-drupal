@@ -1,5 +1,7 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "drupal.fullname" . -}}
+{{- $releaseName := .Release.Name -}}
+{{- $varnishEnabled := .Values.varnish.enabled -}}
 {{- $ingressPath := .Values.ingress.path -}}
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
@@ -31,7 +33,12 @@ spec:
       http:
         paths:
           - backend:
+          {{- if $varnishEnabled }}
+              serviceName: {{ $releaseName }}-varnish
+              servicePort: 80
+          {{- else }}
               serviceName: {{ $fullName }}-nginx
               servicePort: 80
+          {{- end }}
   {{- end }}
 {{- end }}

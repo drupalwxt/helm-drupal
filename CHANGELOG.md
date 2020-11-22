@@ -1,3 +1,7 @@
+## 0.6.1
+
+- Resolved issues with the Varnish integration
+
 ## 0.6.0
 
 - Disabled MinIO installation default

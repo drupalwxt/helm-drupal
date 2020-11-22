@@ -24,7 +24,7 @@ cp values-nfs-azurefile.yaml values-override.yaml
 
 > **Note**: Currently the default install using the `values.yaml` file alone results in a Drupal installation that stateful assets won't work and caching is disabled. If you want stateful assets to work you can either enable MinIO or more preferably set the disableDefaultFilesMount to true and perform the mappings based on your local development environment. You can consult the `values-hostpath-kind.yaml` or `values-hostpath-microk8s.yaml` file for further examples.
 
-> **Note**: It is recommended if you are installing in Azure that you instead use the `values-nfs-azurefile.yaml` as your override file which will allow for stateful assets to work across the nginx and php-fpm containers by using Azure Files (NFS). If you are using other Cloud Providers they will have similar offerings and the CSI driver will be different then `azureFile`.
+> **Note**: It is recommended that if you are installing this in a cloud environment that you use a shared file system provided by the environment you are running in for the stateful assets. An example for Azure is provided by using the `values-nfs-azurefile.yaml` as your override file which will allow for stateful assets to work across the nginx and php-fpm containers by using Azure Files (NFS). If you are using other Cloud Providers they will have similar offerings and the CSI driver will be different then `azureFile`.
 
 3. Run the following command:
 

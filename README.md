@@ -36,6 +36,12 @@ helm install drupal -f values-override.yaml --timeout 2400 --wait .
 
 4. Follow the steps presented to you once the helm install is completed.
 
+> **Note**: If you are working locally with Kind etc you might not have an ingress setup. In these situations you can simply use port-forward to access the service.
+
+```
+kubectl port-forward -n default svc/drupal-nginx 5000:80
+```
+
 ## Documentation
 
 Please consult the [documentation](https://github.com/drupalwxt/helm-drupal/tree/master/docs) which is provided in this repository in the `docs` folder should you wish to have more information about a recommended architecture.

@@ -41,10 +41,6 @@ spec:
           tcpSocket:
             port: 5432
           periodSeconds: 60
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/bin/sh", "-c", "killall -INT pgbouncer && sleep 120"]
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -219,7 +215,6 @@ spec:
               {{- if .Values.drupal.extraInstallScripts }}
               {{ .Values.drupal.extraInstallScripts | nindent 14}}
               {{- end }}
-
         env:
 {{- if .Values.external.enabled }}
         - name: EXTERNAL_PASSWORD

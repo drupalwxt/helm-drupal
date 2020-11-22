@@ -41,6 +41,10 @@ spec:
           tcpSocket:
             port: 5432
           periodSeconds: 60
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "killall -INT pgbouncer && sleep 120"]
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:

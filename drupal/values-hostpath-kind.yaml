@@ -1,19 +1,18 @@
-# When installing microk8s you need to currently install channel 1.15
-# override file for use with microk8s
-# assumes that /mnt/drupal/drupal-public and /mnt/drupal/drupal-private directories exist with correct permissions
-# drupal folder should have the microk8s group with rw
+# When installing with Kind the cluster is required to have the following settings for the stateful assets to work
 #
 # For example:
-#   sudo chgrp -R /mnt/drupal microk8s
-#   sudo chmod -R g+rw /mnt/drupal
+# kind create cluster --config kind.yaml
 #
-# The above should work but microk8s might require
-#
-# sudo chmod -R a+rw /mnt/drupal
-#
-# microk8s will need the following addons enabled: dns storage <helm>
-# Example:
-#   microk8s.enable dns storage helm
+# kind: Cluster
+# apiVersion: kind.x-k8s.io/v1alpha4
+# nodes:
+# - role: control-plane
+#   # add a mount from /path/to/my/files on the host to /files on the node
+#   extraMounts:
+#   - hostPath: /tmp/drupal/shared/drupal-public
+#     containerPath: /mnt/drupal/drupal-public
+#   - hostPath: /tmp/drupal/shared/drupal-private
+#     containerPath: /mnt/drupal/drupal-private
 
 drupal:
   ## Site configuration
@@ -71,7 +70,6 @@ drupal:
   # Allows custom /var/www/html/sites/default/files and /var/www/private mounts
   disableDefaultFilesMount: true
 
-
   volumes:
     - name: files-public
       hostPath:
@@ -111,7 +109,6 @@ mysql:
 
   persistence:
     enabled: true
-    storageClass: microk8s-hostpath
     size: 2Gi
 
 # Files: object storage

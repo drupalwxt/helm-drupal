@@ -54,13 +54,13 @@ drupal:
 
   # Default WxT Library theme (only used if install and/or reconfigure are enabled)
   # Common options include: theme-wet-boew, theme-gcweb-legacy, theme-gcweb, ...
-  # wxtTheme: theme-wet-boew
+  wxtTheme: theme-gcweb
 
   ## Version of the application
   ##
   ## Supported versions: d8
   ##
-  version: d8
+  version: d9
 
   ## Extra settings.php settings
   ##
@@ -92,7 +92,7 @@ drupal:
       # emptyDir: {}
 
   # Run migrations for default content
-  migrate: false
+  migrate: true
 
   # Reconfigure on upgrade
   reconfigure: true
@@ -123,6 +123,10 @@ drupal:
   # php-fpm healthcheck
   # Requires https://github.com/renatomefi/php-fpm-healthcheck in the container.
   healthcheck:
+    enabled: true
+
+  # Enable all of the WxT extension modules
+  extensions:
     enabled: true
 
   serviceType: ClusterIP
@@ -357,7 +361,7 @@ postgresql:
 #   - s3
 #   - none
 files:
-  provider: minio
+  provider: none
   cname:
     enabled: false
     hostname: object.example.com
@@ -379,7 +383,10 @@ s3:
 # Note: Even if you set the defaultBucket.enabled to false,
 # you still need to set the defaultBucket.name to the desired bucket.
 minio:
-  enabled: true
+  enabled: false
+  resources:
+    requests:
+      memory: 1Gi
 
   ## set kubernetes cluster domain where minio is running
   ##

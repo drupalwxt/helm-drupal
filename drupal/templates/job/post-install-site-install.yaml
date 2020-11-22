@@ -118,8 +118,17 @@ spec:
                 --account-pass=$DRUPAL_ADMIN_PASSWORD \
                 --site-mail={{ .Values.drupal.siteEmail | quote }} \
                 --site-name={{ .Values.drupal.siteName | quote }} \
+                {{- if .Values.drupal.extensions.enabled }}
+                wxt_extension_configure_form.select_all='TRUE' \
+                {{- end }}
                 install_configure_form.update_status_module='array(FALSE,FALSE)' \
                 --yes
+              {{- end }}
+
+              {{- if and (eq .Values.files.provider "none") (not .Values.drupal.disableDefaultFilesMount) }}
+              # Need to use NFS otherwise disable caching
+              drush config-set system.performance js.preprocess 0 -y
+              drush config-set system.performance css.preprocess 0 -y
               {{- end }}
 
               {{- if not (eq .Values.files.provider "none") }}

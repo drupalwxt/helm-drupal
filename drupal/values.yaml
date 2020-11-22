@@ -558,14 +558,10 @@ varnish:
       unset resp.http.Via;
 
       # Add Content-Security-Policy
-      # if (req.url ~ "^/(my|mon)statcan") {
-      #   set resp.http.Content-Security-Policy = "default-src 'self' *.example.ca; style-src 'self' 'unsafe-inline' *.example.ca *.twitter.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.example.ca *.adobedtm.com use.fontawesome.com *.twitter.com *.twimg.com blob:; connect-src 'self' *.example.ca *.omtrdc.net *.demdex.net *.everesttech.net; img-src 'self' *.example.ca *.omtrdc.net *.demdex.net *.everesttech.net *.twitter.com *.twimg.com data:; child-src 'self' *.example.ca *.twitter.com;";
-      # } else {
-      #   set resp.http.Content-Security-Policy = "default-src 'self' *.example.ca *.statcan.ca; style-src 'self' 'unsafe-inline' *.example.ca https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.example.ca  *.adobedtm.com use.fontawesome.com blob:; connect-src 'self' *.example.ca *.omtrdc.net *.demdex.net *.everesttech.net; img-src 'self' *.example.ca *.omtrdc.net *.demdex.net *.everesttech.net data:; font-src 'self' *.example.ca https://fonts.gstatic.com";
-      # }
+      # set resp.http.Content-Security-Policy = "default-src 'self' *.example.ca *.example.ca; style-src 'self' 'unsafe-inline' *.example.ca https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.example.ca  *.adobedtm.com use.fontawesome.com blob:; connect-src 'self' *.example.ca *.omtrdc.net *.demdex.net *.everesttech.net; img-src 'self' *.example.ca *.omtrdc.net *.demdex.net *.everesttech.net data:; font-src 'self' *.example.ca https://fonts.gstatic.com";
 
       # Add CORS Headers
-      # if (req.http.Origin ~ "(?i)\.statcan\.ca$") {
+      # if (req.http.Origin ~ "(?i)\.example\.ca$") {
       #   if (req.url ~ "\.(ttd|woff|woff2)(\?.*)?$") {
       #     set resp.http.Access-Control-Allow-Origin = "*";
       #     set resp.http.Access-Control-Allow-Methods = "GET";

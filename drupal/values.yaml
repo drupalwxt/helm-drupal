@@ -421,6 +421,7 @@ minio:
 ## ref: https://github.com/bitnami/charts/blob/master/bitnami/redis/README.md
 redis:
   enabled: false
+  password: ""
   image:
     registry: docker.io
     repository: bitnami/redis

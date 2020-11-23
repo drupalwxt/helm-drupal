@@ -1,3 +1,7 @@
+## 0.6.6
+
+- Resolved issues with the Redis integration
+
 ## 0.6.1
 
 - Resolved issues with the Varnish integration

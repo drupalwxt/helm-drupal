@@ -918,7 +918,7 @@ if (extension_loaded('redis')) {
   $settings['cache']['default'] = 'cache.backend.redis';
   $settings['redis.connection']['interface'] = 'PhpRedis';
   $settings['redis.connection']['scheme'] = 'http';
-  $settings['redis.connection']['host'] = '{{ .Release.Name }}-redis-headless';
+  $settings['redis.connection']['host'] = '{{ .Release.Name }}-redis-master';
   $settings['redis.connection']['port'] = '6379';
   $settings['redis.connection']['password'] = '{{ .Values.redis.password }}';
 

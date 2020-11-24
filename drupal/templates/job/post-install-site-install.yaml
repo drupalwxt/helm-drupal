@@ -131,6 +131,11 @@ spec:
               drush config-set system.performance css.preprocess 0 -y
               {{- end }}
 
+              {{- if .Values.redis.enabled }}
+              # Enable redis
+              drush -y pm:enable redis
+              {{- end }}
+
               {{- if not (eq .Values.files.provider "none") }}
               # Enable s3fs
               drush -y pm:enable s3fs

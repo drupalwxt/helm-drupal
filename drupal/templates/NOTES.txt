@@ -24,6 +24,8 @@ kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush si {{ .Values.dr
     install_configure_form.update_status_module='array(FALSE,FALSE)' \
     --yes
 
+{{- end }}
+
 ** To access your Drupal site
 
 {{- if .Values.ingress.enabled }}

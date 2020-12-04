@@ -65,7 +65,7 @@ spec:
               echo DB available
 
               # Check Drush status
-              drush status
+              drush status || true
 
               # Run site install
               {{- if .Values.drupal.restore.enabled }}

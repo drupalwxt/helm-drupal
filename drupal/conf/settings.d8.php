@@ -97,6 +97,13 @@ $databases['default']['default'] = array (
   'prefix' => '',
   'namespace' => 'Drupal\Core\Database\Driver\{{ .Values.external.driver }}',
   'driver' => '{{ .Values.external.driver }}',
+  'pdo' => array (
+  {{- range .Values.external.pdo }}
+    {{- range $key, $value := . }}
+    {{ $key }} => {{ $value | quote }},
+    {{- end }}
+  {{- end }}
+  ),
 );
 {{- else if .Values.osb.enabled }}
 $databases['default']['default'] = array (

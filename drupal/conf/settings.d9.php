@@ -99,6 +99,13 @@ $databases['default']['default'] = [
   'namespace' => 'Drupal\Core\Database\Driver\{{ .Values.external.driver }}',
   'driver' => '{{ .Values.external.driver }}',
   'collation' => 'utf8mb4_general_ci',
+  'pdo' => [
+  {{- range .Values.external.pdo }}
+    {{- range $key, $value := . }}
+    {{ $key }} => {{ $value | quote }},
+    {{- end }}
+  {{- end }}
+  ],
 ];
 {{- else if .Values.osb.enabled }}
 $databases['default']['default'] = [

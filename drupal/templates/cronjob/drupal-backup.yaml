@@ -114,17 +114,17 @@ spec:
                   name: "{{ .Release.Name }}-mysql"
                   key: mysql-password
 {{- else if .Values.postgresql.enabled }}
-          - name: POSTGRES_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: "{{ .Release.Name }}-postgresql"
-                key: postgresql-password
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-postgresql"
+                  key: postgresql-password
 {{- else if .Values.redis.enabled }}
-          - name: REDIS_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: "{{ .Release.Name }}-redis"
-                key: redis-password
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-redis"
+                  key: redis-password
 {{- end }}
             - name: DRUPAL_ADMIN_PASSWORD
               valueFrom:

@@ -19,8 +19,6 @@ drupal:
   ## ref: https://hub.docker.com/drupalwxt/site-wxt/tags/
   ##
   image: drupalwxt/site-wxt
-
-  ## Note that by default we use appVersion to get image tag
   tag: 4.0.0-rc2
 
   ## Site configuration
@@ -93,6 +91,7 @@ drupal:
       mountPath: /var/www/private
 
 nginx:
+  image: drupalwxt/site-wxt
   tag: 4.0.0-rc2-nginx
 
   # Set your cluster's DNS resolution service here

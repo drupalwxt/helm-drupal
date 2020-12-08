@@ -24,7 +24,7 @@ nodes:
 2. Run the Helm chart installation using the `values-hostpath-kind.yaml` file:
 
 ```sh
-helm install drupal -f values-hostpath-kind.yaml --set varnish.enabled=true .
+helm install drupal -f values-hostpath-kind.yaml .
 ```
 
 > **Note**: In the example above we also enable the varnish integration.

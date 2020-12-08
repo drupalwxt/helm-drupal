@@ -15,6 +15,14 @@
 #     containerPath: /mnt/drupal/drupal-private
 
 drupal:
+  ## Drupal image version
+  ## ref: https://hub.docker.com/drupalwxt/site-wxt/tags/
+  ##
+  image: drupalwxt/site-wxt
+
+  ## Note that by default we use appVersion to get image tag
+  tag: 4.0.0-rc2
+
   ## Site configuration
   ##
   profile: wxt
@@ -85,12 +93,10 @@ drupal:
       mountPath: /var/www/private
 
 nginx:
+  tag: 4.0.0-rc2-nginx
+
   # Set your cluster's DNS resolution service here
-  # default for microk8s is set, but may vary depending on installation.
-  # Run the following to get the IP
-  # kubectl get pod -l k8s-app='kube-dns' --namespace kube-system -o wide or
-  # microk8s.kubectl get pod -l k8s-app='kube-dns' --namespace kube-system -o wide
-  resolver: 10.1.1.4
+  resolver: 10.0.0.10
 
   volumes:
     - name: files-public
@@ -102,14 +108,7 @@ nginx:
       mountPath: /var/www/html/sites/default/files
 
 mysql:
-  imageTag: 5.7.28
-
-  mysqlPassword: SUPERsecureMYSQLpassword
-  mysqlRootPassword: SUPERsecureMYSQLrootPASSWORD
-
-  persistence:
-    enabled: true
-    size: 2Gi
+  enabled: false
 
 # Files: object storage
 #
@@ -127,3 +126,16 @@ files:
 ##
 minio:
   enabled: false
+
+postgresql:
+  enabled: true
+  pgbouncer:
+    enabled: true
+    poolSize: 25
+    maxClientConnections: 500
+
+redis:
+  enabled: true
+
+varnish:
+  enabled: true

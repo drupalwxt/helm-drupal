@@ -116,7 +116,8 @@ spec:
             secretKeyRef:
               name: "{{ .Release.Name }}-postgresql"
               key: postgresql-password
-{{- else if .Values.redis.enabled }}
+{{- end }}
+{{- if .Values.redis.enabled }}
         - name: REDIS_PASSWORD
           valueFrom:
             secretKeyRef:

@@ -196,19 +196,18 @@ spec:
 {{- else if not .Values.drupal.disableDefaultFilesMount }}
           - name: files
             emptyDir: {}
-{{- end }}
-{{- if .Values.postgresql.pgbouncer.enabled }}
-          - name: configfiles
-            secret:
-              secretName: {{ include "drupal.fullname" . }}-pgbouncer
-{{- end }}
-{{- if .Values.azureFile.enabled }}
+{{- else if .Values.azureFile.enabled }}
       - name: files-public
         persistentVolumeClaim:
           claimName: {{ include "drupal.fullname" . }}-public
       - name: files-private
         persistentVolumeClaim:
           claimName: {{ include "drupal.fullname" . }}-private
+{{- end }}
+{{- if .Values.postgresql.pgbouncer.enabled }}
+          - name: configfiles
+            secret:
+              secretName: {{ include "drupal.fullname" . }}-pgbouncer
 {{- end }}
 {{- if .Values.drupal.volumes }}
 {{ toYaml .Values.drupal.volumes | indent 10 }}

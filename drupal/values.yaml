@@ -270,6 +270,10 @@ osb:
       endIPAddress: "255.255.255.255"
       name: "AllowAll"
 
+# AzureFile logic
+azureFile:
+  enabled: false
+
 ## Configuration values for the MySQL dependency sub-chart
 ## ref: https://github.com/kubernetes/charts/blob/master/stable/mysql/README.md
 mysql:

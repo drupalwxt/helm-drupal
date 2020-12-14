@@ -1,0 +1,23 @@
+{{- if and .Values.azureFile.enabled -}}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+{{- if .Values.azureFile.annotations }}
+  annotations:
+{{ toYaml .Values.azureFile.annotations | indent 4 }}
+{{- end }}
+  name: {{ include "drupal.fullname" . }}-private
+spec:
+  capacity:
+    storage: {{ .Values.azureFile.size }}
+  accessModes:
+    - {{- if .Values.azureFile.accessMode }}
+{{- if .Values.azureFile.private }}
+{{ toYaml .Values.azureFile.private | indent 8 }}
+{{- end }}
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - uid=82
+    - gid=82
+{{- end }}

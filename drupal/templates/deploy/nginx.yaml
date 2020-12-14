@@ -78,6 +78,11 @@ spec:
       - name: cm-nginx
         configMap:
           name: {{ include "drupal.fullname" . }}-nginx
+{{- if .Values.azureFile.enabled }}
+      - name: files-public
+        persistentVolumeClaim:
+          claimName: {{ include "drupal.fullname" . }}-public
+{{- end }}
 {{- if .Values.nginx.volumes }}
 {{ toYaml .Values.nginx.volumes | indent 6 }}
 {{- end }}

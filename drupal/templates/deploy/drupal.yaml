@@ -216,6 +216,14 @@ spec:
         secret:
            secretName: {{ include "drupal.fullname" . }}-pgbouncer
 {{- end }}
+{{- if .Values.azureFile.enabled }}
+      - name: files-public
+        persistentVolumeClaim:
+          claimName: {{ include "drupal.fullname" . }}-public
+      - name: files-private
+        persistentVolumeClaim:
+          claimName: {{ include "drupal.fullname" . }}-private
+{{- end }}
 {{- if .Values.drupal.volumes }}
 {{ toYaml .Values.drupal.volumes | indent 6 }}
 {{- end }}

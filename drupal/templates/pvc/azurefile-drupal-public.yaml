@@ -1,0 +1,24 @@
+{{- if and .Values.azureFile.enabled -}}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+{{- if .Values.azureFile.annotations }}
+  annotations:
+{{ toYaml .Values.azureFile.annotations | indent 4 }}
+{{- end }}
+  name: {{ include "drupal.fullname" . }}-public
+spec:
+  accessModes:
+    - {{- if .Values.azureFile.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.azureFile.size }}
+  volumeName: {{ include "drupal.fullname" . }}-public
+{{- if .Values.azureFile.storageClass }}
+{{- if (eq "-" .Values.azureFile.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.azureFile.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end }}

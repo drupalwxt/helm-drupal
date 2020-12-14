@@ -188,7 +188,6 @@ spec:
             emptyDir: {}
           - name: config-sync
             emptyDir: {}
-{{- end }}
 {{- if .Values.drupal.persistence.enabled }}
           - name: files
             persistentVolumeClaim:

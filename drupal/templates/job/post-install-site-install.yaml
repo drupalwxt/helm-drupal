@@ -361,9 +361,6 @@ spec:
       - name: files
         persistentVolumeClaim:
           claimName: {{ template "drupal.fullname" . }}-drupal
-{{- else if not .Values.drupal.disableDefaultFilesMount }}
-      - name: files
-        emptyDir: {}
 {{- else if .Values.azureFile.enabled }}
       - name: files-public
         persistentVolumeClaim:
@@ -371,6 +368,9 @@ spec:
       - name: files-private
         persistentVolumeClaim:
           claimName: {{ include "drupal.fullname" . }}-private
+{{- else if not .Values.drupal.disableDefaultFilesMount }}
+      - name: files
+        emptyDir: {}
 {{- end }}
 {{- if .Values.postgresql.pgbouncer.enabled }}
       - name: configfiles

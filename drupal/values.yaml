@@ -557,6 +557,10 @@ varnish:
       unset resp.http.X-Varnish;
       unset resp.http.Via;
 
+      # Comment these for easier Drupal cache tag debugging in development.
+      unset resp.http.Cache-Tags;
+      unset resp.http.X-Drupal-Cache-Contexts;
+
       # Add Content-Security-Policy
       # set resp.http.Content-Security-Policy = "default-src 'self' *.example.ca *.example.ca; style-src 'self' 'unsafe-inline' *.example.ca https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.example.ca  *.adobedtm.com use.fontawesome.com blob:; connect-src 'self' *.example.ca *.omtrdc.net *.demdex.net *.everesttech.net; img-src 'self' *.example.ca *.omtrdc.net *.demdex.net *.everesttech.net data:; font-src 'self' *.example.ca https://fonts.gstatic.com";
 

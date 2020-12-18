@@ -200,7 +200,7 @@ spec:
           - name: files
             persistentVolumeClaim:
               claimName: {{ template "drupal.fullname" . }}-drupal
-{{- else if .Values.azureFile.enabled }}
+{{- if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
       - name: files-public
         persistentVolumeClaim:
           claimName: {{ include "drupal.fullname" . }}-public

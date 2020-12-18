@@ -26,6 +26,25 @@ spec:
         spec:
           restartPolicy: OnFailure
           containers:
+          - name: drush
+            image: "{{ .Values.drupal.image }}:{{ default .Chart.AppVersion .Values.drupal.tag }}"
+            imagePullPolicy: {{ default "" .Values.drupal.imagePullPolicy | quote }}
+            command:
+            - '/bin/sh'
+            - '-c'
+            - |
+                # Errors should fail the job
+                set -e
+
+                # Wait for DB to be available
+                until drush sql:query 'SHOW TABLES;'; do echo Waiting for DB; sleep 3; done
+                echo DB available
+
+                # Check Drush status
+                drush status
+
+                # Run cron
+                drush -y core-cron
 {{- if .Values.postgresql.pgbouncer.enabled }}
           - name: pgbouncer
             image: mcr.microsoft.com/azure-oss-db-tools/pgbouncer-sidecar:latest
@@ -49,25 +68,6 @@ spec:
               capabilities:
                 drop: ['all']
 {{- end  }}
-          - name: drush
-            image: "{{ .Values.drupal.image }}:{{ default .Chart.AppVersion .Values.drupal.tag }}"
-            imagePullPolicy: {{ default "" .Values.drupal.imagePullPolicy | quote }}
-            command:
-            - '/bin/sh'
-            - '-c'
-            - |
-                # Errors should fail the job
-                set -e
-
-                # Wait for DB to be available
-                until drush sql:query 'SHOW TABLES;'; do echo Waiting for DB; sleep 3; done
-                echo DB available
-
-                # Check Drush status
-                drush status
-
-                # Run cron
-                drush -y core-cron
             env:
 {{- if .Values.external.enabled }}
             - name: EXTERNAL_PASSWORD

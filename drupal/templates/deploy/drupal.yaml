@@ -23,11 +23,58 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
         tier: drupal
     spec:
-{{- if .Values.drupal.initContainers }}
+{{- if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
       initContainers:
-{{ toYaml .Values.drupal.initContainers | indent 8 }}
+        - name: init-chown
+          image: 'alpine:3.10'
+          command:
+            - chown
+            - '-R'
+            - '82:82'
+            - /mnt/azure
+          resources: {}
+          volumeMounts:
+{{- if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
+            - name: files-public
+              mountPath: /mnt/azure
+{{- end }}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+        - name: init-media-icons-folder
+          image: 'alpine:3.10'
+          command:
+            - mkdir
+            - '-p'
+            - /files/media-icons/generic
+          resources: {}
+          volumeMounts:
+{{- if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
+            - name: files-public
+              mountPath: /files
+{{- end }}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
 {{- end }}
       containers:
+      - image: "{{ .Values.drupal.image }}:{{ default .Chart.AppVersion .Values.drupal.tag }}"
+        imagePullPolicy: {{ default "" .Values.drupal.imagePullPolicy | quote }}
+        name: drupal
+{{- if .Values.drupal.healthcheck.enabled }}
+        livenessProbe:
+          exec:
+            command:
+              - php-fpm-healthcheck
+          initialDelaySeconds: 0
+          periodSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+              - php-fpm-healthcheck
+          initialDelaySeconds: 1
+          periodSeconds: 5
+{{- end  }}
 {{- if .Values.postgresql.pgbouncer.enabled }}
       - name: pgbouncer
         image: mcr.microsoft.com/azure-oss-db-tools/pgbouncer-sidecar:latest
@@ -50,23 +97,6 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             drop: ['all']
-{{- end  }}
-      - image: "{{ .Values.drupal.image }}:{{ default .Chart.AppVersion .Values.drupal.tag }}"
-        imagePullPolicy: {{ default "" .Values.drupal.imagePullPolicy | quote }}
-        name: drupal
-{{- if .Values.drupal.healthcheck.enabled }}
-        livenessProbe:
-          exec:
-            command:
-              - php-fpm-healthcheck
-          initialDelaySeconds: 0
-          periodSeconds: 5
-        readinessProbe:
-          exec:
-            command:
-              - php-fpm-healthcheck
-          initialDelaySeconds: 1
-          periodSeconds: 5
 {{- end  }}
         env:
 {{- if .Values.external.enabled }}

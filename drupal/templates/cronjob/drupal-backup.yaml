@@ -26,29 +26,6 @@ spec:
         spec:
           restartPolicy: OnFailure
           containers:
-{{- if .Values.postgresql.pgbouncer.enabled }}
-          - name: pgbouncer
-            image: mcr.microsoft.com/azure-oss-db-tools/pgbouncer-sidecar:latest
-            imagePullPolicy: Always
-            ports:
-              - containerPort: 5432
-            volumeMounts:
-              - name: configfiles
-                mountPath: "/etc/pgbouncer"
-                readOnly: true
-            livenessProbe:
-              tcpSocket:
-                port: 5432
-              periodSeconds: 60
-            lifecycle:
-              preStop:
-                exec:
-                  command: ["/bin/sh", "-c", "killall -INT pgbouncer && sleep 120"]
-            securityContext:
-              allowPrivilegeEscalation: false
-              capabilities:
-                drop: ['all']
-{{- end  }}
           - name: drush
             image: "{{ .Values.drupal.image }}:{{ default .Chart.AppVersion .Values.drupal.tag }}"
             imagePullPolicy: {{ default "" .Values.drupal.imagePullPolicy | quote }}
@@ -72,6 +49,29 @@ spec:
                 drush -y sql-dump | gzip > /backup/$BACKUPNAME/db.sql.gz
                 tar czvf /backup/$BACKUPNAME/files.tar.gz --directory=sites/default/files .
                 tar czvf /backup/$BACKUPNAME/private.tar.gz --directory=/var/www/private .
+{{- if .Values.postgresql.pgbouncer.enabled }}
+          - name: pgbouncer
+            image: mcr.microsoft.com/azure-oss-db-tools/pgbouncer-sidecar:latest
+            imagePullPolicy: Always
+            ports:
+              - containerPort: 5432
+            volumeMounts:
+              - name: configfiles
+                mountPath: "/etc/pgbouncer"
+                readOnly: true
+            livenessProbe:
+              tcpSocket:
+                port: 5432
+              periodSeconds: 60
+            lifecycle:
+              preStop:
+                exec:
+                  command: ["/bin/sh", "-c", "killall -INT pgbouncer && sleep 120"]
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop: ['all']
+{{- end  }}
             env:
 {{- if .Values.external.enabled }}
             - name: EXTERNAL_PASSWORD

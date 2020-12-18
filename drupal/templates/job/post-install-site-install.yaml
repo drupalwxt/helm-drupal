@@ -22,34 +22,41 @@ spec:
         app.kubernetes.io/managed-by: {{ .Release.Service }}
     spec:
       restartPolicy: OnFailure
-{{- if .Values.drupal.initContainers }}
+{{- if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
       initContainers:
-{{ toYaml .Values.drupal.initContainers | indent 8 }}
+        - name: init-chown
+          image: 'alpine:3.10'
+          command:
+            - chown
+            - '-R'
+            - '82:82'
+            - /mnt/azure
+          resources: {}
+          volumeMounts:
+{{- if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
+            - name: files-public
+              mountPath: /mnt/azure
+{{- end }}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+        - name: init-media-icons-folder
+          image: 'alpine:3.10'
+          command:
+            - mkdir
+            - '-p'
+            - /files/media-icons/generic
+          resources: {}
+          volumeMounts:
+{{- if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
+            - name: files-public
+              mountPath: /files
+{{- end }}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
 {{- end }}
       containers:
-{{- if .Values.postgresql.pgbouncer.enabled }}
-      - name: pgbouncer
-        image: mcr.microsoft.com/azure-oss-db-tools/pgbouncer-sidecar:latest
-        imagePullPolicy: Always
-        ports:
-          - containerPort: 5432
-        volumeMounts:
-          - name: configfiles
-            mountPath: "/etc/pgbouncer"
-            readOnly: true
-        livenessProbe:
-          tcpSocket:
-            port: 5432
-          periodSeconds: 60
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/bin/sh", "-c", "killall -INT pgbouncer && sleep 120"]
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop: ['all']
-{{- end  }}
       - name: drush
         image: "{{ .Values.drupal.image }}:{{ default .Chart.AppVersion .Values.drupal.tag }}"
         imagePullPolicy: {{ default "" .Values.drupal.imagePullPolicy | quote }}
@@ -224,6 +231,29 @@ spec:
               {{- if .Values.drupal.extraInstallScripts }}
               {{ .Values.drupal.extraInstallScripts | nindent 14}}
               {{- end }}
+{{- if .Values.postgresql.pgbouncer.enabled }}
+      - name: pgbouncer
+        image: mcr.microsoft.com/azure-oss-db-tools/pgbouncer-sidecar:latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 5432
+        volumeMounts:
+          - name: configfiles
+            mountPath: "/etc/pgbouncer"
+            readOnly: true
+        livenessProbe:
+          tcpSocket:
+            port: 5432
+          periodSeconds: 60
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "killall -INT pgbouncer && sleep 120"]
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ['all']
+{{- end  }}
         env:
 {{- if .Values.external.enabled }}
         - name: EXTERNAL_PASSWORD

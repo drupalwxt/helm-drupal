@@ -22,16 +22,16 @@ spec:
       storage: {{ .Values.azureFile.size }}
   volumeName: {{ include "drupal.fullname" . }}-private
 {{- else if .Values.sharedDisk.enabled }}
-      storage: {{ .Values.sharedDisk.size }}
+      storage: "128Gi"
   volumeName: {{ include "drupal.fullname" . }}-private
 {{- end }}
 {{- if or (.Values.azureFile.storageClass) (.Values.sharedDisk.storageClass) }}
 {{- if or (eq "-" .Values.azureFile.storageClass) (eq "-" .Values.sharedDisk.storageClass) }}
   storageClassName: ""
+{{- else if .Values.azureFile.storageClass }}
+  storageClassName: "{{ .Values.azureFile.storageClass }}"
 {{- else if .Values.sharedDisk.storageClass }}
-  storageClassName: "{{ .Values.sharedDisk.storageClass }}"
-{{- else if .Values.sharedDisk.storageClass }}
-  storageClassName: "{{ include "drupal.fullname" . }}-shared-disk"
+  storageClassName: "default"
 {{- end }}
 {{- end }}
 {{- end }}

@@ -28,8 +28,8 @@ spec:
 {{- if or (.Values.azureFile.storageClass) (.Values.sharedDisk.storageClass) }}
 {{- if or (eq "-" .Values.azureFile.storageClass) (eq "-" .Values.sharedDisk.storageClass) }}
   storageClassName: ""
-{{- else if .Values.sharedDisk.storageClass }}
-  storageClassName: "{{ .Values.sharedDisk.storageClass }}"
+{{- else if .Values.azureFile.storageClass }}
+  storageClassName: "{{ .Values.azureFile.storageClass }}"
 {{- else if .Values.sharedDisk.storageClass }}
   storageClassName: "{{ include "drupal.fullname" . }}-shared-disk"
 {{- end }}

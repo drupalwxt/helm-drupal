@@ -54,16 +54,7 @@ drupal:
   # Allows custom /var/www/html/sites/default/files and /var/www/private mounts
   disableDefaultFilesMount: true
 
-  # kubectl create secret generic drupal-storage --from-literal=azurestorageaccountname=$STORAGE_ACCOUNT_NAME --from-literal=azurestorageaccountkey=$STORAGE_KEY -n drupal
-  volumes:
-    - name: files-public
-      azureFile:
-        secretName: drupal-storage
-        shareName: drupal-public
-    - name: files-private
-      azureFile:
-        secretName: drupal-storage
-        shareName: drupal-private
+  # volumes: {}
 
   volumeMounts:
     - name: files-public
@@ -71,28 +62,11 @@ drupal:
     - name: files-private
       mountPath: /var/www/private
 
-  initContainers:
-    # Pre-create the media-icons folder
-    - name: init-media-icons-folder
-      image: alpine:3.10
-      command:
-        - mkdir
-        - -p
-        - /files/media-icons/generic
-      volumeMounts:
-        - name: files-public
-          mountPath: /files
-
 nginx:
   # Set your cluster's DNS resolution service here
   resolver: 10.0.0.10
 
-  # kubectl create secret generic drupal-storage --from-literal=azurestorageaccountname=$STORAGE_ACCOUNT_NAME --from-literal=azurestorageaccountkey=$STORAGE_KEY -n drupal
-  volumes:
-    - name: files-public
-      azureFile:
-        secretName: drupal-storage
-        shareName: drupal-public
+  # volumes: {}
 
   volumeMounts:
     - name: files-public
@@ -108,6 +82,10 @@ mysql:
     enabled: true
     storageClass: managed-premium
     size: 256Gi
+
+# kubectl create secret generic drupal-storage --from-literal=azurestorageaccountname=$STORAGE_ACCOUNT_NAME --from-literal=azurestorageaccountkey=$STORAGE_KEY -n drupal
+azureFile:
+  enabled: true
 
 # Files: object storage
 #

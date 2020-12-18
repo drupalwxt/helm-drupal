@@ -23,11 +23,53 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
         tier: drupal
     spec:
-{{- if .Values.drupal.initContainers }}
+{{- if or (.Values.drupal.initContainers) (or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled)) }}
       initContainers:
+{{- if .Values.sharedDisk.enabled }}
+        - name: init-chown
+          image: 'alpine:3.10'
+          command:
+            - chown
+            - '-R'
+            - '82:82'
+            - /mnt/azure
+          volumeMounts:
+            - name: files-public
+              mountPath: /mnt/azure
+{{- end }}
+{{- if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
+        - name: init-media-icons-folder
+          image: 'alpine:3.10'
+          command:
+            - mkdir
+            - '-p'
+            - /files/media-icons/generic
+          volumeMounts:
+            - name: files-public
+              mountPath: /files
+{{- end }}
+{{- if .Values.drupal.initContainers }}
 {{ toYaml .Values.drupal.initContainers | indent 8 }}
 {{- end }}
+{{- end }}
       containers:
+      - image: "{{ .Values.drupal.image }}:{{ default .Chart.AppVersion .Values.drupal.tag }}"
+        imagePullPolicy: {{ default "" .Values.drupal.imagePullPolicy | quote }}
+        name: drupal
+{{- if .Values.drupal.healthcheck.enabled }}
+        livenessProbe:
+          exec:
+            command:
+              - php-fpm-healthcheck
+          initialDelaySeconds: 0
+          periodSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+              - php-fpm-healthcheck
+          initialDelaySeconds: 1
+          periodSeconds: 5
+{{- end  }}
 {{- if .Values.postgresql.pgbouncer.enabled }}
       - name: pgbouncer
         image: mcr.microsoft.com/azure-oss-db-tools/pgbouncer-sidecar:latest
@@ -50,23 +92,6 @@ spec:
           allowPrivilegeEscalation: false
           capabilities:
             drop: ['all']
-{{- end  }}
-      - image: "{{ .Values.drupal.image }}:{{ default .Chart.AppVersion .Values.drupal.tag }}"
-        imagePullPolicy: {{ default "" .Values.drupal.imagePullPolicy | quote }}
-        name: drupal
-{{- if .Values.drupal.healthcheck.enabled }}
-        livenessProbe:
-          exec:
-            command:
-              - php-fpm-healthcheck
-          initialDelaySeconds: 0
-          periodSeconds: 5
-        readinessProbe:
-          exec:
-            command:
-              - php-fpm-healthcheck
-          initialDelaySeconds: 1
-          periodSeconds: 5
 {{- end  }}
         env:
 {{- if .Values.external.enabled }}
@@ -215,6 +240,13 @@ spec:
       - name: files
         persistentVolumeClaim:
           claimName: {{ template "drupal.fullname" . }}-drupal
+{{- else if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
+      - name: files-public
+        persistentVolumeClaim:
+          claimName: {{ include "drupal.fullname" . }}-public
+      - name: files-private
+        persistentVolumeClaim:
+          claimName: {{ include "drupal.fullname" . }}-private
 {{- else if not .Values.drupal.disableDefaultFilesMount }}
       - name: files
         emptyDir: {}
@@ -222,7 +254,7 @@ spec:
 {{- if .Values.postgresql.pgbouncer.enabled }}
       - name: configfiles
         secret:
-           secretName: {{ include "drupal.fullname" . }}-pgbouncer
+            secretName: {{ include "drupal.fullname" . }}-pgbouncer
 {{- end }}
 {{- if .Values.drupal.volumes }}
 {{ toYaml .Values.drupal.volumes | indent 6 }}

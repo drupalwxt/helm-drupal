@@ -1,6 +1,6 @@
 dependencies:
 - name: mysql
-  repository: https://kubernetes-charts.storage.googleapis.com
+  repository: https://charts.helm.sh/stable
   version: 1.6.2
 - name: minio
   repository: https://helm.min.io/
@@ -14,5 +14,5 @@ dependencies:
 - name: varnish
   repository: https://statcan.github.io/charts
   version: 0.1.5
-digest: sha256:defbf681c00c2cf7bf6e24e64a2654b3750fef0f99a26479554fc6afd5ec9601
-generated: "2020-11-22T13:38:54.540791-05:00"
+digest: sha256:70716b636bb8ba9374bfd6f3bd3e2375afa343e532101f788cb0015571d27a18
+generated: "2020-12-18T14:20:58.438323-05:00"

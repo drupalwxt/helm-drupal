@@ -270,6 +270,37 @@ osb:
       endIPAddress: "255.255.255.255"
       name: "AllowAll"
 
+# Shared Disk logic
+sharedDisk:
+  enabled: false
+
+  annotations: {}
+  accessMode: ReadWriteMany
+  size: 256Gi
+  # storageClass: "-"
+  maxShares: 2
+
+# Azure File logic
+azureFile:
+  enabled: false
+
+  annotations: {}
+  accessMode: ReadWriteMany
+  size: 100Gi
+  # storageClass: "-"
+
+  public:
+    azureFile:
+      secretName: drupal-storage
+      shareName: drupal-public
+      readOnly: false
+
+  private:
+    azureFile:
+      secretName: drupal-storage
+      shareName: drupal-private
+      readOnly: false
+
 ## Configuration values for the MySQL dependency sub-chart
 ## ref: https://github.com/kubernetes/charts/blob/master/stable/mysql/README.md
 mysql:

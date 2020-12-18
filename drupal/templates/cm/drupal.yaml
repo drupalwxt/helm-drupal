@@ -8,6 +8,8 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
+  www.conf: |
+{{ tpl (.Files.Get "conf/www.conf") . | indent 4 }}
   settings.php: |
 {{- if eq "d8" .Values.drupal.version }}
 {{ tpl (.Files.Get "conf/settings.d8.php") . | indent 4 }}

@@ -23,8 +23,9 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
         tier: drupal
     spec:
-{{- if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
+{{- if or (.Values.drupal.initContainers) (or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled)) }}
       initContainers:
+{{- if .Values.sharedDisk.enabled }}
         - name: init-chown
           image: 'alpine:3.10'
           command:
@@ -32,30 +33,25 @@ spec:
             - '-R'
             - '82:82'
             - /mnt/azure
-          resources: {}
           volumeMounts:
-{{- if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
             - name: files-public
               mountPath: /mnt/azure
 {{- end }}
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-          imagePullPolicy: IfNotPresent
+{{- if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
         - name: init-media-icons-folder
           image: 'alpine:3.10'
           command:
             - mkdir
             - '-p'
             - /files/media-icons/generic
-          resources: {}
           volumeMounts:
-{{- if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
             - name: files-public
               mountPath: /files
 {{- end }}
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
-          imagePullPolicy: IfNotPresent
+{{- if .Values.drupal.initContainers }}
+{{ toYaml .Values.drupal.initContainers | indent 8 }}
+{{- end }}
+{{- end }}
 {{- end }}
       containers:
       - image: "{{ .Values.drupal.image }}:{{ default .Chart.AppVersion .Values.drupal.tag }}"

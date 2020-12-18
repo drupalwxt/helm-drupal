@@ -252,6 +252,14 @@ spec:
 {{- end }}
         volumeMounts:
         - name: cm-drupal
+          readOnly: true
+          mountPath: /usr/local/etc/php/conf.d/opcache-recommended.ini
+          subPath: opcache-recommended.ini
+        - name: cm-drupal
+          readOnly: true
+          mountPath: /usr/local/etc/php-fpm.d/www.conf
+          subPath: www.conf
+        - name: cm-drupal
           mountPath: /var/www/html/sites/default/settings.php
           subPath: settings.php
           readOnly: true

@@ -22,7 +22,7 @@ spec:
         app.kubernetes.io/managed-by: {{ .Release.Service }}
     spec:
       restartPolicy: OnFailure
-{{- if .Values.sharedDisk.enabled }}
+{{- if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
       initContainers:
         - name: init-chown
           image: 'alpine:3.10'

@@ -278,7 +278,7 @@ sharedDisk:
   accessMode: ReadWriteMany
   size: 256Gi
   # storageClass: "-"
-	maxShares: 2
+  maxShares: 2
 
 # Azure File logic
 azureFile:

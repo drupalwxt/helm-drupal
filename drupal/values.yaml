@@ -278,7 +278,14 @@ sharedDisk:
   accessMode: ReadWriteMany
   size: 256Gi
   # storageClass: "-"
+
   maxShares: 2
+
+  private:
+    azureFile:
+      secretName: drupal-storage
+      shareName: drupal-private
+      readOnly: false
 
 # Azure File logic
 azureFile:

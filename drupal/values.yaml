@@ -252,24 +252,6 @@ external:
   user: wxt
   password: password
 
-# Use a managed instance from the Open Service Broker
-# Due to limitations with provider we don't recommend this
-# (example here is for Azure)
-osb:
-  enabled: false
-  # Drupal DB driver
-  driver: mysql
-
-  serviceClass: azure-mysql-5-7
-  servicePlan: general-purpose
-  parameters:
-    location: canadacentral
-    resourceGroup: rg-name
-    firewallRules:
-    - startIPAddress: "0.0.0.0"
-      endIPAddress: "255.255.255.255"
-      name: "AllowAll"
-
 # Shared Disk logic
 sharedDisk:
   enabled: false

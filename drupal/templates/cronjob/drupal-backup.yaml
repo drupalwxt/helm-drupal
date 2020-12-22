@@ -56,32 +56,6 @@ spec:
                 secretKeyRef:
                   name: {{ template "drupal.fullname" . }}
                   key: databasePassword
-{{- else if .Values.osb.enabled }}
-            - name: OSB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ include "drupal.fullname" . }}-mysql"
-                  key: host
-            - name: OSB_PORT
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ include "drupal.fullname" . }}-mysql"
-                  key: port
-            - name: OSB_DATABASE
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ include "drupal.fullname" . }}-mysql"
-                  key: database
-            - name: OSB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ include "drupal.fullname" . }}-mysql"
-                  key: username
-            - name: OSB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ include "drupal.fullname" . }}-mysql"
-                  key: password
 {{- else if .Values.mysql.enabled }}
             - name: MYSQL_PASSWORD
               valueFrom:

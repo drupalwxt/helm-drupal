@@ -150,7 +150,7 @@ drupal:
     accessMode: ReadWriteOnce
     size: 8Gi
 
-  # Allows custom /var/www/html/sites/default/files and /var/www/private mounts
+  # Allows custom /var/www/html/sites/default/files and /private mounts
   disableDefaultFilesMount: false
   volumes:
   #  - name: nothing

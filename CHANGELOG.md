@@ -1,10 +1,8 @@
-## 0.6.8
+## 0.7.0
 
-- Resolved issues with the Redis integration
-
-## 0.6.1
-
-- Resolved issues with the Varnish integration
+- Added support for Azure Shared Disk
+- Added Redis integration
+- Added Varnish integration
 
 ## 0.6.0
 

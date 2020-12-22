@@ -89,12 +89,12 @@ spec:
               set +e
               find sites/default/files/ -type f -print0 | xargs -0 rm
               find sites/default/files/ -mindepth 1 -type d -print0 | xargs -0 rmdir
-              find /var/www/private/ -type f -print0 | xargs -0 rm
-              find /var/www/private/ -mindepth 1 -type d -print0 | xargs -0 rmdir
+              find /private/ -type f -print0 | xargs -0 rm
+              find /private/ -mindepth 1 -type d -print0 | xargs -0 rmdir
               set -e
 
               tar -zxf /backup/$BACKUPNAME/files.tar.gz --directory sites/default/files --no-acls --no-xattrs -m --no-same-permissions --no-overwrite-dir
-              tar -zxf /backup/$BACKUPNAME/private.tar.gz --directory /var/www/private --no-acls --no-xattrs -m --no-same-permissions --no-overwrite-dir
+              tar -zxf /backup/$BACKUPNAME/private.tar.gz --directory /private --no-acls --no-xattrs -m --no-same-permissions --no-overwrite-dir
 
               # Run database updates
               {{- if .Values.drupal.cacheRebuildBeforeDatabaseMigration }}
@@ -227,29 +227,6 @@ spec:
               {{- if .Values.drupal.extraInstallScripts }}
               {{ .Values.drupal.extraInstallScripts | nindent 14}}
               {{- end }}
-{{- if .Values.postgresql.pgbouncer.enabled }}
-      - name: pgbouncer
-        image: mcr.microsoft.com/azure-oss-db-tools/pgbouncer-sidecar:latest
-        imagePullPolicy: Always
-        ports:
-          - containerPort: 5432
-        volumeMounts:
-          - name: configfiles
-            mountPath: "/etc/pgbouncer"
-            readOnly: true
-        livenessProbe:
-          tcpSocket:
-            port: 5432
-          periodSeconds: 60
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/bin/sh", "-c", "killall -INT pgbouncer && sleep 120"]
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop: ['all']
-{{- end  }}
         env:
 {{- if .Values.external.enabled }}
         - name: EXTERNAL_PASSWORD
@@ -356,7 +333,7 @@ spec:
         - name: twig-cache
           mountPath: /cache/twig
         - name: config-sync
-          mountPath: /config/sync
+          mountPath: /private/config/sync
 {{- if .Values.drupal.restore.enabled }}
         - name: backup
           mountPath: /backup
@@ -366,12 +343,35 @@ spec:
           mountPath: /var/www/html/sites/default/files
           subPath: public
         - name: files
-          mountPath: /var/www/private
+          mountPath: /private
           subPath: private
 {{- end }}
 {{- if .Values.drupal.volumeMounts }}
 {{ toYaml .Values.drupal.volumeMounts | indent 8 }}
 {{- end }}
+{{- if .Values.postgresql.pgbouncer.enabled }}
+      - name: pgbouncer
+        image: mcr.microsoft.com/azure-oss-db-tools/pgbouncer-sidecar:latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 5432
+        volumeMounts:
+          - name: configfiles
+            mountPath: "/etc/pgbouncer"
+            readOnly: true
+        livenessProbe:
+          tcpSocket:
+            port: 5432
+          periodSeconds: 60
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "killall -INT pgbouncer && sleep 120"]
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ['all']
+{{- end  }}
       {{- if .Values.drupal.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.drupal.imagePullSecrets | indent 8 }}
@@ -395,7 +395,7 @@ spec:
       - name: files
         persistentVolumeClaim:
           claimName: {{ template "drupal.fullname" . }}-drupal
-{{- if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
+{{- else if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
       - name: files-public
         persistentVolumeClaim:
           claimName: {{ include "drupal.fullname" . }}-public
@@ -413,5 +413,4 @@ spec:
 {{- end }}
 {{- if .Values.drupal.volumes }}
 {{ toYaml .Values.drupal.volumes | indent 6 }}
-{{- end }}
 {{- end }}

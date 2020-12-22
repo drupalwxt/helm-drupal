@@ -775,7 +775,7 @@ if ($drupal_settings !== 'production') {
 /**
 * Set private file path directory.
 */
-$settings['file_private_path'] =  '/var/www/private';
+$settings['file_private_path'] =  '/private';
 
 /**
 * Load local development override configuration, if available.
@@ -793,11 +793,11 @@ if ($drupal_settings === 'development' && file_exists(__DIR__ . '/settings.local
 
 /** Everything after here is added by the installation process.
 *
-* TODO: improve the installtion by putting the settings.local part below these
+* TODO: improve the installation by putting the settings.local part below these
 * settings.
 */
 
-$config_directories[CONFIG_SYNC_DIRECTORY] = '/config/sync';
+$config_directories[CONFIG_SYNC_DIRECTORY] = '/private/config/sync';
 
 {{- if .Values.drupal.configSplit.enabled }}
 /**
@@ -810,7 +810,7 @@ $config_directories[CONFIG_SYNC_DIRECTORY] = '/config/sync';
  *
  * To disable this functionality simply set the following parameters:
  * $wxt_override_config_dirs = FALSE;
- * $settings['config_sync_directory'] = $dir . "/config/$site_dir";
+ * $settings['config_sync_directory'] = $dir . "/private/config/$site_dir";
  *
  * See https://github.com/acquia/blt/blob/12.x/settings/config.settings.php
  * for more information.
@@ -822,8 +822,8 @@ if (!isset($wxt_override_config_dirs)) {
   $wxt_override_config_dirs = TRUE;
 }
 if ($wxt_override_config_dirs) {
-  $config_directories['sync'] = $repo_root . "/var/www/html/sites/default/files/config/default";
-  $settings['config_sync_directory'] = $repo_root . "/var/www/html/sites/default/files/config/default";
+  $config_directories['sync'] = $repo_root . "/private/config/default";
+  $settings['config_sync_directory'] = $repo_root . "/private/config/default";
 }
 $split_filename_prefix = 'config_split.config_split';
 if (isset($config_directories['sync'])) {

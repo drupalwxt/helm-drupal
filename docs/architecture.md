@@ -63,10 +63,6 @@ Statistics Canada is looking at levearing Kubernetes for a majority of its workl
 - Cert-manager: Using Let's Encrypt, providing automatic certificate issuance and renewal
 - Open Policy Agent: Provides enforcement of defined policies (for example, using images from authorized sources only)
 
-#### Canadian Digital Services
-
-The Canadian Digital Services (CDS) develops all of their applications to run in a Kubernetes-based environment on Google Cloud. They are actively involved in promoting Kubernetes, DevOps and other modern workflows across the Government of Canada. They are launching tools suchs as GC Notify, their Security Goals compliance reporting tool, and work closely with GC Tools and GC Connex.
-
 #### Others
 
 Many others across the Government of Canada, municipalities and internal Government agencies are actively and/or investigating Kubernetes. This includes Shared Services Canada (SSC) through their investigation into a managed cloud platform powered by OpenShift (Kubernetes) for use by other departments. The Communication Security Establishment (CSE) is leveraging Kubernetes in their on-premise computing environment, running cloud native technologies in a restricted environment.

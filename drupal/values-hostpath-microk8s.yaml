@@ -68,7 +68,7 @@ drupal:
   healthcheck:
     enabled: true
 
-  # Allows custom /var/www/html/sites/default/files and /var/www/private mounts
+  # Allows custom /var/www/html/sites/default/files and /private mounts
   disableDefaultFilesMount: true
 
 
@@ -84,7 +84,7 @@ drupal:
     - name: files-public
       mountPath: /var/www/html/sites/default/files
     - name: files-private
-      mountPath: /var/www/private
+      mountPath: /private
 
 nginx:
   # Set your cluster's DNS resolution service here

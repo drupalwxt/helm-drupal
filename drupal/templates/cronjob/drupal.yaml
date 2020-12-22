@@ -45,29 +45,6 @@ spec:
 
                 # Run cron
                 drush -y core-cron
-{{- if .Values.postgresql.pgbouncer.enabled }}
-          - name: pgbouncer
-            image: mcr.microsoft.com/azure-oss-db-tools/pgbouncer-sidecar:latest
-            imagePullPolicy: Always
-            ports:
-              - containerPort: 5432
-            volumeMounts:
-              - name: configfiles
-                mountPath: "/etc/pgbouncer"
-                readOnly: true
-            livenessProbe:
-              tcpSocket:
-                port: 5432
-              periodSeconds: 60
-            lifecycle:
-              preStop:
-                exec:
-                  command: ["/bin/sh", "-c", "killall -INT pgbouncer && sleep 120"]
-            securityContext:
-              allowPrivilegeEscalation: false
-              capabilities:
-                drop: ['all']
-{{- end  }}
             env:
 {{- if .Values.external.enabled }}
             - name: EXTERNAL_PASSWORD
@@ -174,17 +151,42 @@ spec:
             - name: twig-cache
               mountPath: /cache/twig
             - name: config-sync
-              mountPath: /config/sync
+              mountPath: /private/config/sync
+{{- if not .Values.drupal.disableDefaultFilesMount }}
             - name: files
               mountPath: /var/www/html/sites/default/files
               subPath: public
             - name: files
-              mountPath: /var/www/private
+              mountPath: /private
               subPath: private
-{{- if .Values.drupal.imagePullSecrets }}
+{{- end }}
+{{- if .Values.postgresql.pgbouncer.enabled }}
+          - name: pgbouncer
+            image: mcr.microsoft.com/azure-oss-db-tools/pgbouncer-sidecar:latest
+            imagePullPolicy: Always
+            ports:
+              - containerPort: 5432
+            volumeMounts:
+              - name: configfiles
+                mountPath: "/etc/pgbouncer"
+                readOnly: true
+            livenessProbe:
+              tcpSocket:
+                port: 5432
+              periodSeconds: 60
+            lifecycle:
+              preStop:
+                exec:
+                  command: ["/bin/sh", "-c", "killall -INT pgbouncer && sleep 120"]
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop: ['all']
+{{- end  }}
+          {{- if .Values.drupal.imagePullSecrets }}
           imagePullSecrets:
 {{ toYaml .Values.drupal.imagePullSecrets | indent 12 }}
-{{- end }}
+          {{- end }}
           # Allow non-root user to access PersistentVolume
           securityContext:
 {{ toYaml .Values.drupal.securityContext | indent 12 }}

@@ -829,7 +829,7 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
 
-$settings["config_sync_directory"] = 'sites/default/files/config/sync';
+$settings["config_sync_directory"] = '/private/config/sync';
 
 {{- if .Values.drupal.configSplit.enabled }}
 /**
@@ -842,7 +842,7 @@ $settings["config_sync_directory"] = 'sites/default/files/config/sync';
  *
  * To disable this functionality simply set the following parameters:
  * $wxt_override_config_dirs = FALSE;
- * $settings['config_sync_directory'] = $dir . "/config/$site_dir";
+ * $settings['config_sync_directory'] = $dir . "/private/config/$site_dir";
  *
  * See https://github.com/acquia/blt/blob/12.x/settings/config.settings.php
  * for more information.
@@ -854,8 +854,8 @@ if (!isset($wxt_override_config_dirs)) {
   $wxt_override_config_dirs = TRUE;
 }
 if ($wxt_override_config_dirs) {
-  $config_directories['sync'] = $repo_root . "/var/www/html/sites/default/files/config/default";
-  $settings['config_sync_directory'] = $repo_root . "/var/www/html/sites/default/files/config/default";
+  $config_directories['sync'] = $repo_root . "/private/config/default";
+  $settings['config_sync_directory'] = $repo_root . "/private/config/default";
 }
 $split_filename_prefix = 'config_split.config_split';
 if (isset($config_directories['sync'])) {

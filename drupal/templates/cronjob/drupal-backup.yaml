@@ -48,30 +48,7 @@ spec:
                 mkdir -p /backup/$BACKUPNAME
                 drush -y sql-dump | gzip > /backup/$BACKUPNAME/db.sql.gz
                 tar czvf /backup/$BACKUPNAME/files.tar.gz --directory=sites/default/files .
-                tar czvf /backup/$BACKUPNAME/private.tar.gz --directory=/var/www/private .
-{{- if .Values.postgresql.pgbouncer.enabled }}
-          - name: pgbouncer
-            image: mcr.microsoft.com/azure-oss-db-tools/pgbouncer-sidecar:latest
-            imagePullPolicy: Always
-            ports:
-              - containerPort: 5432
-            volumeMounts:
-              - name: configfiles
-                mountPath: "/etc/pgbouncer"
-                readOnly: true
-            livenessProbe:
-              tcpSocket:
-                port: 5432
-              periodSeconds: 60
-            lifecycle:
-              preStop:
-                exec:
-                  command: ["/bin/sh", "-c", "killall -INT pgbouncer && sleep 120"]
-            securityContext:
-              allowPrivilegeEscalation: false
-              capabilities:
-                drop: ['all']
-{{- end  }}
+                tar czvf /backup/$BACKUPNAME/private.tar.gz --directory=/private .
             env:
 {{- if .Values.external.enabled }}
             - name: EXTERNAL_PASSWORD
@@ -178,7 +155,7 @@ spec:
             - name: twig-cache
               mountPath: /cache/twig
             - name: config-sync
-              mountPath: /config/sync
+              mountPath: /private/config/sync
             - name: backup
               mountPath: /backup
 {{- if not .Values.drupal.disableDefaultFilesMount }}
@@ -186,16 +163,39 @@ spec:
               mountPath: /var/www/html/sites/default/files
               subPath: public
             - name: files
-              mountPath: /var/www/private
+              mountPath: /private
               subPath: private
 {{- end }}
 {{- if .Values.drupal.volumeMounts }}
 {{ toYaml .Values.drupal.volumeMounts | indent 12 }}
 {{- end }}
-{{- if .Values.drupal.imagePullSecrets }}
+{{- if .Values.postgresql.pgbouncer.enabled }}
+          - name: pgbouncer
+            image: mcr.microsoft.com/azure-oss-db-tools/pgbouncer-sidecar:latest
+            imagePullPolicy: Always
+            ports:
+              - containerPort: 5432
+            volumeMounts:
+              - name: configfiles
+                mountPath: "/etc/pgbouncer"
+                readOnly: true
+            livenessProbe:
+              tcpSocket:
+                port: 5432
+              periodSeconds: 60
+            lifecycle:
+              preStop:
+                exec:
+                  command: ["/bin/sh", "-c", "killall -INT pgbouncer && sleep 120"]
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop: ['all']
+{{- end  }}
+          {{- if .Values.drupal.imagePullSecrets }}
           imagePullSecrets:
 {{ toYaml .Values.drupal.imagePullSecrets | indent 12 }}
-{{- end }}
+          {{- end }}
           # Allow non-root user to access PersistentVolume
           securityContext:
 {{ toYaml .Values.drupal.securityContext | indent 12 }}

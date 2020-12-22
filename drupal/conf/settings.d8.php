@@ -105,17 +105,6 @@ $databases['default']['default'] = array (
   {{- end }}
   ),
 );
-{{- else if .Values.osb.enabled }}
-$databases['default']['default'] = array (
-  'database' => getenv('OSB_DATABASE') ?: '',
-  'username' => getenv('OSB_USERNAME') ?: '',
-  'password' => getenv('OSB_PASSWORD') ?: '',
-  'host' => getenv('OSB_HOST') ?: '',
-  'port' => getenv('OSB_PORT') ?: '',
-  'prefix' => '',
-  'namespace' => 'Drupal\Core\Database\Driver\{{ .Values.osb.driver }}',
-  'driver' => '{{ .Values.osb.driver }}',
-);
 {{- else if .Values.mysql.enabled }}
 $databases['default']['default'] = array (
   'database' => {{ .Values.mysql.mysqlDatabase | quote }},

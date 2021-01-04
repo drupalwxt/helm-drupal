@@ -364,13 +364,13 @@ postgresql:
   #    cpu: "500m"
   nodeSelector: {}
 
-  pgbouncer:
-    enabled: false
-    host: mypgserver.postgres.database.azure.com
-    user: username@hostname
-    password: password
-    poolSize: 50
-    maxClientConnections: 400
+pgbouncer:
+  enabled: false
+  host: mypgserver.postgres.database.azure.com
+  user: username@hostname
+  password: password
+  poolSize: 50
+  maxClientConnections: 400
 
 # Files: object storage
 #

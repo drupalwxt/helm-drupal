@@ -134,7 +134,7 @@ spec:
               mountPath: /private
               subPath: private
 {{- end }}
-{{- if .Values.postgresql.pgbouncer.enabled }}
+{{- if .Values.pgbouncer.enabled }}
           - name: pgbouncer
             image: mcr.microsoft.com/azure-oss-db-tools/pgbouncer-sidecar:latest
             imagePullPolicy: Always
@@ -187,7 +187,7 @@ spec:
           - name: files
             emptyDir: {}
 {{- end }}
-{{- if .Values.postgresql.pgbouncer.enabled }}
+{{- if .Values.pgbouncer.enabled }}
           - name: configfiles
             secret:
               secretName: {{ include "drupal.fullname" . }}-pgbouncer

@@ -1,0 +1,28 @@
+{{- if .Values.sharedDisk.enabled -}}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+{{- if .Values.sharedDisk.annotations }}
+  annotations:
+{{ toYaml .Values.sharedDisk.annotations | indent 4 }}
+{{- end }}
+  name: {{ include "drupal.fullname" . }}-private
+spec:
+  capacity:
+    storage: {{ .Values.sharedDisk.size }}
+  accessModes:
+    - {{ .Values.sharedDisk.accessMode }}
+{{- if eq "-" .Values.sharedDisk.storageClass }}
+  storageClassName: ""
+{{- else if .Values.sharedDisk.storageClass }}
+  storageClassName: "{{ .Values.sharedDisk.storageClass }}"
+{{- end }}
+{{- if .Values.sharedDisk.private }}
+{{ toYaml .Values.sharedDisk.private | indent 2 }}
+{{- end }}
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - uid=82
+    - gid=82
+{{- end }}

@@ -177,12 +177,12 @@ spec:
             persistentVolumeClaim:
               claimName: {{ template "drupal.fullname" . }}-drupal
 {{- else if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
-      - name: files-public
-        persistentVolumeClaim:
-          claimName: {{ include "drupal.fullname" . }}-public
-      - name: files-private
-        persistentVolumeClaim:
-          claimName: {{ include "drupal.fullname" . }}-private
+          - name: files-public
+            persistentVolumeClaim:
+              claimName: {{ include "drupal.fullname" . }}-public
+          - name: files-private
+            persistentVolumeClaim:
+              claimName: {{ include "drupal.fullname" . }}-private
 {{- else if not .Values.drupal.disableDefaultFilesMount }}
           - name: files
             emptyDir: {}

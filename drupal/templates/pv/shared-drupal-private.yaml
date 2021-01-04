@@ -1,31 +1,24 @@
-{{- if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
+{{- if and .Values.azureFile.enabled -}}
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+{{- if .Values.azureFile.annotations }}
   annotations:
-{{- if .Values.azureFile.enabled }}
 {{ toYaml .Values.azureFile.annotations | indent 4 }}
-{{- else if .Values.sharedDisk.enabled }}
-{{ toYaml .Values.sharedDisk.annotations | indent 4 }}
 {{- end }}
   name: {{ include "drupal.fullname" . }}-private
 spec:
   capacity:
-{{- if .Values.azureFile.enabled }}
     storage: {{ .Values.azureFile.size }}
-{{- else if .Values.sharedDisk.enabled }}
-    storage: {{ .Values.sharedDisk.size }}
-{{- end }}
   accessModes:
-{{- if .Values.azureFile.enabled }}
     - {{ .Values.azureFile.accessMode }}
-{{- else if .Values.sharedDisk.enabled }}
-    - {{ .Values.sharedDisk.accessMode }}
+{{- if eq "-" .Values.azureFile.storageClass }}
+  storageClassName: ""
+{{- else if .Values.azureFile.storageClass }}
+  storageClassName: "{{ .Values.azureFile.storageClass }}"
 {{- end }}
 {{- if .Values.azureFile.private }}
-{{ toYaml .Values.azureFile.private | indent 8 }}
-{{- else if .Values.sharedDisk.enabled }}
-{{ toYaml .Values.sharedDisk.private | indent 8 }}
+{{ toYaml .Values.azureFile.private | indent 2 }}
 {{- end }}
   mountOptions:
     - dir_mode=0777

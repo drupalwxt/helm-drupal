@@ -276,7 +276,7 @@ azureFile:
   annotations: {}
   accessMode: ReadWriteMany
   size: 100Gi
-  # storageClass: "-"
+  storageClass: "azurefile"
 
   public:
     azureFile:

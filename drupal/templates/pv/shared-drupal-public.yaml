@@ -12,8 +12,13 @@ spec:
     storage: {{ .Values.azureFile.size }}
   accessModes:
     - {{ .Values.azureFile.accessMode }}
+{{- if eq "-" .Values.azureFile.storageClass }}
+  storageClassName: ""
+{{- else if .Values.azureFile.storageClass }}
+  storageClassName: "{{ .Values.azureFile.storageClass }}"
+{{- end }}
 {{- if .Values.azureFile.public }}
-{{ toYaml .Values.azureFile.public | indent 8 }}
+{{ toYaml .Values.azureFile.public | indent 2 }}
 {{- end }}
   mountOptions:
     - dir_mode=0777

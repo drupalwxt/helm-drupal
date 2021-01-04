@@ -306,8 +306,6 @@ spec:
           readOnly: true
         - name: twig-cache
           mountPath: /cache/twig
-        - name: config-sync
-          mountPath: /private/config/sync
 {{- if .Values.drupal.restore.enabled }}
         - name: backup
           mountPath: /backup
@@ -358,8 +356,6 @@ spec:
         configMap:
           name: {{ include "drupal.fullname" . }}
       - name: twig-cache
-        emptyDir: {}
-      - name: config-sync
         emptyDir: {}
 {{- if .Values.drupal.restore.enabled }}
       - name: backup

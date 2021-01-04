@@ -152,8 +152,6 @@ spec:
           readOnly: true
         - name: twig-cache
           mountPath: /cache/twig
-        - name: config-sync
-          mountPath: /private/config/sync
 {{- if not .Values.drupal.disableDefaultFilesMount }}
         - name: files
           mountPath: /var/www/html/sites/default/files
@@ -206,8 +204,6 @@ spec:
             - key: ssmtp.conf
               path: ssmtp.conf
       - name: twig-cache
-        emptyDir: {}
-      - name: config-sync
         emptyDir: {}
 {{- if .Values.drupal.persistence.enabled }}
       - name: files

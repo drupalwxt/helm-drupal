@@ -3,7 +3,7 @@
 {{- $releaseName := .Release.Name -}}
 {{- $varnishEnabled := .Values.varnish.enabled -}}
 {{- $ingressPath := .Values.ingress.path -}}
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
@@ -32,13 +32,19 @@ spec:
     - host: {{ . | quote }}
       http:
         paths:
-          - backend:
+          - pathType: Prefix
+            path: {{ $ingressPath }}
+            backend:
           {{- if $varnishEnabled }}
-              serviceName: {{ $releaseName }}-varnish
-              servicePort: 80
+              service:
+                name: {{ $releaseName }}-varnish
+                port:
+                  number: 80
           {{- else }}
-              serviceName: {{ $fullName }}-nginx
-              servicePort: 80
+              service:
+                name: {{ $fullName }}-nginx
+                port:
+                  number: 80
           {{- end }}
   {{- end }}
 {{- end }}

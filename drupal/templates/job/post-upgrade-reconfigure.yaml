@@ -51,7 +51,6 @@ spec:
 {{ toYaml .Values.drupal.initContainers | indent 8 }}
 {{- end }}
 {{- end }}
-{{- end }}
       containers:
       - name: drush
         image: "{{ .Values.drupal.image }}:{{ default .Chart.AppVersion .Values.drupal.tag }}"
@@ -314,4 +313,5 @@ spec:
 {{- end }}
 {{- if .Values.drupal.volumes }}
 {{ toYaml .Values.drupal.volumes | indent 6 }}
+{{- end }}
 {{- end }}

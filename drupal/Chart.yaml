@@ -3,7 +3,7 @@ apiVersion: v2
 type: application
 version: 0.8.0
 appVersion: 4.0.0-rc3
-description: Drupal 8 variant of the Web Experience Toolkit (WxT).
+description: Drupal 8/9 variant of the Web Experience Toolkit (WxT).
 keywords:
 - drupal
 - cms

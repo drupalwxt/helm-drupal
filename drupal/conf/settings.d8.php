@@ -110,7 +110,11 @@ $databases['default']['default'] = array (
   'database' => {{ .Values.mysql.mysqlDatabase | quote }},
   'username' => {{ .Values.mysql.mysqlUser | quote }},
   'password' => getenv('MYSQL_PASSWORD') ?: '',
+  {{- if .Values.proxysql.enabled }}
+  'host' => '127.0.0.1',
+  {{- else }}
   'host' => '{{ .Release.Name }}-mysql',
+  {{- end }}
   'port' => {{ .Values.mysql.service.port | quote }},
   'prefix' => '',
   'namespace' => 'Drupal\Core\Database\Driver\mysql',
@@ -121,7 +125,11 @@ $databases['default']['default'] = array (
   'database' => {{ .Values.postgresql.postgresqlDatabase | quote }},
   'username' => {{ .Values.postgresql.postgresqlUsername | quote }},
   'password' => getenv('POSTGRES_PASSWORD') ?: '',
+  {{- if .Values.pgbouncer.enabled }}
+  'host' => 'localhost',
+  {{- else }}
   'host' => '{{ .Release.Name }}-postgresql',
+  {{- end }}
   'port' => {{ .Values.postgresql.service.port | quote }},
   'prefix' => '',
   'namespace' => 'Drupal\Core\Database\Driver\pgsql',

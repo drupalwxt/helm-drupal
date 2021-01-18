@@ -106,35 +106,31 @@ nginx:
     - name: files-public
       mountPath: /var/www/html/sites/default/files
 
-mysql:
-  enabled: false
-
-# Files: object storage
-#
-# Use Minio for object storage by default.
-# You can use any S3 compatible object storage.
-# Also:
-#   - minio
-#   - s3
-#   - none
-files:
-  provider: none
-
-##
-## MINIO
-##
-minio:
-  enabled: false
-
-postgresql:
-  enabled: true
-  pgbouncer:
-    enabled: true
-    poolSize: 25
-    maxClientConnections: 500
-
 redis:
   enabled: true
 
 varnish:
   enabled: true
+
+mysql:
+  enabled: true
+  mysqlPassword: testPassword
+
+proxysql:
+  enabled: true
+  admin:
+    user: proxysql
+    password: proxysqlPassword
+  monitor:
+    user: monitor
+    password: monitorPassword
+  configuration:
+    maxConnections: 2048
+    serverVersion: "5.7.28"
+    stackSize: 1048576
+
+postgresql:
+  enabled: false
+
+pgbouncer:
+  enabled: false

@@ -141,7 +141,27 @@ spec:
 {{- if .Values.drupal.volumeMounts }}
 {{ toYaml .Values.drupal.volumeMounts | indent 12 }}
 {{- end }}
-{{- if .Values.pgbouncer.enabled }}
+{{- if .Values.proxysql.enabled }}
+          - name: proxysql
+            image: proxysql/proxysql:2.1.0
+            imagePullPolicy: Always
+            ports:
+              - containerPort: 6032
+              - containerPort: 6033
+            volumeMounts:
+              - name: configfiles
+                mountPath: "/etc/proxysql"
+                readOnly: true
+            livenessProbe:
+              tcpSocket:
+                port: 6032
+              periodSeconds: 60
+            command: ["/bin/sh", "-c", "proxysql --initial -f -c /etc/proxysql/proxysql.conf"]
+            securityContext:
+              allowPrivilegeEscalation: false
+              runAsUser: 0
+              runAsGroup: 999
+{{- else if .Values.pgbouncer.enabled }}
           - name: pgbouncer
             image: mcr.microsoft.com/azure-oss-db-tools/pgbouncer-sidecar:latest
             imagePullPolicy: Always
@@ -198,7 +218,11 @@ spec:
           - name: files
             emptyDir: {}
 {{- end }}
-{{- if .Values.pgbouncer.enabled }}
+{{- if .Values.proxysql.enabled }}
+          - name: configfiles
+            secret:
+              secretName: {{ include "drupal.fullname" . }}-proxysql
+{{- else if .Values.pgbouncer.enabled }}
           - name: configfiles
             secret:
               secretName: {{ include "drupal.fullname" . }}-pgbouncer

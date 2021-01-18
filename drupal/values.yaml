@@ -372,6 +372,19 @@ pgbouncer:
   poolSize: 50
   maxClientConnections: 400
 
+proxysql:
+  enabled: false
+  admin:
+    user: username@hostname
+    password: password
+  monitor:
+    user: username@hostname
+    password: password
+  configuration:
+    maxConnections: 2048
+    serverVersion: "5.7.28"
+    stackSize: 1048576
+
 # Files: object storage
 #
 # Use Minio for object storage by default.

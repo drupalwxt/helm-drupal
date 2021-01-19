@@ -49,6 +49,9 @@ kubectl -n kube-system get pod -o wide --watch -l app=csi-azuredisk-node
 ### Kind
 
 ```sh
+# When using the repo directly
+helm install drupal -f values-kind.yaml --timeout 2400 --wait drupalwxt/drupal
+# When using the local git repository
 helm install drupal -f values-kind.yaml --timeout 2400 --wait .
 ```
 

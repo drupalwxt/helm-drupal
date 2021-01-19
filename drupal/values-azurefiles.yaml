@@ -1,19 +1,7 @@
-# When installing with Kind the cluster is required to have the following settings for the stateful assets to work
-#
-# For example:
-# kind create cluster --config kind.yaml
-#
-# kind: Cluster
-# apiVersion: kind.x-k8s.io/v1alpha4
-# nodes:
-# - role: control-plane
-#   # add a mount from /path/to/my/files on the host to /files on the node
-#   extraMounts:
-#   - hostPath: /tmp/drupal/shared/drupal-public
-#     containerPath: /mnt/drupal/drupal-public
-#   - hostPath: /tmp/drupal/shared/drupal-private
-#     containerPath: /mnt/drupal/drupal-private
+# When installing with Azure Files
 
+## Drupal
+## Ref: https://github.com/drupalwxt/helm-drupal
 drupal:
   ## Drupal image version
   ## ref: https://hub.docker.com/drupalwxt/site-wxt/tags/
@@ -76,13 +64,7 @@ drupal:
   # Allows custom /var/www/html/sites/default/files and /private mounts
   disableDefaultFilesMount: true
 
-  volumes:
-    - name: files-public
-      hostPath:
-        path: /mnt/drupal/drupal-public
-    - name: files-private
-      hostPath:
-        path: /mnt/drupal/drupal-private
+  # volumes: {}
 
   volumeMounts:
     - name: files-public
@@ -90,6 +72,8 @@ drupal:
     - name: files-private
       mountPath: /private
 
+## Nginx
+## Ref: https://github.com/drupalwxt/helm-drupal
 nginx:
   image: drupalwxt/site-wxt
   tag: 4.0.0-rc3-nginx
@@ -97,40 +81,49 @@ nginx:
   # Set your cluster's DNS resolution service here
   resolver: 10.0.0.10
 
-  volumes:
-    - name: files-public
-      hostPath:
-        path: /mnt/drupal/drupal-public
+  # volumes: {}
 
   volumeMounts:
     - name: files-public
       mountPath: /var/www/html/sites/default/files
 
+# kubectl create secret generic drupal-storage --from-literal=azurestorageaccountname=$STORAGE_ACCOUNT_NAME --from-literal=azurestorageaccountkey=$STORAGE_KEY -n drupal
+azureFile:
+  enabled: true
+
+## Redis
+## Ref: https://github.com/bitnami/charts/tree/master/bitnami/redis
 redis:
   enabled: true
 
+## Varnish
+## Ref: https://github.com/StatCan/charts/tree/master/stable/varnish
 varnish:
   enabled: true
 
+## MySQL
+## Ref: https://github.com/bitnami/charts/tree/master/bitnami/mysql
 mysql:
+  imageTag: 5.7.28
   enabled: true
   mysqlPassword: testPassword
 
-proxysql:
-  enabled: true
-  admin:
-    user: proxysql
-    password: proxysqlPassword
-  monitor:
-    user: monitor
-    password: monitorPassword
-  configuration:
-    maxConnections: 2048
-    serverVersion: "5.7.28"
-    stackSize: 1048576
+  persistence:
+    enabled: true
+    storageClass: managed-premium
+    size: 256Gi
 
+## ProxySQL
+## Ref: https://github.com/drupalwxt/helm-drupal
+proxysql:
+  enabled: false
+
+## PostgreSQL
+## Ref: https://github.com/bitnami/charts/tree/master/bitnami/postgresql
 postgresql:
   enabled: false
 
+## PGBouncer
+## Ref: https://github.com/drupalwxt/helm-drupal
 pgbouncer:
   enabled: false

@@ -1,4 +1,14 @@
+# When installing with MinIO
+
+## Drupal
+## Ref: https://github.com/drupalwxt/helm-drupal
 drupal:
+  ## Drupal image version
+  ## ref: https://hub.docker.com/drupalwxt/site-wxt/tags/
+  ##
+  image: drupalwxt/site-wxt
+  tag: 4.0.0-rc3
+
   ## Site configuration
   ##
   profile: wxt
@@ -17,7 +27,7 @@ drupal:
   # Requires https://github.com/renatomefi/php-fpm-healthcheck in the container.
   # (note: official images do not contain this feature yet)
   healthcheck:
-    enabled: false
+    enabled: true
 
   # Switch to canada.ca theme (only used if install and/or reconfigure are enabled)
   # Common options include: theme-wet-boew, theme-gcweb-legacy
@@ -51,20 +61,51 @@ drupal:
   healthcheck:
     enabled: true
 
+## Nginx
+## Ref: https://github.com/drupalwxt/helm-drupal
 nginx:
+  image: drupalwxt/site-wxt
+  tag: 4.0.0-rc3-nginx
+
   # Set your cluster's DNS resolution service here
   resolver: 10.0.0.10
 
+## Redis
+## Ref: https://github.com/bitnami/charts/tree/master/bitnami/redis
+redis:
+  enabled: true
+
+## Varnish
+## Ref: https://github.com/StatCan/charts/tree/master/stable/varnish
+varnish:
+  enabled: true
+
+## MySQL
+## Ref: https://github.com/bitnami/charts/tree/master/bitnami/mysql
 mysql:
   imageTag: 5.7.28
-
-  mysqlPassword: SUPERsecureMYSQLpassword
-  mysqlRootPassword: SUPERsecureMYSQLrootPASSWORD
+  enabled: true
+  mysqlPassword: testPassword
 
   persistence:
     enabled: true
     storageClass: managed-premium
     size: 256Gi
+
+## ProxySQL
+## Ref: https://github.com/drupalwxt/helm-drupal
+proxysql:
+  enabled: false
+
+## PostgreSQL
+## Ref: https://github.com/bitnami/charts/tree/master/bitnami/postgresql
+postgresql:
+  enabled: false
+
+## PGBouncer
+## Ref: https://github.com/drupalwxt/helm-drupal
+pgbouncer:
+  enabled: false
 
 # Files: object storage
 #
@@ -77,9 +118,8 @@ mysql:
 files:
   provider: minio
 
-##
 ## MINIO
-##
+## Ref: https://github.com/minio/charts
 minio:
   enabled: true
 

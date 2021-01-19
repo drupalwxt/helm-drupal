@@ -22,7 +22,7 @@ This chart will allow you to setup and configure Drupal alongside with other int
 2. Add the Helm repository location.
 
 ```sh
-helm repo add statcan https://drupalwxt.github.io/helm-drupal
+helm repo add drupalwxt https://drupalwxt.github.io/helm-drupal
 ```
 
 3. Optionally you can git clone the helm chart and select the appropriate values file as your template.

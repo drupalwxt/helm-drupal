@@ -79,6 +79,10 @@ We strive to ensure for every significant changes made to the Helm Chart we will
 
 In general, you should take note that most often the `values-kind.yaml` file is the most up-to-date and will often have newer features documented and in use.
 
+You can consult the `values.yaml` file for the full range of options available to you.
+
+> **Note:** We try out best to follow `https://semver.org` so that it's clear patch, minor and major releases for breaking changes.
+
 ## Documentation
 
 Please consult the [documentation](https://github.com/drupalwxt/helm-drupal/tree/master/docs) which is provided in this repository in the `docs` folder should you wish to have more information about a recommended architecture.

@@ -1,5 +1,4 @@
-# When installing microk8s you need to currently install channel 1.15
-# override file for use with microk8s
+# When installing microk8s you need to currently install channel 1.15 override file for use with microk8s
 # assumes that /mnt/drupal/drupal-public and /mnt/drupal/drupal-private directories exist with correct permissions
 # drupal folder should have the microk8s group with rw
 #
@@ -15,6 +14,8 @@
 # Example:
 #   microk8s.enable dns storage helm
 
+## Drupal
+## Ref: https://github.com/drupalwxt/helm-drupal
 drupal:
   ## Site configuration
   ##
@@ -71,7 +72,6 @@ drupal:
   # Allows custom /var/www/html/sites/default/files and /private mounts
   disableDefaultFilesMount: true
 
-
   volumes:
     - name: files-public
       hostPath:
@@ -86,9 +86,14 @@ drupal:
     - name: files-private
       mountPath: /private
 
+## Nginx
+## Ref: https://github.com/drupalwxt/helm-drupal
 nginx:
+  image: drupalwxt/site-wxt
+  tag: 4.0.0-rc3-nginx
+
   # Set your cluster's DNS resolution service here
-  # default for microk8s is set, but may vary depending on installation.
+  # Default for microk8s is set, but may vary depending on installation.
   # Run the following to get the IP
   # kubectl get pod -l k8s-app='kube-dns' --namespace kube-system -o wide or
   # microk8s.kubectl get pod -l k8s-app='kube-dns' --namespace kube-system -o wide
@@ -103,30 +108,39 @@ nginx:
     - name: files-public
       mountPath: /var/www/html/sites/default/files
 
+## Redis
+## Ref: https://github.com/bitnami/charts/tree/master/bitnami/redis
+redis:
+  enabled: true
+
+## Varnish
+## Ref: https://github.com/StatCan/charts/tree/master/stable/varnish
+varnish:
+  enabled: true
+
+## MySQL
+## Ref: https://github.com/bitnami/charts/tree/master/bitnami/mysql
 mysql:
   imageTag: 5.7.28
-
-  mysqlPassword: SUPERsecureMYSQLpassword
-  mysqlRootPassword: SUPERsecureMYSQLrootPASSWORD
+  enabled: true
+  mysqlPassword: testPassword
 
   persistence:
     enabled: true
     storageClass: microk8s-hostpath
     size: 2Gi
 
-# Files: object storage
-#
-# Use Minio for object storage by default.
-# You can use any S3 compatible object storage.
-# Also:
-#   - minio
-#   - s3
-#   - none
-files:
-  provider: none
+## ProxySQL
+## Ref: https://github.com/drupalwxt/helm-drupal
+proxysql:
+  enabled: false
 
-##
-## MINIO
-##
-minio:
+## PostgreSQL
+## Ref: https://github.com/bitnami/charts/tree/master/bitnami/postgresql
+postgresql:
+  enabled: false
+
+## PGBouncer
+## Ref: https://github.com/drupalwxt/helm-drupal
+pgbouncer:
   enabled: false

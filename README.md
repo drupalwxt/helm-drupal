@@ -12,6 +12,10 @@ This chart will allow you to setup and configure Drupal alongside with other int
 * Redis
 * Varnish
 
+Please consult our Architectural Diagram for a recommended setup on Azure:
+
+* [Azure AKS](https://github.com/drupalwxt/helm-drupal/blob/master/docs/azure-aks-infra.pdf)
+
 ## Installation
 
 1. Ensure you have a running Kubernetes cluster. You can also test locally with with a variety of tooling.

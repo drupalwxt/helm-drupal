@@ -1,10 +1,16 @@
-## 0.7.0
+## 0.8.x
+
+- Added support for ProxySQL
+- Added support for PGBouncer
+- Updated Architectural Diagram
+
+## 0.7.x
 
 - Added support for Azure Shared Disk
 - Added Redis integration
 - Added Varnish integration
 
-## 0.6.0
+## 0.6.x
 
 - Disabled MinIO installation default
 - Default installation will set theme to GCWeb variant and provide default content

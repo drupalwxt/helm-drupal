@@ -44,7 +44,7 @@ curl -skSL https://raw.githubusercontent.com/kubernetes-sigs/azuredisk-csi-drive
 kubectl -n kube-system get pod -o wide --watch -l app=csi-azuredisk-node
 ```
 
-3. Run the following command:
+4. Run the following command:
 
 ### Kind
 

@@ -64,6 +64,9 @@ drupal:
 
   ## Extra settings.php settings
   ##
+  ## Note that if using Varnish and 'trusted_host_patterns' you need a pattern for your Helm release name:
+  ## $settings['trusted_host_patterns'] = ['^example\.com$','^your-helm-release.*$'];
+  ##
   extraSettings: ''
   #  |-
   #  $settings['trusted_host_patterns'] = ['^example\.com$'];

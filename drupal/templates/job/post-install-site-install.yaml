@@ -127,6 +127,8 @@ spec:
                 --yes
               {{- end }}
 
+              drush -y cache:rebuild
+
               {{- if and (eq .Values.files.provider "none") (not .Values.drupal.disableDefaultFilesMount) }}
               # Need to use NFS otherwise disable caching
               drush config-set system.performance js.preprocess 0 -y

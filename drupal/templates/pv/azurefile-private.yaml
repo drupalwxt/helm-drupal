@@ -25,4 +25,7 @@ spec:
     - file_mode=0777
     - uid=82
     - gid=82
+    - mfsymlinks
+    - nobrl
+    - cache=none
 {{- end }}

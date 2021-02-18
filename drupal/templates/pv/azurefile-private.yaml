@@ -12,11 +12,6 @@ spec:
     storage: {{ .Values.azureFile.size }}
   accessModes:
     - {{ .Values.azureFile.accessMode }}
-{{- if or (eq "-" .Values.azureFile.storageClass) (.Values.azureFile.mountOptions) }}
-  storageClassName: ""
-{{- else if .Values.azureFile.storageClass }}
-  storageClassName: "{{ .Values.azureFile.storageClass }}"
-{{- end }}
 {{- if .Values.azureFile.private }}
 {{ toYaml .Values.azureFile.private | indent 2 }}
 {{- end }}

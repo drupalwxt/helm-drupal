@@ -20,12 +20,8 @@ spec:
 {{- if .Values.azureFile.private }}
 {{ toYaml .Values.azureFile.private | indent 2 }}
 {{- end }}
+{{- if .Values.azureFile.mount }}
   mountOptions:
-    - dir_mode=0777
-    - file_mode=0777
-    - uid=82
-    - gid=82
-    - mfsymlinks
-    - nobrl
-    - cache=none
+{{ toYaml .Values.azureFile.mount | indent 4 }}
+{{- end }}
 {{- end }}

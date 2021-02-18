@@ -12,7 +12,7 @@ spec:
     storage: {{ .Values.azureFile.size }}
   accessModes:
     - {{ .Values.azureFile.accessMode }}
-{{- if eq "-" .Values.azureFile.storageClass }}
+{{- if or (eq "-" .Values.azureFile.storageClass) (.Values.azureFile.mountOptions) }}
   storageClassName: ""
 {{- else if .Values.azureFile.storageClass }}
   storageClassName: "{{ .Values.azureFile.storageClass }}"
@@ -20,8 +20,8 @@ spec:
 {{- if .Values.azureFile.public }}
 {{ toYaml .Values.azureFile.public | indent 2 }}
 {{- end }}
-{{- if .Values.azureFile.mount }}
+{{- if .Values.azureFile.mountOptions }}
   mountOptions:
-{{ toYaml .Values.azureFile.mount | indent 4 }}
+{{ toYaml .Values.azureFile.mountOptions | indent 4 }}
 {{- end }}
 {{- end }}

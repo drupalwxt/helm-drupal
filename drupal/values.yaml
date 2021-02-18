@@ -295,14 +295,14 @@ azureFile:
       # secretNamespace: ""
       readOnly: false
 
-  mountOptions:
-    - dir_mode=0777
-    - file_mode=0777
-    - uid=82
-    - gid=82
-    - mfsymlinks
-    - nobrl
-    - cache=none
+  # mountOptions:
+  #   - dir_mode=0777
+  #   - file_mode=0777
+  #   - uid=82
+  #   - gid=82
+  #   - mfsymlinks
+  #   - nobrl
+  #   - cache=none
 
 ## Configuration values for the MySQL dependency sub-chart
 ## ref: https://github.com/kubernetes/charts/blob/master/stable/mysql/README.md

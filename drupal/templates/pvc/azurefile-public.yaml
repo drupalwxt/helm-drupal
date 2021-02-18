@@ -14,7 +14,7 @@ spec:
     requests:
       storage: {{ .Values.azureFile.size }}
   volumeName: {{ include "drupal.fullname" . }}-public
-{{- if eq "-" .Values.azureFile.storageClass }}
+{{- if or (eq "-" .Values.azureFile.storageClass) (.Values.azureFile.mountOptions) }}
   storageClassName: ""
 {{- else if .Values.azureFile.storageClass }}
   storageClassName: "{{ .Values.azureFile.storageClass }}"

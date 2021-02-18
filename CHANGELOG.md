@@ -3,6 +3,7 @@
 - Added support for ProxySQL
 - Added support for PGBouncer
 - Updated Architectural Diagram
+- Added custom mount options support for Azure Files
 
 ## 0.7.x
 

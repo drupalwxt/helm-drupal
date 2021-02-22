@@ -22,6 +22,10 @@ spec:
         app.kubernetes.io/name: {{ include "drupal.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
         tier: drupal
+{{- if .Values.drupal.podAnnotations }}
+      annotations:
+{{ toYaml .Values.drupal.podAnnotations | indent 8 }}
+{{- end }}        
     spec:
 {{- if or (.Values.drupal.initContainers) (or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled)) }}
       initContainers:
@@ -125,6 +129,10 @@ spec:
 {{- if .Values.extraVars }}
 {{ toYaml .Values.extraVars | indent 8 }}
 {{- end }}
+{{- if .Values.drupal.resources }}
+        resources:
+{{ toYaml .Values.drupal.resources | indent 10 }}        
+{{- end  }} 
         ports:
         - containerPort: 9000
           name: tcp-php-fpm

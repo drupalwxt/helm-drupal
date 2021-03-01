@@ -55,12 +55,6 @@ drupal:
   # Reconfigure on upgrade
   reconfigure: true
 
-  # php-fpm healthcheck
-  # Requires https://github.com/renatomefi/php-fpm-healthcheck in the container.
-  # (note: official images do not contain this feature yet)
-  healthcheck:
-    enabled: true
-
   # Allows custom /var/www/html/sites/default/files and /private mounts
   disableDefaultFilesMount: true
 

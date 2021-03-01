@@ -84,6 +84,7 @@ nginx:
 # kubectl create secret generic drupal-storage --from-literal=azurestorageaccountname=$STORAGE_ACCOUNT_NAME --from-literal=azurestorageaccountkey=$STORAGE_KEY -n drupal
 azureFile:
   enabled: true
+  storageClass: "-"
 
 ## Redis
 ## Ref: https://github.com/bitnami/charts/tree/master/bitnami/redis

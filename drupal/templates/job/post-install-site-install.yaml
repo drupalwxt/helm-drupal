@@ -337,7 +337,7 @@ spec:
           tcpSocket:
             port: 6032
           periodSeconds: 60
-        command: ["/bin/sh", "-c", "proxysql --initial -f -c /etc/proxysql/proxysql.conf"]
+        command: ["/usr/bin/proxysql", "--initial", "-f", "-c", "/etc/proxysql/proxysql.conf"]
         securityContext:
           allowPrivilegeEscalation: false
           runAsUser: 0

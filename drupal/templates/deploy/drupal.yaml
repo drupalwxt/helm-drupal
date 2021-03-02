@@ -25,7 +25,7 @@ spec:
 {{- if .Values.drupal.podAnnotations }}
       annotations:
 {{ toYaml .Values.drupal.podAnnotations | indent 8 }}
-{{- end }}        
+{{- end }}
     spec:
 {{- if or (.Values.drupal.initContainers) (or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled)) }}
       initContainers:
@@ -131,8 +131,8 @@ spec:
 {{- end }}
 {{- if .Values.drupal.resources }}
         resources:
-{{ toYaml .Values.drupal.resources | indent 10 }}        
-{{- end  }} 
+{{ toYaml .Values.drupal.resources | indent 10 }}
+{{- end  }}
         ports:
         - containerPort: 9000
           name: tcp-php-fpm
@@ -186,7 +186,7 @@ spec:
           tcpSocket:
             port: 6032
           periodSeconds: 60
-        command: ["/bin/sh", "-c", "proxysql --initial -f -c /etc/proxysql/proxysql.conf"]
+        command: ["/usr/bin/proxysql", "--initial", "-f", "-c", "/etc/proxysql/proxysql.conf"]
         securityContext:
           allowPrivilegeEscalation: false
           runAsUser: 0

@@ -523,8 +523,8 @@ varnish:
     import directors;
 
     backend nginx {
-      .host = "{{ include "drupal.fullname" . }}-nginx";
-      .host_header = "{{ include "drupal.fullname" . }}-nginx";
+      .host = "{{ include "backend.fullname" . }}-nginx";
+      .host_header = "{{ include "backend.fullname" . }}-nginx";
       .port = "80";
     }
 
@@ -581,7 +581,7 @@ varnish:
 
     sub vcl_backend_fetch {
       # NEW
-      set bereq.http.Host = "{{ include "drupal.fullname" . }}-nginx";
+      set bereq.http.Host = "{{ include "backend.fullname" . }}-nginx";
 
       # Don't add 127.0.0.1 to X-Forwarded-For
       set bereq.http.X-Forwarded-For = regsub(bereq.http.X-Forwarded-For, "(, )?127\.0\.0\.1$", "");

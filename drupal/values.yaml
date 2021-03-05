@@ -130,7 +130,7 @@ drupal:
 
   # Enable all of the WxT extension modules
   extensions:
-    enabled: true
+    enabled: false
 
   serviceType: ClusterIP
 

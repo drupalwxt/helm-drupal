@@ -130,10 +130,6 @@ drupal:
   healthcheck:
     enabled: true
 
-  # Enable all of the WetKit extension modules
-  extensions:
-    enabled: true
-
   serviceType: ClusterIP
 
   persistence:

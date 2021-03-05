@@ -43,6 +43,10 @@ drupal:
   healthcheck:
     enabled: true
 
+  # Enable all of the WxT extension modules
+  extensions:
+    enabled: false
+
   # Switch to canada.ca theme (only used if install and/or reconfigure are enabled)
   # Common options include: theme-wet-boew, theme-gcweb-legacy
   wxtTheme: theme-gcweb

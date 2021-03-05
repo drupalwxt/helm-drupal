@@ -254,13 +254,7 @@ $databases = array(
       'database' => {{ .Values.external.database | quote }},
       'username' => {{ .Values.external.user | quote }},
       'password' => getenv('EXTERNAL_PASSWORD') ?: '',
-      {{- if .Values.proxysql.enabled }}
-      'host' => '127.0.0.1',
-      {{- else if .Values.postgresql.enabled }}
-      'host' => 'localhost',
-      {{- else }}
       'host' => {{ .Values.external.host | quote }},
-      {{- end }}
       'port' => {{ .Values.external.port }},
       'driver' => '{{ .Values.external.driver }}',
       'prefix' => '',

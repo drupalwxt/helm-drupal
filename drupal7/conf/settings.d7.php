@@ -710,7 +710,16 @@ $conf['file_private_path'] =  '/var/www/private';
 
 {{- if .Values.redis.enabled }}
 if (extension_loaded('redis')) {
-
+$conf['redis_client_host'] = "{{ .Release.Name }}-redis-master";
+$conf['redis_client_port'] = 6379;
+$conf['redis_client_interface'] = 'Predis';
+$conf['cache_backends'][]       = 'sites/all/modules/contrib/redis/redis.autoload.inc';
+$conf['cache_default_class']    = 'Redis_Cache';
+// The 'cache_form' bin must be assigned to non-volatile storage.
+$conf['cache_class_cache_form'] = 'DrupalDatabaseCache';
+// The 'cache_field' bin must be transactional.
+$conf['cache_class_cache_field'] = 'DrupalDatabaseCache';
+$conf['redis_client_password'] = "{{ .Values.redis.password }}";
 }
 {{- end }}
 

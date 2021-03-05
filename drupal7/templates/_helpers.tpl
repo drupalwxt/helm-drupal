@@ -30,7 +30,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "backend.fullname" -}}
-{{- $name := default "drupal" .Values.nameOverride -}}
+{{- $name := default "drupal7" .Values.nameOverride -}}
 {{- if contains $name .Release.Name -}}
 {{- .Release.Name | trunc 63 | trimSuffix "-" -}}
 {{- else -}}

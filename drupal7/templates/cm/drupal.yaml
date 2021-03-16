@@ -8,6 +8,8 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
+  php.ini: |
+{{ tpl (.Files.Get "conf/php.ini") . | indent 4 }}
   opcache-recommended.ini: |
 {{ tpl (.Files.Get "conf/opcache-recommended.ini") . | indent 4 }}
   www.conf: |

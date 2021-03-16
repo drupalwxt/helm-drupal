@@ -85,6 +85,10 @@ spec:
             volumeMounts:
             - name: cm-drupal
               readOnly: true
+              mountPath: /usr/local/etc/php/php.ini
+              subPath: php.ini
+            - name: cm-drupal
+              readOnly: true
               mountPath: /usr/local/etc/php/conf.d/opcache-recommended.ini
               subPath: opcache-recommended.ini
             - name: cm-drupal

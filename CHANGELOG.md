@@ -4,6 +4,7 @@
 - Added support for PGBouncer
 - Updated Architectural Diagram
 - Added custom mount options support for Azure Files
+- Added custom php.ini mount
 
 ## 0.7.x
 

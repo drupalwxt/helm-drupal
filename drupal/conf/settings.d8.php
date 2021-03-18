@@ -574,7 +574,7 @@ if ($settings['hash_salt']) {
 * See https://www.drupal.org/documentation/modules/file for more information
 * about securing private files.
 */
-# $settings['file_private_path'] = '';
+$settings['file_private_path'] =  '/private';
 
 /**
 * Session write interval:
@@ -774,11 +774,6 @@ if (isset($_ENV['DRUPAL_SETTINGS'])) {
 if ($drupal_settings !== 'production') {
   $settings['trusted_host_patterns'] = array('[\s\S]*');
 }
-
-/**
-* Set private file path directory.
-*/
-$settings['file_private_path'] =  '/private';
 
 /**
 * Load local development override configuration, if available.

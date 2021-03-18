@@ -695,7 +695,7 @@ $conf['404_fast_html'] = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
 /**
 * Set private file path directory.
 */
-$conf['file_private_path'] =  '/var/www/private';
+$conf['file_private_path'] =  '/private';
 
 /**
 * Load local development override configuration, if available.

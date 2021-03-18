@@ -37,7 +37,7 @@ spec:
           resources:
             requests:
               storage: "5Gi"
-      replicas: 3
+      replicas: {{ .Values.replicas }}
       zookeeperPodPolicy:
         resources:
           limits:

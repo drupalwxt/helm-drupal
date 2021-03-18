@@ -21,3 +21,7 @@ ingress:
 destinationRule:
   enabled: true
   mode: DISABLE
+
+## Solr
+## Ref: https://github.com/drupalwxt/helm-drupal/tree/master/solr
+replicas: 3

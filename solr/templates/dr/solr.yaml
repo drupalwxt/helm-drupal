@@ -1,0 +1,13 @@
+{{- if .Values.destinationRule.enabled }}
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: {{ include "solr.fullname" . }}
+  labels:
+    {{- include "solr.labels" . | nindent 4 }}
+spec:
+  host: "{{ template "solr.fullname" . }}.{{ .Release.Namespace }}.svc.{{ default "cluster.local" .Values.clusterDomain }}"
+  trafficPolicy:
+    tls:
+      mode: "{{ default "DISABLE" .Values.destinationRule.mode }}"
+{{- end }}

@@ -1,0 +1,1 @@
+Your Solr instance has been installed.

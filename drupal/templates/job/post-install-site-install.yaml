@@ -66,8 +66,18 @@ spec:
               until drush sql:query 'SHOW TABLES;'; do echo Waiting for DB; sleep 3; done
               echo DB available
 
+              {{- if .Values.redis.enabled }}
+              until [[ $(printf "AUTH $REDIS_PASSWORD\r\n" | nc -w 2 {{ .Release.Name }}-redis-master {{ .Values.redis.master.service.port }}) == *OK* ]]; do echo Waiting for Redis; sleep 3; done
+              echo Redis available
+              {{- end }}
+
               # Check Drush status
               drush status || true
+
+              {{- if .Values.redis.enabled }}
+              # Flush redis caches
+              printf "AUTH $REDIS_PASSWORD\r\nFLUSHDB\r\n" | nc -w 2 {{ .Release.Name }}-redis-master {{ .Values.redis.master.service.port }}
+              {{- end }}
 
               # Run site install
               {{- if .Values.drupal.restore.enabled }}

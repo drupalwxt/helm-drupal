@@ -414,18 +414,14 @@ redis:
     registry: docker.io
     repository: bitnami/redis
     tag: 6.0.8-debian-10-r35
-  service:
-    type: ClusterIP
-  resources: {}
-  #  requests:
-  #    memory: "512Mi"
-  #    cpu: "100m"
-  #  limits:
-  #    memory: "1Gi"
-  #    cpu: "500m"
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
+  master:
+    service:
+      type: ClusterIP
+    disableCommands: []
+  slave:
+    service:
+      type: ClusterIP
+    disableCommands: []
 
 ## Configuration values for the Varnish dependency sub-chart
 ## ref: https://github.com/StatCan/charts/blob/master/stable/varnish/README.md

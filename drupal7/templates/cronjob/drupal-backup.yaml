@@ -46,7 +46,7 @@ spec:
                 # Run cron
                 BACKUPNAME=$(date +%Y%m%d.%H%M%S)
                 mkdir -p /backup/$BACKUPNAME
-                drush -y sql-dump | gzip > /backup/$BACKUPNAME/db.sql.gz
+                drush -y sql-dump {{ .Values.drupal.backup.sqlDumpArgs }} | gzip > /backup/$BACKUPNAME/db.sql.gz
                 tar czvf /backup/$BACKUPNAME/files.tar.gz --directory=sites/default/files .
                 tar czvf /backup/$BACKUPNAME/private.tar.gz --directory=/private .
             env:

@@ -67,7 +67,7 @@ spec:
               echo DB available
 
               {{- if .Values.redis.enabled }}
-              until [[ $(printf "AUTH $REDIS_PASSWORD\r\n" | nc -w 2 {{ .Release.Name }}-redis-master {{ .Values.redis.master.service.port }}) == *OK* ]]; do echo Waiting for Redis; sleep 3; done
+              until [[ $(printf "AUTH $REDIS_PASSWORD\r\n" | nc -w 2 {{ .Release.Name }}-redis-master {{ .Values.redis.master.service.port }}) == $(printf "+OK\r\n") ]]; do echo Waiting for Redis; sleep 3; done
               echo Redis available
               {{- end }}
 

@@ -1,15 +1,22 @@
-{{- if .Values.drupal.cron.enabled }}
+{{- if $values.drupal.additionalCrons }}
+{{- $name := include "drupal7.name" . -}}
+{{- $fullName := include "drupal7.fullname" . -}}
+{{- $chartName := include "drupal7.chart" . -}}
+{{- $chart := .Chart }}
+{{- $release := .Release }}
+{{- $values := .Values }}
+{{- range $cronName, $cron := .Values.drupal.additionalCrons -}}
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ template "drupal7.fullname" . }}-drupal-cron
+  name: {{ $fullName }}-{{ $cronName }}
   labels:
-    app.kubernetes.io/name: {{ include "drupal7.name" . }}
-    helm.sh/chart: {{ include "drupal7.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ $name }}
+    helm.sh/chart: {{ $chartName }}
+    app.kubernetes.io/instance: {{ $release.Name }}
+    app.kubernetes.io/managed-by: {{ $release.Service }}
 spec:
-  schedule: "{{ .Values.drupal.cron.schedule }}"
+  schedule: "{{ $cron.schedule }}"
   startingDeadlineSeconds: 100
   concurrencyPolicy: Replace
   successfulJobsHistoryLimit: 5
@@ -19,68 +26,56 @@ spec:
       template:
         metadata:
           labels:
-            app.kubernetes.io/name: {{ include "drupal7.name" . }}
-            helm.sh/chart: {{ include "drupal7.chart" . }}
-            app.kubernetes.io/instance: {{ .Release.Name }}
-            app.kubernetes.io/managed-by: {{ .Release.Service }}
+            app.kubernetes.io/name: {{ $name }}
+            helm.sh/chart: {{ $chartName }}
+            app.kubernetes.io/instance: {{ $release.Name }}
+            app.kubernetes.io/managed-by: {{ $release.Service }}
         spec:
           restartPolicy: OnFailure
           containers:
-          - name: drush
-            image: "{{ .Values.drupal.image }}:{{ default .Chart.AppVersion .Values.drupal.tag }}"
-            imagePullPolicy: {{ default "" .Values.drupal.imagePullPolicy | quote }}
+          - name: cron
+            image: "{{ $values.drupal.image }}:{{ default $chart.AppVersion $values.drupal.tag }}"
+            imagePullPolicy: {{ default "" $values.drupal.imagePullPolicy | quote }}
             command:
             - '/bin/sh'
             - '-c'
-            - |
-                # Errors should fail the job
-                set -e
-
-                # Wait for DB to be available
-                until drush sql:query 'SHOW TABLES;'; do echo Waiting for DB; sleep 3; done
-                echo DB available
-
-                # Check Drush status
-                drush status
-
-                # Run cron
-                drush -y core-cron
+            - {{ toYaml | $cron.script }}
             env:
-{{- if .Values.external.enabled }}
+{{- if $values.external.enabled }}
             - name: EXTERNAL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "drupal7.fullname" . }}
+                  name: {{ $fullName }}
                   key: databasePassword
-{{- else if .Values.mysql.enabled }}
+{{- else if $values.mysql.enabled }}
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
                   # This is not ideal, but calling {{ include "mysql.secretName" . }}
                   # was returning the wrong result.
-                  name: "{{ .Release.Name }}-mysql"
+                  name: "{{ $release.Name }}-mysql"
                   key: mysql-password
-{{- else if .Values.postgresql.enabled }}
+{{- else if $values.postgresql.enabled }}
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Release.Name }}-postgresql"
+                  name: "{{ $release.Name }}-postgresql"
                   key: postgresql-password
 {{- end }}
-{{- if .Values.redis.enabled }}
+{{- if $values.redis.enabled }}
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Release.Name }}-redis"
+                  name: "{{ $release.Name }}-redis"
                   key: redis-password
 {{- end }}
             - name: DRUPAL_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: "{{ include "drupal7.fullname" . }}"
+                  name: "{{ $fullName }}"
                   key: password
-{{- if .Values.extraVars }}
-{{ toYaml .Values.extraVars | indent 12 }}
+{{- if $values.extraVars }}
+{{ toYaml $values.extraVars | indent 12 }}
 {{- end }}
             volumeMounts:
             - name: cm-drupal
@@ -109,7 +104,7 @@ spec:
               readOnly: true
             - name: twig-cache
               mountPath: /cache/twig
-{{- if not .Values.drupal.disableDefaultFilesMount }}
+{{- if not $values.drupal.disableDefaultFilesMount }}
             - name: files
               mountPath: /var/www/html/sites/default/files
               subPath: public
@@ -120,7 +115,10 @@ spec:
 {{- if .Values.drupal.volumeMounts }}
 {{ toYaml .Values.drupal.volumeMounts | indent 8 }}
 {{- end }}
-{{- if .Values.proxysql.enabled }}
+{{- if $cron.volumeMounts }}
+{{ toYaml $cron.volumeMounts | indent 8 }}
+{{- end }}
+{{- if $values.proxysql.enabled }}
           - name: proxysql
             image: proxysql/proxysql:2.1.0
             imagePullPolicy: Always
@@ -140,7 +138,7 @@ spec:
               allowPrivilegeEscalation: false
               runAsUser: 0
               runAsGroup: 999
-{{- else if .Values.pgbouncer.enabled }}
+{{- else if $values.pgbouncer.enabled }}
           - name: pgbouncer
             image: mcr.microsoft.com/azure-oss-db-tools/pgbouncer-sidecar:latest
             imagePullPolicy: Always
@@ -163,50 +161,53 @@ spec:
               capabilities:
                 drop: ['all']
 {{- end  }}
-          {{- if .Values.drupal.imagePullSecrets }}
+          {{- if $values.drupal.imagePullSecrets }}
           imagePullSecrets:
-{{ toYaml .Values.drupal.imagePullSecrets | indent 12 }}
+{{ toYaml $values.drupal.imagePullSecrets | indent 12 }}
           {{- end }}
           # Allow non-root user to access PersistentVolume
           securityContext:
-{{ toYaml .Values.drupal.securityContext | indent 12 }}
+{{ toYaml $values.drupal.securityContext | indent 12 }}
           volumes:
           - name: cm-drupal
             configMap:
-              name: {{ include "drupal7.fullname" . }}
+              name: {{ $fullName }}
           - name: ssmtp
             secret:
-              secretName: {{ include "drupal7.fullname" . }}-ssmtp
+              secretName: {{ $fullName }}-ssmtp
               items:
                 - key: ssmtp.conf
                   path: ssmtp.conf
           - name: twig-cache
             emptyDir: {}
-{{- if .Values.drupal.persistence.enabled }}
+{{- if $values.drupal.persistence.enabled }}
           - name: files
             persistentVolumeClaim:
-              claimName: {{ template "drupal7.fullname" . }}-drupal
-{{- else if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
+              claimName: {{ $fullName }}-drupal
+{{- else if or ($values.azureFile.enabled) ($values.sharedDisk.enabled) }}
           - name: files-public
             persistentVolumeClaim:
-              claimName: {{ include "drupal7.fullname" . }}-public
+              claimName: {{ $fullName }}-public
           - name: files-private
             persistentVolumeClaim:
-              claimName: {{ include "drupal7.fullname" . }}-private
-{{- else if not .Values.drupal.disableDefaultFilesMount }}
+              claimName: {{ $fullName }}-private
+{{- else if not $values.drupal.disableDefaultFilesMount }}
           - name: files
             emptyDir: {}
 {{- end }}
-{{- if .Values.proxysql.enabled }}
+{{- if $values.proxysql.enabled }}
           - name: configfiles
             secret:
-              secretName: {{ include "drupal7.fullname" . }}-proxysql
-{{- else if .Values.pgbouncer.enabled }}
+              secretName: {{ $fullName }}-proxysql
+{{- else if $values.pgbouncer.enabled }}
           - name: configfiles
             secret:
-              secretName: {{ include "drupal7.fullname" . }}-pgbouncer
+              secretName: {{ $fullName }}-pgbouncer
 {{- end }}
-{{- if .Values.drupal.volumes }}
-{{ toYaml .Values.drupal.volumes | indent 10 }}
+{{- if $values.drupal.volumes }}
+{{ toYaml $values.drupal.volumes | indent 10 }}
+{{- end }}
+{{- if $cron.volumes }}
+{{ toYaml $cron.volumes | indent 10 }}
 {{- end }}
 {{- end }}

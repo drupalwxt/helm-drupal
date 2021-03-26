@@ -117,6 +117,24 @@ drupal:
     # Defaults to once an hour
     schedule: '0 * * * *'
 
+  additionalCrons: []
+    # example:
+    #   # Run at midnight UTC
+    #   schedule: '0 0 * * *'
+
+    #   script: |
+    #     echo 'Hello, world!'
+
+    #   volumes:
+    #   - name: example-cron-disk
+    #     azureFile:
+    #       shareName: ''
+    #       secretName: ''
+    #   volumeMounts:
+    #   - name: example-cron-disk
+    #     mountPath: /path/to/folder
+    #     readOnly: true
+
   # Configure the Drupal backup cron
   backup:
     # When enabled, a CronJob will run the job based on the schedule

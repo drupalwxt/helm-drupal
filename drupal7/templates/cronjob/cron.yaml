@@ -1,4 +1,4 @@
-{{- if $values.drupal.additionalCrons }}
+{{- if .Values.drupal.additionalCrons }}
 {{- $name := include "drupal7.name" . -}}
 {{- $fullName := include "drupal7.fullname" . -}}
 {{- $chartName := include "drupal7.chart" . -}}

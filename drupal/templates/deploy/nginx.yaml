@@ -31,15 +31,15 @@ spec:
 {{- end }}
     spec:
       initContainers:
-{{- if not (eq .Values.drupal.root "/") }}
+{{- if not (eq .Values.drupal.siteRoot "/") }}
         - name: init-site-root
           image: 'alpine:3.10'
           command:
             - /bin/sh
             - '-c'
             - |
-              mkdir -p "/webroot$(dirname "{{ .Values.drupal.root }}")"
-              ln -s /var/www/html "/webroot{{ .Values.drupal.root }}"
+              mkdir -p "/webroot$(dirname "{{ .Values.drupal.siteRoot }}")"
+              ln -s /var/www/html "/webroot{{ .Values.drupal.siteRoot }}"
           volumeMounts:
             - name: webroot
               mountPath: /webroot
@@ -78,7 +78,7 @@ spec:
           name: cm-nginx
           readOnly: true
           subPath: nginx.conf
-{{- if not (eq .Values.drupal.root "/") }}
+{{- if not (eq .Values.drupal.siteRoot "/") }}
         - name: webroot
           mountPath: /webroot
 {{- end }}
@@ -101,7 +101,7 @@ spec:
         persistentVolumeClaim:
           claimName: {{ include "drupal.fullname" . }}-public
 {{- end }}
-{{- if not (eq .Values.drupal.root "/") }}
+{{- if not (eq .Values.drupal.siteRoot "/") }}
       - name: webroot
         emptyDir: {}
 {{- end }}

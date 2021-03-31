@@ -30,6 +30,20 @@ spec:
 {{ toYaml .Values.nginx.podAnnotations | indent 8 }}
 {{- end }}
     spec:
+      initContainers:
+{{- if not (eq .Values.drupal.root "/") }}
+        - name: init-site-root
+          image: 'alpine:3.10'
+          command:
+            - /bin/sh
+            - '-c'
+            - |
+              mkdir -p "/webroot$(dirname "{{ .Values.drupal.root }}")"
+              ln -s /var/www/html "/webroot{{ .Values.drupal.root }}"
+          volumeMounts:
+            - name: webroot
+              mountPath: /webroot
+{{- end }}
       containers:
       - image: "{{ .Values.nginx.image }}:{{ default (print .Chart.AppVersion "-nginx") .Values.nginx.tag }}"
         name: nginx
@@ -64,6 +78,10 @@ spec:
           name: cm-nginx
           readOnly: true
           subPath: nginx.conf
+{{- if not (eq .Values.drupal.root "/") }}
+        - name: webroot
+          mountPath: /webroot
+{{- end }}
 {{- if .Values.nginx.volumeMounts }}
 {{ toYaml .Values.nginx.volumeMounts | indent 8 }}
 {{- end }}
@@ -82,6 +100,10 @@ spec:
       - name: files-public
         persistentVolumeClaim:
           claimName: {{ include "drupal.fullname" . }}-public
+{{- end }}
+{{- if not (eq .Values.drupal.root "/") }}
+      - name: webroot
+        emptyDir: {}
 {{- end }}
 {{- if .Values.nginx.volumes }}
 {{ toYaml .Values.nginx.volumes | indent 6 }}

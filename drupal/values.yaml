@@ -52,6 +52,10 @@ drupal:
   siteEmail: admin@example.com
   siteName: Drupal Install Profile (WxT)
 
+  # Root path to serve the site on (ex. /subsite)
+  # (NOTE: Root must always start with a / and should NOT have a trailing slash)
+  siteRoot: /
+
   # Default WxT Library theme (only used if install and/or reconfigure are enabled)
   # Common options include: theme-wet-boew, theme-gcweb-legacy, theme-gcweb, ...
   wxtTheme: theme-gcweb

@@ -10,6 +10,7 @@ jobs:
     name: Verify pull requests
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@master
     - name: Helm linting
       run: |
         ./test/lint.sh

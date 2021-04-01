@@ -1,0 +1,16 @@
+name: Publish Helm Charts
+on:
+  pull_request:
+    types:
+      - 'opened'
+      - 'synchronize'
+      - 'reopened'
+jobs:
+  verify:
+    name: Verify pull requests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Helm linting
+      run: |
+        ./test/lint.sh

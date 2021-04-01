@@ -39,7 +39,8 @@ spec:
             command:
             - '/bin/sh'
             - '-c'
-            - {{ toYaml | $cron.script }}
+            - | 
+              {{ $cron.script | indent 14 }}
             env:
 {{- if $values.external.enabled }}
             - name: EXTERNAL_PASSWORD
@@ -112,11 +113,11 @@ spec:
               mountPath: /private
               subPath: private
 {{- end }}
-{{- if .Values.drupal.volumeMounts }}
-{{ toYaml .Values.drupal.volumeMounts | indent 8 }}
+{{- if $values.drupal.volumeMounts }}
+{{ toYaml $values.drupal.volumeMounts | indent 12 }}
 {{- end }}
 {{- if $cron.volumeMounts }}
-{{ toYaml $cron.volumeMounts | indent 8 }}
+{{ toYaml $cron.volumeMounts | indent 12 }}
 {{- end }}
 {{- if $values.proxysql.enabled }}
           - name: proxysql
@@ -161,10 +162,10 @@ spec:
               capabilities:
                 drop: ['all']
 {{- end  }}
-          {{- if $values.drupal.imagePullSecrets }}
+{{- if $values.drupal.imagePullSecrets }}
           imagePullSecrets:
 {{ toYaml $values.drupal.imagePullSecrets | indent 12 }}
-          {{- end }}
+{{- end }}
           # Allow non-root user to access PersistentVolume
           securityContext:
 {{ toYaml $values.drupal.securityContext | indent 12 }}
@@ -209,5 +210,6 @@ spec:
 {{- end }}
 {{- if $cron.volumes }}
 {{ toYaml $cron.volumes | indent 10 }}
+{{- end }}
 {{- end }}
 {{- end }}

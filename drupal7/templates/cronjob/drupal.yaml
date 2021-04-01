@@ -118,7 +118,7 @@ spec:
               subPath: private
 {{- end }}
 {{- if .Values.drupal.volumeMounts }}
-{{ toYaml .Values.drupal.volumeMounts | indent 8 }}
+{{ toYaml .Values.drupal.volumeMounts | indent 12 }}
 {{- end }}
 {{- if .Values.proxysql.enabled }}
           - name: proxysql

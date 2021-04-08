@@ -876,15 +876,6 @@ if ($split != 'none') {
 // $config["$split_filename_prefix.SITENAME"]['status'] = TRUE;
 {{- end }}
 
-{{- if or (eq .Values.files.provider "s3") (eq .Values.files.provider "minio") }}
-// S3FS
-$settings['s3fs.access_key'] = getenv('S3_ACCESS_KEY') ?: '';
-$settings['s3fs.secret_key'] = getenv('S3_SECRET_KEY') ?: '';
-
-$settings['s3fs.use_s3_for_public'] = TRUE;
-$settings['s3fs.use_s3_for_private'] = TRUE;
-{{- end }}
-
 {{- if .Values.redis.enabled }}
 if (extension_loaded('redis')) {
   // Set Redis as the default backend for any cache bin not otherwise specified.

@@ -484,7 +484,12 @@ redis:
   image:
     registry: docker.io
     repository: bitnami/redis
-    tag: 6.0.8-debian-10-r35
+    tag: 6.0.12-debian-10-r33
+  cluster:
+    enabled: true
+    slaveCount: 2
+  sentinel:
+    enabled: true
   master:
     service:
       type: ClusterIP

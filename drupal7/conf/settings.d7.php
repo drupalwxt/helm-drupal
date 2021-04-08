@@ -710,7 +710,11 @@ $conf['file_private_path'] =  '/private';
 
 {{- if .Values.redis.enabled }}
 if (extension_loaded('redis')) {
+{{- if and .Values.redis.cluster.enabled .Values.redis.sentinel.enabled }}
+$conf['redis_client_host'] = "{{ .Release.Name }}-redis";
+{{- else }}
 $conf['redis_client_host'] = "{{ .Release.Name }}-redis-master";
+{{- end }}
 $conf['redis_client_port'] = 6379;
 $conf['redis_client_interface'] = 'Predis';
 $conf['cache_backends'][]       = 'sites/all/modules/contrib/redis/redis.autoload.inc';

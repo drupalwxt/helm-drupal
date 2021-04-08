@@ -489,7 +489,7 @@ redis:
     enabled: true
     slaveCount: 2
   sentinel:
-    enabled: true
+    enabled: false
   master:
     service:
       type: ClusterIP

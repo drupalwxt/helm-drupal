@@ -927,8 +927,13 @@ if (extension_loaded('redis')) {
   $settings['cache']['default'] = 'cache.backend.redis';
   $settings['redis.connection']['interface'] = 'PhpRedis';
   $settings['redis.connection']['scheme'] = 'http';
+  {{- if and .Values.redis.cluster.enabled .Values.redis.sentinel.enabled }}
+  $settings['redis.connection']['host'] = '{{ .Release.Name }}-redis';
+  $settings['redis.connection']['port'] = '{{ .Values.redis.sentinel.service.port }}';
+  {{- else }}
   $settings['redis.connection']['host'] = '{{ .Release.Name }}-redis-master';
-  $settings['redis.connection']['port'] = '6379';
+  $settings['redis.connection']['port'] = '{{ .Values.redis.master.service.port }}';
+  {{- end }}
   $settings['redis.connection']['password'] = getenv('REDIS_PASSWORD') ?: '';
 
   // Allow the services to work before the Redis module itself is enabled.

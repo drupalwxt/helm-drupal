@@ -10,9 +10,9 @@ dependencies:
   version: 8.6.4
 - name: redis
   repository: https://charts.bitnami.com/bitnami
-  version: 11.2.1
+  version: 12.10.1
 - name: varnish
   repository: https://statcan.github.io/charts
   version: 0.2.0
-digest: sha256:040ef49c75860e5f6649b9c2af37d33b533ce4c5ecd0605aaab5f7d766d488ad
-generated: "2021-04-07T12:27:34.025819-04:00"
+digest: sha256:3e8c7f7581ace206f5b9458b4d9290863923eae2d59f4ec0d3d7822f091bc29f
+generated: "2021-04-08T03:34:05.9347016Z"

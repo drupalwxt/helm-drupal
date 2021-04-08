@@ -929,7 +929,7 @@ if (extension_loaded('redis')) {
   $settings['redis.connection']['scheme'] = 'http';
   {{- if and .Values.redis.cluster.enabled .Values.redis.sentinel.enabled }}
   $settings['redis.connection']['host'] = '{{ .Release.Name }}-redis';
-  $settings['redis.connection']['port'] = '{{ .Values.redis.sentinel.service.port }}';
+  $settings['redis.connection']['port'] = '{{ .Values.redis.sentinel.service.redisPort }}';
   {{- else }}
   $settings['redis.connection']['host'] = '{{ .Release.Name }}-redis-master';
   $settings['redis.connection']['port'] = '{{ .Values.redis.master.service.port }}';

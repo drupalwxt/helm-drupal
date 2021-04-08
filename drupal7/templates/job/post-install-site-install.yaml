@@ -68,7 +68,7 @@ spec:
 
               {{- if .Values.redis.enabled }}
               {{- if and .Values.redis.cluster.enabled .Values.redis.sentinel.enabled }}
-              until [[ $(printf "AUTH $REDIS_PASSWORD\r\n" | nc -w 2 {{ .Release.Name }}-redis {{ .Values.redis.master.service.port }}) == $(printf "+OK\r\n") ]]; do echo Waiting for Redis; sleep 3; done
+              until [[ $(printf "AUTH $REDIS_PASSWORD\r\n" | nc -w 2 {{ .Release.Name }}-redis {{ .Values.redis.sentinel.service.port }}) == $(printf "+OK\r\n") ]]; do echo Waiting for Redis; sleep 3; done
               {{- else }}
               until [[ $(printf "AUTH $REDIS_PASSWORD\r\n" | nc -w 2 {{ .Release.Name }}-redis-master {{ .Values.redis.master.service.port }}) == $(printf "+OK\r\n") ]]; do echo Waiting for Redis; sleep 3; done
               {{- end }}
@@ -80,7 +80,11 @@ spec:
 
               {{- if .Values.redis.enabled }}
               # Flush redis caches
+              {{- if and .Values.redis.cluster.enabled .Values.redis.sentinel.enabled }}
+              printf "AUTH $REDIS_PASSWORD\r\nFLUSHDB\r\n" | nc -w 2 {{ .Release.Name }}-redis {{ .Values.redis.sentinel.service.port }}
+              {{- else }}
               printf "AUTH $REDIS_PASSWORD\r\nFLUSHDB\r\n" | nc -w 2 {{ .Release.Name }}-redis-master {{ .Values.redis.master.service.port }}
+              {{- end }}
               {{- end }}
 
               # Run site install

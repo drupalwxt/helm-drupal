@@ -38,6 +38,12 @@ drupal:
 
   replicas: 1
 
+
+  # PHP configuration
+  php:
+    ini: {}
+      # max_execution_time: 300
+
   ## User of the application
   ##
   username: admin

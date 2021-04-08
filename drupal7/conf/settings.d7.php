@@ -712,7 +712,7 @@ $conf['file_private_path'] =  '/private';
 if (extension_loaded('redis')) {
 {{- if and .Values.redis.cluster.enabled .Values.redis.sentinel.enabled }}
 $conf['redis_client_host'] = "{{ .Release.Name }}-redis";
-$conf['redis_client_port'] = "{{ .Values.redis.sentinel.service.redisPort }}";
+$conf['redis_client_port'] = "{{ .Values.redis.sentinel.service.sentinelPort }}";
 {{- else }}
 $conf['redis_client_host'] = "{{ .Release.Name }}-redis-master";
 $conf['redis_client_port'] = "{{ .Values.redis.master.service.port }}";

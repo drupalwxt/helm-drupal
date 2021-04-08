@@ -39,7 +39,7 @@ spec:
             command:
             - '/bin/sh'
             - '-c'
-            - | 
+            - |
               {{ $cron.script | indent 14 }}
             env:
 {{- if $values.external.enabled }}

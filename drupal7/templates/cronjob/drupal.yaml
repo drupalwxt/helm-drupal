@@ -117,6 +117,9 @@ spec:
               mountPath: /private
               subPath: private
 {{- end }}
+{{- if .Values.drupal.volumeMounts }}
+{{ toYaml .Values.drupal.volumeMounts | indent 12 }}
+{{- end }}
 {{- if .Values.proxysql.enabled }}
           - name: proxysql
             image: proxysql/proxysql:2.1.0

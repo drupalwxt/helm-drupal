@@ -267,6 +267,26 @@ $databases = array(
     ),
   ),
 );
+
+{{- if .Values.proxysql.enabled }}
+// When proxysql is enabled, allow a way to
+// access the upstream database directly.
+$databases['noproxy'] = array(
+  'default' =>
+  array (
+    'database' => {{ .Values.external.database | quote }},
+    'username' => {{ .Values.external.user | quote }},
+    'password' => getenv('EXTERNAL_PASSWORD') ?: '',
+    'host' => {{ .Values.external.host | quote }},
+    'port' => {{ .Values.external.port }},
+    'driver' => '{{ .Values.external.driver }}',
+    'prefix' => '',
+    'pdo' => array(
+      PDO::MYSQL_ATTR_SSL_CA => "/etc/ssl/certs/ca-certificates.crt",
+    ),
+  ),
+);
+{{- end }}
 {{- else if .Values.mysql.enabled }}
 $databases = array (
   'default' =>

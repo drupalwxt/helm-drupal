@@ -116,29 +116,6 @@ spec:
               name: "{{ .Release.Name }}-redis"
               key: redis-password
 {{- end }}
-{{- if eq .Values.files.provider "minio" }}
-        - name: S3_ACCESS_KEY
-          valueFrom:
-            secretKeyRef:
-              name: "{{ .Release.Name }}-minio"
-              key: accesskey
-        - name: S3_SECRET_KEY
-          valueFrom:
-            secretKeyRef:
-              name: "{{ .Release.Name }}-minio"
-              key: secretkey
-{{- else if eq .Values.files.provider "s3" }}
-        - name: S3_ACCESS_KEY
-          valueFrom:
-            secretKeyRef:
-              name: "{{ .Release.Name }}-s3"
-              key: accesskey
-        - name: S3_SECRET_KEY
-          valueFrom:
-            secretKeyRef:
-              name: "{{ .Release.Name }}-s3"
-              key: secretkey
-{{- end }}
 {{- if .Values.extraVars }}
 {{ toYaml .Values.extraVars | indent 8 }}
 {{- end }}

@@ -1,3 +1,8 @@
+## 0.11.x
+
+- Added Redis sentinel
+- Remove MinIO
+
 ## 0.8.x
 
 - Added support for ProxySQL

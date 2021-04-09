@@ -99,9 +99,16 @@ spec:
 
               echo "Restoring backup: $BACKUPNAME"
 
+              {{- if .Values.drupal.restore.db }}
+              echo "Drop database"
               drush sql-drop -y
+              echo "Restore database"
               gunzip -c /backup/$BACKUPNAME/db.sql.gz | drush sql-cli
+              echo "Database restored"
+              {{- end }}
 
+              {{- if .Values.drupal.restore.files }}
+              echo "Deleting files"
               # Errors from deleting should not fail the job
               set +e
               find sites/default/files/ -type f -print0 | xargs -0 rm
@@ -110,8 +117,11 @@ spec:
               find /private/ -mindepth 1 -type d -print0 | xargs -0 rmdir
               set -e
 
+              echo "Restoring files"
               tar -zxf /backup/$BACKUPNAME/files.tar.gz --directory sites/default/files --no-acls --no-xattrs -m --no-same-permissions --no-overwrite-dir
               tar -zxf /backup/$BACKUPNAME/private.tar.gz --directory /private --no-acls --no-xattrs -m --no-same-permissions --no-overwrite-dir
+              echo "Files restored"
+              {{- end }}
 
               # Run database updates
               {{- if .Values.drupal.cacheRebuildBeforeDatabaseMigration }}

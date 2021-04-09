@@ -100,6 +100,8 @@ drupal:
   restore:
     enabled: false
     name: latest
+    db: true
+    files: false
     # CHANGE THIS! Otherwise restore won't complete.
     volume: {}
       # emptyDir: {}

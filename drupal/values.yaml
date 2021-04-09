@@ -280,6 +280,7 @@ nginx:
     fsGroup: 33
 
   client_max_body_size: 20m
+  real_ip_header: X-Forwarded-For
 
 # Specify an external database
 # Useful for managed offerings from your Cloud Provider

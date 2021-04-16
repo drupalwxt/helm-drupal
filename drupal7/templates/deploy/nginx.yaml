@@ -32,6 +32,7 @@ spec:
     spec:
       containers:
       - image: "{{ .Values.nginx.image }}:{{ default (print .Chart.AppVersion "-nginx") .Values.nginx.tag }}"
+        imagePullPolicy: {{ default "" .Values.nginx.imagePullPolicy | quote }}
         name: nginx
         ports:
         - name: http

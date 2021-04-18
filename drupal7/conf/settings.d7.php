@@ -737,7 +737,7 @@ $conf['redis_client_port'] = "{{ .Values.redis.sentinel.service.sentinelPort }}"
 $conf['redis_client_host'] = "{{ .Release.Name }}-redis-master";
 $conf['redis_client_port'] = "{{ .Values.redis.master.service.port }}";
 {{- end }}
-$conf['redis_client_interface'] = 'Predis';
+$conf['redis_client_interface'] = '{{ default "Predis" .Values.redis.clientInterface }}';
 $conf['cache_backends'][]       = 'sites/all/modules/contrib/redis/redis.autoload.inc';
 $conf['cache_default_class']    = 'Redis_Cache';
 // The 'cache_form' bin must be assigned to non-volatile storage.

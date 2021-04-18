@@ -880,7 +880,7 @@ if ($split != 'none') {
 if (extension_loaded('redis')) {
   // Set Redis as the default backend for any cache bin not otherwise specified.
   $settings['cache']['default'] = 'cache.backend.redis';
-  $settings['redis.connection']['interface'] = 'PhpRedis';
+  $settings['redis.connection']['interface'] = '{{ default "PhpRedis" .Values.redis.clientInterface }}';
   $settings['redis.connection']['scheme'] = 'http';
   {{- if and .Values.redis.cluster.enabled .Values.redis.sentinel.enabled }}
   $settings['redis.connection']['host'] = ['{{ .Release.Name }}-redis:{{ .Values.redis.sentinel.service.sentinelPort }}'];

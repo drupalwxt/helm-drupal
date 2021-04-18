@@ -447,6 +447,7 @@ redis:
     registry: docker.io
     repository: bitnami/redis
     tag: 6.0.12-debian-10-r33
+    # clientInterface: PhpRedis
   cluster:
     enabled: true
     slaveCount: 2

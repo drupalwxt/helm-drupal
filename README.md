@@ -14,7 +14,7 @@ This chart will allow you to setup and configure Drupal alongside with other int
 
 Please consult our Architectural Diagram for a recommended setup on Azure:
 
-* [Azure AKS](https://github.com/drupalwxt/helm-drupal/blob/master/docs/azure-aks-infra.pdf)
+* [Architectual Diagram](https://github.com/drupalwxt/helm-drupal/blob/master/docs/diagram-drupal.pdf)
 
 ## Installation
 

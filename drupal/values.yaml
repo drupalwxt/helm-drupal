@@ -153,6 +153,10 @@ drupal:
     volume: {}
       # emptyDir: {}
 
+    sqlDumpArgs: ''
+      # additional arguments for sql-dump command
+      # --skip-tables-list="table_0,table_1"
+
   # php-fpm healthcheck
   # Requires https://github.com/renatomefi/php-fpm-healthcheck in the container.
   healthcheck:

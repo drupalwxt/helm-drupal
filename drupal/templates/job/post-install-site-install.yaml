@@ -149,7 +149,11 @@ spec:
                 --site-mail={{ .Values.drupal.siteEmail | quote }} \
                 --site-name={{ .Values.drupal.siteName | quote }} \
                 {{- if .Values.drupal.extensions.enabled }}
+                {{- if semverCompare ">=0.11.8" .Chart.AppVersion }}
+                wxt_extension_configure_form.all_wxt='TRUE' \
+                {{- else }}
                 wxt_extension_configure_form.select_all='TRUE' \
+                {{- end }}
                 {{- end }}
                 install_configure_form.update_status_module='array(FALSE,FALSE)' \
                 --yes

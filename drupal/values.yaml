@@ -601,7 +601,7 @@ varnish:
       # }
 
       # Add X-Frame-Options
-      if (req.url ~ "^/livechat" || req.url ~ "^/(eng/|fra/)?media/") {
+      if (req.url ~ "^/livechat" || req.url ~ "^/(en/|fr/)?media/") {
         set resp.http.X-Frame-Options = "SAMEORIGIN";
       } else {
         set resp.http.X-Frame-Options = "DENY";

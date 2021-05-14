@@ -12,4 +12,4 @@ dependencies:
   repository: https://statcan.github.io/charts
   version: 0.2.0
 digest: sha256:5a9d7dc7fec304d69da17b98677cd7028a284822cad339da5e3f3c9b218d6e90
-generated: "2021-04-24T21:07:32.676432-04:00"
+generated: "2021-05-14T11:46:53.308164-04:00"

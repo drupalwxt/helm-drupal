@@ -102,6 +102,10 @@ drupal:
     name: latest
     db: true
     files: false
+
+    # Convert MyISAM to InnoDB
+    convert: false
+
     # CHANGE THIS! Otherwise restore won't complete.
     volume: {}
       # emptyDir: {}

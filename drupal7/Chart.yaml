@@ -1,7 +1,7 @@
 name: drupal7
 apiVersion: v2
 type: application
-version: 0.1.12
+version: 0.1.13
 appVersion: "4.54"
 description: Drupal 7 variant of the Web Experience Toolkit (WetKit).
 keywords:

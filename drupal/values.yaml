@@ -231,22 +231,25 @@ drupal:
     #   cpu: "500m"
 
   # Fix permissions for the drupal container
-  initContainers:
-  - name: set-volume-permissions
-    image: 'alpine:3.10'
-    command:
-      - chown
-      - '-R'
-      - '84:84'
-      - /files/public
-      - /files/private
-    volumeMounts:
-      - name: files-public
-        mountPath: /files/public
-      - name: files-private
-        mountPath: /files/private
-    securityContext:
-      runAsUser: 0
+  #volumePermissions:
+  # enabled: true
+  # or you can set an initContainers manually
+  #initContainers:
+  #- name: set-volume-permissions
+  #  image: 'alpine:3.10'
+  #  command:
+  #    - chown
+  #    - '-R'
+  #    - '84:84'
+  #    - /files/public
+  #    - /files/private
+  #  volumeMounts:
+  #    - name: files-public
+  #      mountPath: /files/public
+  #    - name: files-private
+  #      mountPath: /files/private
+  #  securityContext:
+  #    runAsUser: 0
 
 
 nginx:

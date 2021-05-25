@@ -27,9 +27,9 @@ spec:
 {{ toYaml .Values.drupal.podAnnotations | indent 8 }}
 {{- end }}
     spec:
-{{- if or (.Values.drupal.initContainers) (or (.Values.volumePermissions.enabled)) (or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled)) }}
+{{- if or (.Values.drupal.initContainers) (.Values.drupal.volumePermissions.enabled) (or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled)) }}
       initContainers:
-{{- if .Values.volumePermissions.enabled }}
+{{- if .Values.drupal.volumePermissions.enabled }}
         - name: set-volume-permissions
           image: 'alpine:3.10'
           command:

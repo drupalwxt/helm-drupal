@@ -231,8 +231,8 @@ drupal:
     #   cpu: "500m"
 
   # Fix permissions for the drupal container
-  #volumePermissions:
-  # enabled: true
+  volumePermissions:
+   enabled: false
   # or you can set an initContainers manually
   #initContainers:
   #- name: set-volume-permissions

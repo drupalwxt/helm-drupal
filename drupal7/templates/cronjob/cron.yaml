@@ -6,6 +6,7 @@
 {{- $release := .Release }}
 {{- $values := .Values }}
 {{- range $cronName, $cron := .Values.drupal.additionalCrons -}}
+---
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
@@ -52,7 +53,7 @@ spec:
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  # This is not ideal, but calling {{ include "mysql.secretName" . }}
+                  # This is not ideal, but calling through the template
                   # was returning the wrong result.
                   name: "{{ $release.Name }}-mysql"
                   key: mysql-password

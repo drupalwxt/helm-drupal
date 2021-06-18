@@ -5,7 +5,7 @@
 {{- $chart := .Chart }}
 {{- $release := .Release }}
 {{- $values := .Values }}
-{{- range $cronName, $cron := .Values.drupal.additionalCrons -}}
+{{- range $cronName, $cron := .Values.drupal.additionalCrons }}
 ---
 apiVersion: batch/v1beta1
 kind: CronJob

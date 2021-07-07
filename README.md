@@ -18,7 +18,7 @@ Please consult our Architectural Diagram for a recommended setup on Azure:
 
 ## Installation
 
-1. Ensure you have a running Kubernetes cluster. You can also test locally with with a variety of tooling.
+1. Ensure you have a running Kubernetes cluster. You can also test locally with a variety of tooling.
 
 * Docker Mac / Windows
 * [Kind][kind]
@@ -41,7 +41,7 @@ cp values-nfs-azurefile.yaml values-override.yaml
 
 > **Note**: It is recommended that if you are installing this in a cloud environment that you use a shared file system provided by the environment you are running in for the stateful assets. An example for Azure is provided by using the `values-nfs-azurefile.yaml` as your override file which will allow for stateful assets to work across the nginx and php-fpm containers by using Azure Files (NFS). If you are using other Cloud Providers they will have similar offerings and the CSI driver will be different then `azureFile`.
 
-> **Note:** We also provide support for the new Azure Shared Disks implementation however it is still advised to use Azure Files for the moment due. If you are running <= Kubernetes v1.19.0 you will need to manaully install the Azure CSI Driver. The instructions are given below.
+> **Note:** We also provide support for the new Azure Shared Disks implementation however it is still advised to use Azure Files for the moment due. If you are running <= Kubernetes v1.19.0 you will need to manually install the Azure CSI Driver. The instructions are given below.
 
 ```sh
 curl -skSL https://raw.githubusercontent.com/kubernetes-sigs/azuredisk-csi-driver/v0.9.0/deploy/install-driver.sh | bash -s v0.9.0 --

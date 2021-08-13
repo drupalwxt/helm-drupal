@@ -127,7 +127,7 @@ drupal:
     # Defaults to once an hour
     schedule: '0 * * * *'
 
-  additionalCrons: []
+  additionalCrons: {}
     # example:
     #   # Run at midnight UTC
     #   schedule: '0 0 * * *'

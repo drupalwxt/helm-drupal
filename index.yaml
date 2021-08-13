@@ -3,7 +3,51 @@ entries:
   drupal:
   - apiVersion: v2
     appVersion: 4.1.0
-    created: "2021-08-12T19:15:16.943493772Z"
+    created: "2021-08-13T02:36:58.044952415Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.helm.sh/stable
+      version: 1.6.2
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.6.4
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.10.1
+    - condition: varnish.enabled
+      name: varnish
+      repository: https://statcan.github.io/charts
+      version: 0.2.0
+    description: Drupal 8/9 variant of the Web Experience Toolkit (WxT).
+    digest: f4962713e756edad70aff03e92fdb093f03e24fd54ebdd15f8731d5f7cc96de1
+    home: http://www.drupal.org/project/wxt
+    icon: https://bitnami.com/assets/stacks/drupal/img/drupal-stack-220x234.png
+    keywords:
+    - drupal
+    - cms
+    - wxt
+    - http
+    - web
+    - application
+    - php
+    maintainers:
+    - email: william.hearn@canada.ca
+      name: sylus
+    - email: zachary.seguin@canada.ca
+      name: zachomedia
+    name: drupal
+    sources:
+    - https://github.com/drupalwxt/wxt
+    type: application
+    urls:
+    - https://drupalwxt.github.io/helm-drupal/drupal-0.11.18.tgz
+    version: 0.11.18
+  - apiVersion: v2
+    appVersion: 4.1.0
+    created: "2021-08-13T02:36:58.033806779Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -47,7 +91,7 @@ entries:
     version: 0.11.17
   - apiVersion: v2
     appVersion: 4.1.0
-    created: "2021-08-12T19:15:16.930816407Z"
+    created: "2021-08-13T02:36:58.022430339Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -91,7 +135,7 @@ entries:
     version: 0.11.16
   - apiVersion: v2
     appVersion: 4.0.7
-    created: "2021-08-12T19:15:16.915317028Z"
+    created: "2021-08-13T02:36:58.01191071Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -135,7 +179,7 @@ entries:
     version: 0.11.15
   - apiVersion: v2
     appVersion: 4.0.6
-    created: "2021-08-12T19:15:16.901097655Z"
+    created: "2021-08-13T02:36:58.000177066Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -179,7 +223,7 @@ entries:
     version: 0.11.14
   - apiVersion: v2
     appVersion: 4.0.6
-    created: "2021-08-12T19:15:16.886812082Z"
+    created: "2021-08-13T02:36:57.988995229Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -223,7 +267,7 @@ entries:
     version: 0.11.13
   - apiVersion: v2
     appVersion: 4.0.6
-    created: "2021-08-12T19:15:16.872958112Z"
+    created: "2021-08-13T02:36:57.97769439Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -267,7 +311,7 @@ entries:
     version: 0.11.12
   - apiVersion: v2
     appVersion: 4.0.6
-    created: "2021-08-12T19:15:16.860541548Z"
+    created: "2021-08-13T02:36:57.967407364Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -311,7 +355,7 @@ entries:
     version: 0.11.11
   - apiVersion: v2
     appVersion: 4.0.4
-    created: "2021-08-12T19:15:16.846810878Z"
+    created: "2021-08-13T02:36:57.955994424Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -355,7 +399,7 @@ entries:
     version: 0.11.10
   - apiVersion: v2
     appVersion: 4.0.4
-    created: "2021-08-12T19:15:17.059961666Z"
+    created: "2021-08-13T02:36:58.134075209Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -399,7 +443,7 @@ entries:
     version: 0.11.9
   - apiVersion: v2
     appVersion: 4.0.4
-    created: "2021-08-12T19:15:17.044849389Z"
+    created: "2021-08-13T02:36:58.122312064Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -443,7 +487,7 @@ entries:
     version: 0.11.8
   - apiVersion: v2
     appVersion: 4.0.4
-    created: "2021-08-12T19:15:17.029836812Z"
+    created: "2021-08-13T02:36:58.111255929Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -487,7 +531,7 @@ entries:
     version: 0.11.7
   - apiVersion: v2
     appVersion: 4.0.4
-    created: "2021-08-12T19:15:17.015453439Z"
+    created: "2021-08-13T02:36:58.099804888Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -531,7 +575,7 @@ entries:
     version: 0.11.6
   - apiVersion: v2
     appVersion: 4.0.2
-    created: "2021-08-12T19:15:17.000754564Z"
+    created: "2021-08-13T02:36:58.08934626Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -575,7 +619,7 @@ entries:
     version: 0.11.5
   - apiVersion: v2
     appVersion: 4.0.2
-    created: "2021-08-12T19:15:16.986460791Z"
+    created: "2021-08-13T02:36:58.078093622Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -619,7 +663,7 @@ entries:
     version: 0.11.4
   - apiVersion: v2
     appVersion: 4.0.2
-    created: "2021-08-12T19:15:16.972847822Z"
+    created: "2021-08-13T02:36:58.067140388Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -663,7 +707,7 @@ entries:
     version: 0.11.3
   - apiVersion: v2
     appVersion: 4.0.2
-    created: "2021-08-12T19:15:16.959021351Z"
+    created: "2021-08-13T02:36:58.05674756Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -707,7 +751,7 @@ entries:
     version: 0.11.2
   - apiVersion: v2
     appVersion: 4.0.2
-    created: "2021-08-12T19:15:16.833327009Z"
+    created: "2021-08-13T02:36:57.943482871Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -751,7 +795,7 @@ entries:
     version: 0.11.1
   - apiVersion: v2
     appVersion: 4.0.2
-    created: "2021-08-12T19:15:16.820754745Z"
+    created: "2021-08-13T02:36:57.933137844Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -795,7 +839,7 @@ entries:
     version: 0.11.0
   - apiVersion: v2
     appVersion: 4.0.2
-    created: "2021-08-12T19:15:16.804908564Z"
+    created: "2021-08-13T02:36:57.921609102Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -843,7 +887,7 @@ entries:
     version: 0.10.5
   - apiVersion: v2
     appVersion: 4.0.2
-    created: "2021-08-12T19:15:16.788093979Z"
+    created: "2021-08-13T02:36:57.908518942Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -891,7 +935,7 @@ entries:
     version: 0.10.4
   - apiVersion: v2
     appVersion: 4.0.2
-    created: "2021-08-12T19:15:16.771677895Z"
+    created: "2021-08-13T02:36:57.895804586Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -939,7 +983,7 @@ entries:
     version: 0.10.3
   - apiVersion: v2
     appVersion: 4.0.2
-    created: "2021-08-12T19:15:16.756264816Z"
+    created: "2021-08-13T02:36:57.883173631Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -987,7 +1031,7 @@ entries:
     version: 0.10.2
   - apiVersion: v2
     appVersion: 4.0.2
-    created: "2021-08-12T19:15:16.739658631Z"
+    created: "2021-08-13T02:36:57.869633565Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -1035,7 +1079,7 @@ entries:
     version: 0.10.1
   - apiVersion: v2
     appVersion: 4.0.2
-    created: "2021-08-12T19:15:16.722778845Z"
+    created: "2021-08-13T02:36:57.855859396Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -1083,7 +1127,7 @@ entries:
     version: 0.10.0
   - apiVersion: v2
     appVersion: 4.0.2
-    created: "2021-08-12T19:15:17.930926211Z"
+    created: "2021-08-13T02:36:58.811936724Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -1131,7 +1175,7 @@ entries:
     version: 0.9.4
   - apiVersion: v2
     appVersion: 4.0.2
-    created: "2021-08-12T19:15:17.91702814Z"
+    created: "2021-08-13T02:36:58.800856688Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -1179,7 +1223,7 @@ entries:
     version: 0.9.3
   - apiVersion: v2
     appVersion: 4.0.2
-    created: "2021-08-12T19:15:17.901509461Z"
+    created: "2021-08-13T02:36:58.78874034Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -1227,7 +1271,7 @@ entries:
     version: 0.9.2
   - apiVersion: v2
     appVersion: 4.0.2
-    created: "2021-08-12T19:15:17.882670265Z"
+    created: "2021-08-13T02:36:58.776963495Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -1275,7 +1319,7 @@ entries:
     version: 0.9.1
   - apiVersion: v2
     appVersion: 4.0.2
-    created: "2021-08-12T19:15:17.867699289Z"
+    created: "2021-08-13T02:36:58.765767258Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -1323,7 +1367,7 @@ entries:
     version: 0.9.0
   - apiVersion: v2
     appVersion: 4.0.2
-    created: "2021-08-12T19:15:17.731121792Z"
+    created: "2021-08-13T02:36:58.661866883Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -1371,7 +1415,7 @@ entries:
     version: 0.8.17
   - apiVersion: v2
     appVersion: 4.0.2
-    created: "2021-08-12T19:15:17.714851809Z"
+    created: "2021-08-13T02:36:58.650460043Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -1419,7 +1463,7 @@ entries:
     version: 0.8.16
   - apiVersion: v2
     appVersion: 4.0.2
-    created: "2021-08-12T19:15:17.701978043Z"
+    created: "2021-08-13T02:36:58.638666099Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -1467,7 +1511,7 @@ entries:
     version: 0.8.15
   - apiVersion: v2
     appVersion: 4.0.2
-    created: "2021-08-12T19:15:17.688442774Z"
+    created: "2021-08-13T02:36:58.625580138Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -1515,7 +1559,7 @@ entries:
     version: 0.8.14
   - apiVersion: v2
     appVersion: 4.0.2
-    created: "2021-08-12T19:15:17.674730404Z"
+    created: "2021-08-13T02:36:58.614571503Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -1563,7 +1607,7 @@ entries:
     version: 0.8.13
   - apiVersion: v2
     appVersion: 4.0.1
-    created: "2021-08-12T19:15:17.659429126Z"
+    created: "2021-08-13T02:36:58.602282152Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -1611,7 +1655,7 @@ entries:
     version: 0.8.12
   - apiVersion: v2
     appVersion: 4.0.1
-    created: "2021-08-12T19:15:17.64257424Z"
+    created: "2021-08-13T02:36:58.590440207Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -1659,7 +1703,7 @@ entries:
     version: 0.8.11
   - apiVersion: v2
     appVersion: 4.0.1
-    created: "2021-08-12T19:15:17.628710369Z"
+    created: "2021-08-13T02:36:58.579392771Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -1707,7 +1751,7 @@ entries:
     version: 0.8.10
   - apiVersion: v2
     appVersion: 4.0.1
-    created: "2021-08-12T19:15:17.852403511Z"
+    created: "2021-08-13T02:36:58.754233716Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -1755,7 +1799,7 @@ entries:
     version: 0.8.9
   - apiVersion: v2
     appVersion: 4.0.1
-    created: "2021-08-12T19:15:17.83655493Z"
+    created: "2021-08-13T02:36:58.742605174Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -1803,7 +1847,7 @@ entries:
     version: 0.8.8
   - apiVersion: v2
     appVersion: 4.0.1
-    created: "2021-08-12T19:15:17.823188161Z"
+    created: "2021-08-13T02:36:58.73093413Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -1851,7 +1895,7 @@ entries:
     version: 0.8.7
   - apiVersion: v2
     appVersion: 4.0.1
-    created: "2021-08-12T19:15:17.807574882Z"
+    created: "2021-08-13T02:36:58.719873395Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -1899,7 +1943,7 @@ entries:
     version: 0.8.6
   - apiVersion: v2
     appVersion: 4.0.1
-    created: "2021-08-12T19:15:17.792177003Z"
+    created: "2021-08-13T02:36:58.707660945Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -1947,7 +1991,7 @@ entries:
     version: 0.8.5
   - apiVersion: v2
     appVersion: 4.0.0
-    created: "2021-08-12T19:15:17.777456228Z"
+    created: "2021-08-13T02:36:58.696511408Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -1995,7 +2039,7 @@ entries:
     version: 0.8.4
   - apiVersion: v2
     appVersion: 4.0.0
-    created: "2021-08-12T19:15:17.76223235Z"
+    created: "2021-08-13T02:36:58.68528877Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -2043,7 +2087,7 @@ entries:
     version: 0.8.3
   - apiVersion: v2
     appVersion: 4.0.0
-    created: "2021-08-12T19:15:17.747349174Z"
+    created: "2021-08-13T02:36:58.673085421Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -2091,7 +2135,7 @@ entries:
     version: 0.8.2
   - apiVersion: v2
     appVersion: 4.0.0
-    created: "2021-08-12T19:15:17.612314685Z"
+    created: "2021-08-13T02:36:58.566680615Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -2139,7 +2183,7 @@ entries:
     version: 0.8.1
   - apiVersion: v2
     appVersion: 4.0.0-rc3
-    created: "2021-08-12T19:15:17.598484015Z"
+    created: "2021-08-13T02:36:58.555182374Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -2187,7 +2231,7 @@ entries:
     version: 0.8.0
   - apiVersion: v2
     appVersion: 4.0.0-rc3
-    created: "2021-08-12T19:15:17.585605349Z"
+    created: "2021-08-13T02:36:58.543670233Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -2235,7 +2279,7 @@ entries:
     version: 0.7.5
   - apiVersion: v2
     appVersion: 4.0.0-rc3
-    created: "2021-08-12T19:15:17.570535272Z"
+    created: "2021-08-13T02:36:58.5328014Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -2283,7 +2327,7 @@ entries:
     version: 0.7.4
   - apiVersion: v2
     appVersion: 4.0.0-rc3
-    created: "2021-08-12T19:15:17.556139599Z"
+    created: "2021-08-13T02:36:58.520861453Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -2331,7 +2375,7 @@ entries:
     version: 0.7.3
   - apiVersion: v2
     appVersion: 4.0.0-rc3
-    created: "2021-08-12T19:15:17.541784925Z"
+    created: "2021-08-13T02:36:58.509318312Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -2379,7 +2423,7 @@ entries:
     version: 0.7.1
   - apiVersion: v2
     appVersion: 4.0.0-rc3
-    created: "2021-08-12T19:15:17.526408047Z"
+    created: "2021-08-13T02:36:58.497859971Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -2427,7 +2471,7 @@ entries:
     version: 0.7.0
   - apiVersion: v2
     appVersion: 4.0.0-rc3
-    created: "2021-08-12T19:15:17.394303073Z"
+    created: "2021-08-13T02:36:58.396839032Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -2475,7 +2519,7 @@ entries:
     version: 0.6.15
   - apiVersion: v2
     appVersion: 4.0.0-rc3
-    created: "2021-08-12T19:15:17.3801636Z"
+    created: "2021-08-13T02:36:58.385140989Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -2523,7 +2567,7 @@ entries:
     version: 0.6.14
   - apiVersion: v2
     appVersion: 4.0.0-rc3-rc2
-    created: "2021-08-12T19:15:17.367270835Z"
+    created: "2021-08-13T02:36:58.37465646Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -2571,7 +2615,7 @@ entries:
     version: 0.6.13
   - apiVersion: v2
     appVersion: 4.0.0-rc2
-    created: "2021-08-12T19:15:17.352348258Z"
+    created: "2021-08-13T02:36:58.362890016Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -2619,7 +2663,7 @@ entries:
     version: 0.6.12
   - apiVersion: v2
     appVersion: 4.0.0-rc2
-    created: "2021-08-12T19:15:17.338701989Z"
+    created: "2021-08-13T02:36:58.351229573Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -2667,7 +2711,7 @@ entries:
     version: 0.6.11
   - apiVersion: v2
     appVersion: 4.0.0-rc2
-    created: "2021-08-12T19:15:17.32524942Z"
+    created: "2021-08-13T02:36:58.339828833Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -2715,7 +2759,7 @@ entries:
     version: 0.6.10
   - apiVersion: v2
     appVersion: 4.0.0-rc2
-    created: "2021-08-12T19:15:17.51137817Z"
+    created: "2021-08-13T02:36:58.48719744Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -2763,7 +2807,7 @@ entries:
     version: 0.6.9
   - apiVersion: v2
     appVersion: 4.0.0-rc2-rc1
-    created: "2021-08-12T19:15:17.496817496Z"
+    created: "2021-08-13T02:36:58.475503597Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -2811,7 +2855,7 @@ entries:
     version: 0.6.8
   - apiVersion: v2
     appVersion: 4.0.0-rc1
-    created: "2021-08-12T19:15:17.483299827Z"
+    created: "2021-08-13T02:36:58.464064457Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -2859,7 +2903,7 @@ entries:
     version: 0.6.7
   - apiVersion: v2
     appVersion: 4.0.0-rc1
-    created: "2021-08-12T19:15:17.468159849Z"
+    created: "2021-08-13T02:36:58.453643029Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -2907,7 +2951,7 @@ entries:
     version: 0.6.6
   - apiVersion: v2
     appVersion: 4.0.0-rc1
-    created: "2021-08-12T19:15:17.452484569Z"
+    created: "2021-08-13T02:36:58.441656982Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -2955,7 +2999,7 @@ entries:
     version: 0.6.5
   - apiVersion: v2
     appVersion: 4.0.0-rc1
-    created: "2021-08-12T19:15:17.436386287Z"
+    created: "2021-08-13T02:36:58.43013594Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -3003,7 +3047,7 @@ entries:
     version: 0.6.4
   - apiVersion: v2
     appVersion: 4.0.0-rc1
-    created: "2021-08-12T19:15:17.421628712Z"
+    created: "2021-08-13T02:36:58.418846502Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -3051,7 +3095,7 @@ entries:
     version: 0.6.3
   - apiVersion: v2
     appVersion: 4.0.0-rc1
-    created: "2021-08-12T19:15:17.408488145Z"
+    created: "2021-08-13T02:36:58.408293473Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -3099,7 +3143,7 @@ entries:
     version: 0.6.2
   - apiVersion: v2
     appVersion: 4.0.0-rc1
-    created: "2021-08-12T19:15:17.30960304Z"
+    created: "2021-08-13T02:36:58.329263803Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -3147,7 +3191,7 @@ entries:
     version: 0.6.1
   - apiVersion: v2
     appVersion: 4.0.0-rc1
-    created: "2021-08-12T19:15:17.296027071Z"
+    created: "2021-08-13T02:36:58.317186455Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -3195,7 +3239,7 @@ entries:
     version: 0.6.0
   - apiVersion: v2
     appVersion: 4.0.0-rc1
-    created: "2021-08-12T19:15:17.283459107Z"
+    created: "2021-08-13T02:36:58.305744415Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -3243,7 +3287,7 @@ entries:
     version: 0.5.16
   - apiVersion: v2
     appVersion: 3.0.15
-    created: "2021-08-12T19:15:17.268691331Z"
+    created: "2021-08-13T02:36:58.295891594Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -3291,7 +3335,7 @@ entries:
     version: 0.5.15
   - apiVersion: v2
     appVersion: 3.0.15
-    created: "2021-08-12T19:15:17.254882861Z"
+    created: "2021-08-13T02:36:58.285199063Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -3339,7 +3383,7 @@ entries:
     version: 0.5.14
   - apiVersion: v2
     appVersion: 3.0.15
-    created: "2021-08-12T19:15:17.242103196Z"
+    created: "2021-08-13T02:36:58.274190327Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -3387,7 +3431,7 @@ entries:
     version: 0.5.13
   - apiVersion: v2
     appVersion: 3.0.15
-    created: "2021-08-12T19:15:17.227723722Z"
+    created: "2021-08-13T02:36:58.263397995Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -3435,7 +3479,7 @@ entries:
     version: 0.5.12
   - apiVersion: v2
     appVersion: 3.0.15
-    created: "2021-08-12T19:15:17.212727246Z"
+    created: "2021-08-13T02:36:58.251407148Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -3483,7 +3527,7 @@ entries:
     version: 0.5.11
   - apiVersion: v1
     appVersion: 3.0.15
-    created: "2021-08-12T19:15:17.128945418Z"
+    created: "2021-08-13T02:36:58.184347725Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -3530,7 +3574,7 @@ entries:
     version: 0.4.11
   - apiVersion: v1
     appVersion: 3.0.15
-    created: "2021-08-12T19:15:17.114134643Z"
+    created: "2021-08-13T02:36:58.174220701Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -3577,7 +3621,7 @@ entries:
     version: 0.4.10
   - apiVersion: v1
     appVersion: 3.0.14
-    created: "2021-08-12T19:15:17.19974848Z"
+    created: "2021-08-13T02:36:58.241517327Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -3620,7 +3664,7 @@ entries:
     version: 0.4.9
   - apiVersion: v1
     appVersion: 3.0.13
-    created: "2021-08-12T19:15:17.19008363Z"
+    created: "2021-08-13T02:36:58.233995534Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -3663,7 +3707,7 @@ entries:
     version: 0.4.8
   - apiVersion: v1
     appVersion: 3.0.13
-    created: "2021-08-12T19:15:17.182392891Z"
+    created: "2021-08-13T02:36:58.227392553Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -3706,7 +3750,7 @@ entries:
     version: 0.4.7
   - apiVersion: v1
     appVersion: 3.0.13
-    created: "2021-08-12T19:15:17.171978138Z"
+    created: "2021-08-13T02:36:58.219847561Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -3749,7 +3793,7 @@ entries:
     version: 0.4.6
   - apiVersion: v1
     appVersion: 3.0.13
-    created: "2021-08-12T19:15:17.164084298Z"
+    created: "2021-08-13T02:36:58.213109678Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -3792,7 +3836,7 @@ entries:
     version: 0.4.5
   - apiVersion: v1
     appVersion: 3.0.13
-    created: "2021-08-12T19:15:17.154968151Z"
+    created: "2021-08-13T02:36:58.206179293Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -3835,7 +3879,7 @@ entries:
     version: 0.4.4
   - apiVersion: v1
     appVersion: 3.0.13
-    created: "2021-08-12T19:15:17.14696451Z"
+    created: "2021-08-13T02:36:58.198916904Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -3878,7 +3922,7 @@ entries:
     version: 0.4.3
   - apiVersion: v1
     appVersion: 3.0.13
-    created: "2021-08-12T19:15:17.137476362Z"
+    created: "2021-08-13T02:36:58.191033707Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -3921,7 +3965,7 @@ entries:
     version: 0.4.2
   - apiVersion: v1
     appVersion: 3.0.12
-    created: "2021-08-12T19:15:17.099413968Z"
+    created: "2021-08-13T02:36:58.160643035Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -3964,7 +4008,7 @@ entries:
     version: 0.4.1
   - apiVersion: v1
     appVersion: 3.0.12
-    created: "2021-08-12T19:15:17.090556222Z"
+    created: "2021-08-13T02:36:58.154036954Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -4007,7 +4051,7 @@ entries:
     version: 0.4.0
   - apiVersion: v1
     appVersion: 3.0.12
-    created: "2021-08-12T19:15:17.081971578Z"
+    created: "2021-08-13T02:36:58.146897966Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -4050,7 +4094,7 @@ entries:
     version: 0.3.2
   - apiVersion: v1
     appVersion: 3.0.12
-    created: "2021-08-12T19:15:17.067644005Z"
+    created: "2021-08-13T02:36:58.140165483Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -4090,7 +4134,7 @@ entries:
   drupal7:
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.240862293Z"
+    created: "2021-08-13T02:36:59.052320573Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -4134,7 +4178,7 @@ entries:
     version: 0.1.17
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.226078318Z"
+    created: "2021-08-13T02:36:59.041047435Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -4178,7 +4222,7 @@ entries:
     version: 0.1.16
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.211529443Z"
+    created: "2021-08-13T02:36:59.030931911Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -4222,7 +4266,7 @@ entries:
     version: 0.1.15
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.19902228Z"
+    created: "2021-08-13T02:36:59.020476282Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -4266,7 +4310,7 @@ entries:
     version: 0.1.14
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.185231209Z"
+    created: "2021-08-13T02:36:59.009443247Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -4310,7 +4354,7 @@ entries:
     version: 0.1.13
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.172765746Z"
+    created: "2021-08-13T02:36:58.99908512Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -4354,7 +4398,7 @@ entries:
     version: 0.1.12
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.157682769Z"
+    created: "2021-08-13T02:36:58.988374889Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -4398,7 +4442,7 @@ entries:
     version: 0.1.11
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.142646192Z"
+    created: "2021-08-13T02:36:58.977615257Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -4442,7 +4486,7 @@ entries:
     version: 0.1.10
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.350077251Z"
+    created: "2021-08-13T02:36:59.137376916Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -4486,7 +4530,7 @@ entries:
     version: 0.1.9
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.336682382Z"
+    created: "2021-08-13T02:36:59.126595384Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -4530,7 +4574,7 @@ entries:
     version: 0.1.8
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.321996307Z"
+    created: "2021-08-13T02:36:59.116336458Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -4574,7 +4618,7 @@ entries:
     version: 0.1.7
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.309191042Z"
+    created: "2021-08-13T02:36:59.104928218Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -4618,7 +4662,7 @@ entries:
     version: 0.1.6
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.296562877Z"
+    created: "2021-08-13T02:36:59.094166186Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -4662,7 +4706,7 @@ entries:
     version: 0.1.5
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.28331071Z"
+    created: "2021-08-13T02:36:59.084255365Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -4706,7 +4750,7 @@ entries:
     version: 0.1.4
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.268195033Z"
+    created: "2021-08-13T02:36:59.073221829Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -4750,7 +4794,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.255648069Z"
+    created: "2021-08-13T02:36:59.062198394Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -4794,7 +4838,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.127485414Z"
+    created: "2021-08-13T02:36:58.967549133Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -4838,7 +4882,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.112451638Z"
+    created: "2021-08-13T02:36:58.956331695Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -4882,7 +4926,7 @@ entries:
     version: 0.1.0
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.002909479Z"
+    created: "2021-08-13T02:36:58.869940136Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -4926,7 +4970,7 @@ entries:
     version: 0.0.14
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:17.991057418Z"
+    created: "2021-08-13T02:36:58.859893112Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -4970,7 +5014,7 @@ entries:
     version: 0.0.13
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:17.980068462Z"
+    created: "2021-08-13T02:36:58.848840377Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -5014,7 +5058,7 @@ entries:
     version: 0.0.12
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:17.966672494Z"
+    created: "2021-08-13T02:36:58.840000568Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -5058,7 +5102,7 @@ entries:
     version: 0.0.11
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:17.954340531Z"
+    created: "2021-08-13T02:36:58.83033735Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -5102,7 +5146,7 @@ entries:
     version: 0.0.10
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.098815168Z"
+    created: "2021-08-13T02:36:58.945378661Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -5146,7 +5190,7 @@ entries:
     version: 0.0.9
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.08751261Z"
+    created: "2021-08-13T02:36:58.936472052Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -5190,7 +5234,7 @@ entries:
     version: 0.0.8
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.074876646Z"
+    created: "2021-08-13T02:36:58.926853034Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -5234,7 +5278,7 @@ entries:
     version: 0.0.7
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.063562088Z"
+    created: "2021-08-13T02:36:58.917969225Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -5278,7 +5322,7 @@ entries:
     version: 0.0.6
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.051474727Z"
+    created: "2021-08-13T02:36:58.908120404Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -5322,7 +5366,7 @@ entries:
     version: 0.0.5
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.040751572Z"
+    created: "2021-08-13T02:36:58.899181194Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -5366,7 +5410,7 @@ entries:
     version: 0.0.4
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.027183203Z"
+    created: "2021-08-13T02:36:58.889089471Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -5410,7 +5454,7 @@ entries:
     version: 0.0.3
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:18.01488964Z"
+    created: "2021-08-13T02:36:58.878900746Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -5454,7 +5498,7 @@ entries:
     version: 0.0.2
   - apiVersion: v2
     appVersion: "4.54"
-    created: "2021-08-12T19:15:17.943088673Z"
+    created: "2021-08-13T02:36:58.821502541Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -5499,7 +5543,7 @@ entries:
   solr:
   - apiVersion: v2
     appVersion: 8.7.0
-    created: "2021-08-12T19:15:18.350489853Z"
+    created: "2021-08-13T02:36:59.13770662Z"
     description: A Helm chart for a Solr instance using the official Solr Operator
     digest: 333c9f91aa2f86ae93d8e69cf0a31a57ee381ebb503630ab2704fa478a3149fd
     name: solr
@@ -5507,4 +5551,4 @@ entries:
     urls:
     - https://drupalwxt.github.io/helm-drupal/solr-0.1.0.tgz
     version: 0.1.0
-generated: "2021-08-12T19:15:16.705509957Z"
+generated: "2021-08-13T02:36:57.841696722Z"

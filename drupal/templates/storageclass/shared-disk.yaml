@@ -1,0 +1,20 @@
+{{- if and .Values.sharedDisk.enabled -}}
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: {{ include "drupal.fullname" . }}-shared-disk
+  labels:
+    app.kubernetes.io/name: {{ include "drupal.name" . }}
+    helm.sh/chart: {{ include "drupal.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+provisioner: kubernetes.io/azure-disk
+{{- else }}
+provisioner: disk.csi.azure.com
+{{- end }}
+parameters:
+  skuname: Premium_LRS
+  cachingMode: None
+  maxShares: "{{ .Values.sharedDisk.maxShares }}"
+{{- end }}

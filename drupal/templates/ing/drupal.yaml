@@ -1,7 +1,13 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "drupal.fullname" . -}}
+{{- $releaseName := .Release.Name -}}
+{{- $varnishEnabled := .Values.varnish.enabled -}}
 {{- $ingressPath := .Values.ingress.path -}}
+{{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+apiVersion: networking.k8s.io/v1
+{{- else }}
 apiVersion: networking.k8s.io/v1beta1
+{{- end }}
 kind: Ingress
 metadata:
   name: {{ $fullName }}
@@ -30,8 +36,30 @@ spec:
     - host: {{ . | quote }}
       http:
         paths:
+        {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+          - pathType: Prefix
+            path: {{ $ingressPath }}
+            backend:
+          {{- if $varnishEnabled }}
+              service:
+                name: {{ $releaseName }}-varnish
+                port:
+                  number: 80
+          {{- else }}
+              service:
+                name: {{ $fullName }}-nginx
+                port:
+                  number: 80
+          {{- end }}
+        {{- else }}
           - backend:
+          {{- if $varnishEnabled }}
+              serviceName: {{ $releaseName }}-varnish
+              servicePort: 80
+          {{- else }}
               serviceName: {{ $fullName }}-nginx
               servicePort: 80
+          {{- end }}
+        {{- end }}
   {{- end }}
 {{- end }}

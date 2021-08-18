@@ -27,3 +27,21 @@ jobs:
         ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
         GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
         SCRIPT_MODE: true
+
+    - name: Helm gh-pages
+      uses: statcan/actions/helm-ghpages@master
+      with:
+        args: "drupal7 https://drupalwxt.github.io/helm-drupal"
+      env:
+        ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+        GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
+        SCRIPT_MODE: true
+
+    - name: Helm gh-pages
+      uses: statcan/actions/helm-ghpages@master
+      with:
+        args: "solr https://drupalwxt.github.io/helm-drupal"
+      env:
+        ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+        GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
+        SCRIPT_MODE: true

@@ -11,7 +11,7 @@ metadata:
   annotations:
     "helm.sh/hook": post-install
     "helm.sh/hook-weight": "10"
-    "helm.sh/hook-delete-policy": hook-succeeded
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   template:
     metadata:
@@ -22,34 +22,36 @@ spec:
         app.kubernetes.io/managed-by: {{ .Release.Service }}
     spec:
       restartPolicy: OnFailure
-{{- if .Values.drupal.initContainers }}
+{{- if or (.Values.drupal.initContainers) (or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled)) }}
       initContainers:
+{{- if .Values.sharedDisk.enabled }}
+        - name: init-chown
+          image: 'alpine:3.10'
+          command:
+            - chown
+            - '-R'
+            - '82:82'
+            - /mnt/azure
+          volumeMounts:
+            - name: files-public
+              mountPath: /mnt/azure
+{{- end }}
+{{- if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
+        - name: init-media-icons-folder
+          image: 'alpine:3.10'
+          command:
+            - mkdir
+            - '-p'
+            - /files/media-icons/generic
+          volumeMounts:
+            - name: files-public
+              mountPath: /files
+{{- end }}
+{{- if .Values.drupal.initContainers }}
 {{ toYaml .Values.drupal.initContainers | indent 8 }}
 {{- end }}
+{{- end }}
       containers:
-{{- if .Values.postgresql.pgbouncer.enabled }}
-      - name: pgbouncer
-        image: mcr.microsoft.com/azure-oss-db-tools/pgbouncer-sidecar:latest
-        imagePullPolicy: Always
-        ports:
-          - containerPort: 5432
-        volumeMounts:
-          - name: configfiles
-            mountPath: "/etc/pgbouncer"
-            readOnly: true
-        livenessProbe:
-          tcpSocket:
-            port: 5432
-          periodSeconds: 60
-        lifecycle:
-          preStop:
-            exec:
-              command: ["/bin/sh", "-c", "killall -INT pgbouncer && sleep 120"]
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop: ['all']
-{{- end  }}
       - name: drush
         image: "{{ .Values.drupal.image }}:{{ default .Chart.AppVersion .Values.drupal.tag }}"
         imagePullPolicy: {{ default "" .Values.drupal.imagePullPolicy | quote }}
@@ -64,8 +66,26 @@ spec:
               until drush sql:query 'SHOW TABLES;'; do echo Waiting for DB; sleep 3; done
               echo DB available
 
+              {{- if .Values.redis.enabled }}
+              {{- if and .Values.redis.cluster.enabled .Values.redis.sentinel.enabled }}
+              until [[ $(printf "AUTH $REDIS_PASSWORD\r\n" | nc -w 2 {{ .Release.Name }}-redis {{ .Values.redis.sentinel.service.sentinelPort }}) == $(printf "+OK\r\n") ]]; do echo Waiting for Redis; sleep 3; done
+              {{- else }}
+              until [[ $(printf "AUTH $REDIS_PASSWORD\r\n" | nc -w 2 {{ .Release.Name }}-redis-master {{ .Values.redis.master.service.port }}) == $(printf "+OK\r\n") ]]; do echo Waiting for Redis; sleep 3; done
+              {{- end }}
+              echo Redis available
+              {{- end }}
+
               # Check Drush status
-              drush status
+              drush status || true
+
+              {{- if .Values.redis.enabled }}
+              # Flush redis caches
+              {{- if and .Values.redis.cluster.enabled .Values.redis.sentinel.enabled }}
+              printf "AUTH $REDIS_PASSWORD\r\nFLUSHDB\r\n" | nc -w 2 {{ .Release.Name }}-redis {{ .Values.redis.sentinel.service.sentinelPort }}
+              {{- else }}
+              printf "AUTH $REDIS_PASSWORD\r\nFLUSHDB\r\n" | nc -w 2 {{ .Release.Name }}-redis-master {{ .Values.redis.master.service.port }}
+              {{- end }}
+              {{- end }}
 
               # Run site install
               {{- if .Values.drupal.restore.enabled }}
@@ -79,19 +99,29 @@ spec:
 
               echo "Restoring backup: $BACKUPNAME"
 
+              {{- if .Values.drupal.restore.db }}
+              echo "Drop database"
               drush sql-drop -y
-              gunzip -c /backup/$BACKUPNAME/db.sql.gz | drush sql-cli
+              echo "Restore database"
+              gunzip -c /backup/$BACKUPNAME/db.sql.gz{{ if .Values.drupal.restore.convert }} | sed 's/MyISAM/InnoDB/g'{{ end }} | drush sql-cli
+              echo "Database restored"
+              {{- end }}
 
+              {{- if .Values.drupal.restore.files }}
+              echo "Deleting files"
               # Errors from deleting should not fail the job
               set +e
               find sites/default/files/ -type f -print0 | xargs -0 rm
               find sites/default/files/ -mindepth 1 -type d -print0 | xargs -0 rmdir
-              find /var/www/private/ -type f -print0 | xargs -0 rm
-              find /var/www/private/ -mindepth 1 -type d -print0 | xargs -0 rmdir
+              find /private/ -type f -print0 | xargs -0 rm
+              find /private/ -mindepth 1 -type d -print0 | xargs -0 rmdir
               set -e
 
+              echo "Restoring files"
               tar -zxf /backup/$BACKUPNAME/files.tar.gz --directory sites/default/files --no-acls --no-xattrs -m --no-same-permissions --no-overwrite-dir
-              tar -zxf /backup/$BACKUPNAME/private.tar.gz --directory /var/www/private --no-acls --no-xattrs -m --no-same-permissions --no-overwrite-dir
+              tar -zxf /backup/$BACKUPNAME/private.tar.gz --directory /private --no-acls --no-xattrs -m --no-same-permissions --no-overwrite-dir
+              echo "Files restored"
+              {{- end }}
 
               # Run database updates
               {{- if .Values.drupal.cacheRebuildBeforeDatabaseMigration }}
@@ -118,67 +148,22 @@ spec:
                 --account-pass=$DRUPAL_ADMIN_PASSWORD \
                 --site-mail={{ .Values.drupal.siteEmail | quote }} \
                 --site-name={{ .Values.drupal.siteName | quote }} \
+                {{- if .Values.drupal.extensions.enabled }}
+                {{- if semverCompare ">=0.11.8" .Chart.AppVersion }}
+                wxt_extension_configure_form.all_wxt='TRUE' \
+                {{- else }}
+                wxt_extension_configure_form.select_all='TRUE' \
+                {{- end }}
+                {{- end }}
                 install_configure_form.update_status_module='array(FALSE,FALSE)' \
                 --yes
               {{- end }}
 
-              {{- if not (eq .Values.files.provider "none") }}
-              # Enable s3fs
-              drush -y pm:enable s3fs
+              drush -y cache:rebuild
 
-              # Configure s3fs
-              {{- if eq .Values.files.provider "minio" }}
-              drush -y config:set s3fs.settings bucket '{{ .Values.minio.defaultBucket.name }}'
-              drush -y config:set s3fs.settings region 'us-east-1'
-              {{- else if eq .Values.files.provider "s3" }}
-              drush -y config:set s3fs.settings bucket '{{ .Values.s3.bucket }}'
-              drush -y config:set s3fs.settings region '{{ .Values.s3.region }}'
-              {{ end }}
-
-              {{- if eq .Values.files.provider "minio" }}
-              drush -y config:set s3fs.settings use_https 0
-              {{- else }}
-              drush -y config:set s3fs.settings use_https 1
-              {{ end }}
-
-              drush -y config:set s3fs.settings no_rewrite_cssjs 0
-
-              {{- if .Values.files.cname.enabled }}
-              drush -y config:set s3fs.settings use_cname 1
-              {{- if eq .Values.files.provider "minio" }}
-              drush -y config:set s3fs.settings domain {{ print .Values.files.cname.hostname "/" .Values.minio.defaultBucket.name | quote }}
-              {{- else }}
-              drush -y config:set s3fs.settings domain {{ print .Values.files.cname.hostname | quote }}
-              {{- end }}
-              {{- else if eq .Values.files.provider "minio" }}
-              drush -y config:set s3fs.settings use_cname 1
-              drush -y config:set s3fs.settings domain '/{{ .Values.minio.defaultBucket.name }}'
-              {{- else }}
-              drush -y config:set s3fs.settings use_cname 0
-              {{- end }}
-
-              {{- if eq .Values.files.provider "minio" }}
-              drush -y config:set s3fs.settings use_customhost 1
-              drush -y config:set s3fs.settings hostname '{{ .Release.Name }}-minio:{{ .Values.minio.service.port }}'
-              drush -y config:set s3fs.settings use_path_style_endpoint 1
-              {{- else if and (eq .Values.files.provider "s3") .Values.s3.customHost.enabled }}
-              drush -y config:set s3fs.settings use_customhost 1
-              drush -y config:set s3fs.settings hostname '{{ .Values.s3.customHost.hostname }}'
-              {{- if .Values.s3.customHost.pathBased }}
-              drush -y config:set s3fs.settings use_path_style_endpoint 1
-              {{- else }}
-              drush -y config:set s3fs.settings use_path_style_endpoint 0
-              {{- end }}
-              {{- else }}
-              drush -y config:set s3fs.settings use_customhost 0
-              drush -y config:set s3fs.settings use_path_style_endpoint 0
-              {{- end }}
-
-              drush -y config:set s3fs.settings use_s3_for_public 1
-              drush -y config:set s3fs.settings use_s3_for_private 1
-
-              drush -y config:set s3fs.settings public_folder '{{ .Values.files.folders.public }}'
-              drush -y config:set s3fs.settings private_folder '{{ .Values.files.folders.private }}'
+              {{- if .Values.redis.enabled }}
+              # Enable redis
+              drush -y pm:enable redis
               {{- end }}
 
               # Change WxT theme
@@ -191,13 +176,7 @@ spec:
 
               # Migrate content
               {{- if .Values.drupal.migrate }}
-              {{- if not (eq .Values.files.provider "none") }}
-              drush -y config:set migrate_plus.migration.wxt_file process.uri uri
-              {{- end }}
               drush -y migrate:import wxt_file
-              {{- if not (eq .Values.files.provider "none") }}
-              drush -y s3fs-refresh-cache
-              {{- end }}
               drush -y migrate:import --group wxt --tag 'Core'
               drush -y migrate:import --group gcweb --tag 'Core'
               drush -y migrate:import --group gcweb --tag 'Menu'
@@ -210,7 +189,6 @@ spec:
               {{- if .Values.drupal.extraInstallScripts }}
               {{ .Values.drupal.extraInstallScripts | nindent 14}}
               {{- end }}
-
         env:
 {{- if .Values.external.enabled }}
         - name: EXTERNAL_PASSWORD
@@ -218,32 +196,6 @@ spec:
             secretKeyRef:
               name: {{ template "drupal.fullname" . }}
               key: databasePassword
-{{- else if .Values.osb.enabled }}
-        - name: OSB_HOST
-          valueFrom:
-            secretKeyRef:
-              name: "{{ include "drupal.fullname" . }}-osb"
-              key: host
-        - name: OSB_PORT
-          valueFrom:
-            secretKeyRef:
-              name: "{{ include "drupal.fullname" . }}-osb"
-              key: port
-        - name: OSB_DATABASE
-          valueFrom:
-            secretKeyRef:
-              name: "{{ include "drupal.fullname" . }}-osb"
-              key: database
-        - name: OSB_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: "{{ include "drupal.fullname" . }}-osb"
-              key: username
-        - name: OSB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: "{{ include "drupal.fullname" . }}-osb"
-              key: password
 {{- else if .Values.mysql.enabled }}
         - name: MYSQL_PASSWORD
           valueFrom:
@@ -259,38 +211,34 @@ spec:
               name: "{{ .Release.Name }}-postgresql"
               key: postgresql-password
 {{- end }}
+{{- if .Values.redis.enabled }}
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Release.Name }}-redis"
+              key: redis-password
+{{- end }}
         - name: DRUPAL_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
               name: "{{ include "drupal.fullname" . }}"
               key: password
-{{- if eq .Values.files.provider "minio" }}
-        - name: S3_ACCESS_KEY
-          valueFrom:
-            secretKeyRef:
-              name: "{{ .Release.Name }}-minio"
-              key: accesskey
-        - name: S3_SECRET_KEY
-          valueFrom:
-            secretKeyRef:
-              name: "{{ .Release.Name }}-minio"
-              key: secretkey
-{{- else if eq .Values.files.provider "s3" }}
-        - name: S3_ACCESS_KEY
-          valueFrom:
-            secretKeyRef:
-              name: "{{ .Release.Name }}-s3"
-              key: accesskey
-        - name: S3_SECRET_KEY
-          valueFrom:
-            secretKeyRef:
-              name: "{{ .Release.Name }}-s3"
-              key: secretkey
-{{- end }}
 {{- if .Values.extraVars }}
 {{ toYaml .Values.extraVars | indent 8 }}
 {{- end }}
         volumeMounts:
+        - name: cm-drupal
+          readOnly: true
+          mountPath: /usr/local/etc/php/php.ini
+          subPath: php.ini
+        - name: cm-drupal
+          readOnly: true
+          mountPath: /usr/local/etc/php/conf.d/opcache-recommended.ini
+          subPath: opcache-recommended.ini
+        - name: cm-drupal
+          readOnly: true
+          mountPath: /usr/local/etc/php-fpm.d/www.conf
+          subPath: www.conf
         - name: cm-drupal
           mountPath: /var/www/html/sites/default/settings.php
           subPath: settings.php
@@ -301,8 +249,6 @@ spec:
           readOnly: true
         - name: twig-cache
           mountPath: /cache/twig
-        - name: config-sync
-          mountPath: /config/sync
 {{- if .Values.drupal.restore.enabled }}
         - name: backup
           mountPath: /backup
@@ -312,12 +258,55 @@ spec:
           mountPath: /var/www/html/sites/default/files
           subPath: public
         - name: files
-          mountPath: /var/www/private
+          mountPath: /private
           subPath: private
 {{- end }}
 {{- if .Values.drupal.volumeMounts }}
 {{ toYaml .Values.drupal.volumeMounts | indent 8 }}
 {{- end }}
+{{- if .Values.proxysql.enabled }}
+      - name: proxysql
+        image: proxysql/proxysql:2.1.0
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 6032
+          - containerPort: 6033
+        volumeMounts:
+          - name: configfiles
+            mountPath: "/etc/proxysql"
+            readOnly: true
+        livenessProbe:
+          tcpSocket:
+            port: 6032
+          periodSeconds: 60
+        command: ["/usr/bin/proxysql", "--initial", "-f", "-c", "/etc/proxysql/proxysql.conf"]
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsUser: 0
+          runAsGroup: 999
+{{- else if .Values.pgbouncer.enabled }}
+      - name: pgbouncer
+        image: mcr.microsoft.com/azure-oss-db-tools/pgbouncer-sidecar:latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 5432
+        volumeMounts:
+          - name: configfiles
+            mountPath: "/etc/pgbouncer"
+            readOnly: true
+        livenessProbe:
+          tcpSocket:
+            port: 5432
+          periodSeconds: 60
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "killall -INT pgbouncer && sleep 120"]
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ['all']
+{{- end  }}
       {{- if .Values.drupal.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.drupal.imagePullSecrets | indent 8 }}
@@ -331,8 +320,6 @@ spec:
           name: {{ include "drupal.fullname" . }}
       - name: twig-cache
         emptyDir: {}
-      - name: config-sync
-        emptyDir: {}
 {{- if .Values.drupal.restore.enabled }}
       - name: backup
 {{ toYaml .Values.drupal.restore.volume | indent 8 }}
@@ -341,11 +328,22 @@ spec:
       - name: files
         persistentVolumeClaim:
           claimName: {{ template "drupal.fullname" . }}-drupal
+{{- else if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
+      - name: files-public
+        persistentVolumeClaim:
+          claimName: {{ include "drupal.fullname" . }}-public
+      - name: files-private
+        persistentVolumeClaim:
+          claimName: {{ include "drupal.fullname" . }}-private
 {{- else if not .Values.drupal.disableDefaultFilesMount }}
       - name: files
         emptyDir: {}
 {{- end }}
-{{- if .Values.postgresql.pgbouncer.enabled }}
+{{- if .Values.proxysql.enabled }}
+      - name: configfiles
+        secret:
+          secretName: {{ include "drupal.fullname" . }}-proxysql
+{{- else if .Values.pgbouncer.enabled }}
       - name: configfiles
         secret:
            secretName: {{ include "drupal.fullname" . }}-pgbouncer

@@ -92,29 +92,35 @@ $databases['default']['default'] = array (
   'database' => {{ .Values.external.database | quote }},
   'username' => {{ .Values.external.user | quote }},
   'password' => getenv('EXTERNAL_PASSWORD') ?: '',
+  {{- if .Values.proxysql.enabled }}
+  'host' => '127.0.0.1',
+  {{- else if .Values.postgresql.enabled }}
+  'host' => 'localhost',
+  {{- else }}
   'host' => {{ .Values.external.host | quote }},
+  {{- end }}
   'port' => {{ .Values.external.port }},
   'prefix' => '',
   'namespace' => 'Drupal\Core\Database\Driver\{{ .Values.external.driver }}',
   'driver' => '{{ .Values.external.driver }}',
-);
-{{- else if .Values.osb.enabled }}
-$databases['default']['default'] = array (
-  'database' => getenv('OSB_DATABASE') ?: '',
-  'username' => getenv('OSB_USERNAME') ?: '',
-  'password' => getenv('OSB_PASSWORD') ?: '',
-  'host' => getenv('OSB_HOST') ?: '',
-  'port' => getenv('OSB_PORT') ?: '',
-  'prefix' => '',
-  'namespace' => 'Drupal\Core\Database\Driver\{{ .Values.osb.driver }}',
-  'driver' => '{{ .Values.osb.driver }}',
+  'pdo' => array (
+  {{- range .Values.external.pdo }}
+    {{- range $key, $value := . }}
+    {{ $key }} => {{ $value | quote }},
+    {{- end }}
+  {{- end }}
+  ),
 );
 {{- else if .Values.mysql.enabled }}
 $databases['default']['default'] = array (
   'database' => {{ .Values.mysql.mysqlDatabase | quote }},
   'username' => {{ .Values.mysql.mysqlUser | quote }},
   'password' => getenv('MYSQL_PASSWORD') ?: '',
+  {{- if .Values.proxysql.enabled }}
+  'host' => '127.0.0.1',
+  {{- else }}
   'host' => '{{ .Release.Name }}-mysql',
+  {{- end }}
   'port' => {{ .Values.mysql.service.port | quote }},
   'prefix' => '',
   'namespace' => 'Drupal\Core\Database\Driver\mysql',
@@ -125,7 +131,11 @@ $databases['default']['default'] = array (
   'database' => {{ .Values.postgresql.postgresqlDatabase | quote }},
   'username' => {{ .Values.postgresql.postgresqlUsername | quote }},
   'password' => getenv('POSTGRES_PASSWORD') ?: '',
+  {{- if .Values.pgbouncer.enabled }}
+  'host' => 'localhost',
+  {{- else }}
   'host' => '{{ .Release.Name }}-postgresql',
+  {{- end }}
   'port' => {{ .Values.postgresql.service.port | quote }},
   'prefix' => '',
   'namespace' => 'Drupal\Core\Database\Driver\pgsql',
@@ -564,7 +574,7 @@ if ($settings['hash_salt']) {
 * See https://www.drupal.org/documentation/modules/file for more information
 * about securing private files.
 */
-# $settings['file_private_path'] = '';
+$settings['file_private_path'] =  '/private';
 
 /**
 * Session write interval:
@@ -766,11 +776,6 @@ if ($drupal_settings !== 'production') {
 }
 
 /**
-* Set private file path directory.
-*/
-$settings['file_private_path'] =  '/var/www/private';
-
-/**
 * Load local development override configuration, if available.
 *
 * Use settings.local.php to override variables on secondary (staging,
@@ -786,11 +791,11 @@ if ($drupal_settings === 'development' && file_exists(__DIR__ . '/settings.local
 
 /** Everything after here is added by the installation process.
 *
-* TODO: improve the installtion by putting the settings.local part below these
+* TODO: improve the installation by putting the settings.local part below these
 * settings.
 */
 
-$config_directories[CONFIG_SYNC_DIRECTORY] = '/config/sync';
+$config_directories[CONFIG_SYNC_DIRECTORY] = '/private/config/sync';
 
 {{- if .Values.drupal.configSplit.enabled }}
 /**
@@ -803,7 +808,7 @@ $config_directories[CONFIG_SYNC_DIRECTORY] = '/config/sync';
  *
  * To disable this functionality simply set the following parameters:
  * $wxt_override_config_dirs = FALSE;
- * $settings['config_sync_directory'] = $dir . "/config/$site_dir";
+ * $settings['config_sync_directory'] = $dir . "/private/config/$site_dir";
  *
  * See https://github.com/acquia/blt/blob/12.x/settings/config.settings.php
  * for more information.
@@ -815,8 +820,8 @@ if (!isset($wxt_override_config_dirs)) {
   $wxt_override_config_dirs = TRUE;
 }
 if ($wxt_override_config_dirs) {
-  $config_directories['sync'] = $repo_root . "/var/www/html/sites/default/files/config/default";
-  $settings['config_sync_directory'] = $repo_root . "/var/www/html/sites/default/files/config/default";
+  $config_directories['sync'] = $repo_root . "/private/config/default";
+  $settings['config_sync_directory'] = $repo_root . "/private/config/default";
 }
 $split_filename_prefix = 'config_split.config_split';
 if (isset($config_directories['sync'])) {
@@ -871,24 +876,20 @@ if ($split != 'none') {
 // $config["$split_filename_prefix.SITENAME"]['status'] = TRUE;
 {{- end }}
 
-{{- if or (eq .Values.files.provider "s3") (eq .Values.files.provider "minio") }}
-// S3FS
-$settings['s3fs.access_key'] = getenv('S3_ACCESS_KEY') ?: '';
-$settings['s3fs.secret_key'] = getenv('S3_SECRET_KEY') ?: '';
-
-$settings['s3fs.use_s3_for_public'] = TRUE;
-$settings['s3fs.use_s3_for_private'] = TRUE;
-{{- end }}
-
 {{- if .Values.redis.enabled }}
 if (extension_loaded('redis')) {
   // Set Redis as the default backend for any cache bin not otherwise specified.
   $settings['cache']['default'] = 'cache.backend.redis';
-  $settings['redis.connection']['interface'] = 'PhpRedis';
+  $settings['redis.connection']['interface'] = '{{ default "PhpRedis" .Values.redis.clientInterface }}';
   $settings['redis.connection']['scheme'] = 'http';
-  $settings['redis.connection']['host'] = 'localhost';
-  $settings['redis.connection']['port'] = '6379';
-  //$settings['redis.connection']['password'] = '';
+  {{- if and .Values.redis.cluster.enabled .Values.redis.sentinel.enabled }}
+  $settings['redis.connection']['host'] = ['{{ .Release.Name }}-redis:{{ .Values.redis.sentinel.service.sentinelPort }}'];
+  $settings['redis.connection']['instance']  = '{{ .Values.redis.sentinel.masterSet }}';
+  {{- else }}
+  $settings['redis.connection']['host'] = '{{ .Release.Name }}-redis-master';
+  $settings['redis.connection']['port'] = '{{ .Values.redis.master.service.port }}';
+  {{- end }}
+  $settings['redis.connection']['password'] = getenv('REDIS_PASSWORD') ?: '';
 
   // Allow the services to work before the Redis module itself is enabled.
   $settings['container_yamls'][] = 'modules/contrib/redis/example.services.yml';

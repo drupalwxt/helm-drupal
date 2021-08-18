@@ -1,0 +1,22 @@
+{{- if .Values.sharedDisk.enabled }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  annotations:
+{{- if .Values.sharedDisk.enabled }}
+{{ toYaml .Values.sharedDisk.annotations | indent 4 }}
+{{- end }}
+  name: {{ include "drupal.fullname" . }}-public
+spec:
+  accessModes:
+    - {{ .Values.sharedDisk.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.sharedDisk.size }}
+  volumeName: {{ include "drupal.fullname" . }}-public
+{{- if eq "-" .Values.sharedDisk.storageClass }}
+  storageClassName: ""
+{{- else if .Values.sharedDisk.storageClass }}
+  storageClassName: "{{ .Values.sharedDisk.storageClass }}"
+{{- end }}
+{{- end }}

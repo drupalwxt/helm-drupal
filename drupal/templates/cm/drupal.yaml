@@ -8,10 +8,17 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
+  php.ini: |
+{{ tpl (.Files.Get "conf/php.ini") . | indent 4 }}
+  opcache-recommended.ini: |
+{{ tpl (.Files.Get "conf/opcache-recommended.ini") . | indent 4 }}
+  www.conf: |
+{{ tpl (.Files.Get "conf/www.conf") . | indent 4 }}
   settings.php: |
 {{- if eq "d8" .Values.drupal.version }}
 {{ tpl (.Files.Get "conf/settings.d8.php") . | indent 4 }}
-
+{{- else if eq "d9" .Values.drupal.version }}
+{{ tpl (.Files.Get "conf/settings.d9.php") . | indent 4 }}
 {{- else }}
   settings.php:
     <?php

@@ -24,8 +24,6 @@ kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush si {{ .Values.dr
     install_configure_form.update_status_module='array(FALSE,FALSE)' \
     --yes
 
-# Enable the S3FS module
-kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush en s3fs -y
 {{- end }}
 
 ** To access your Drupal site
@@ -68,7 +66,6 @@ kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush en s3fs -y
 
   # Baseline migrations for Canada.ca
   kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import wxt_file
-  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush s3fs-refresh-cache
   kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import --group wxt --tag 'Core'
   kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import --group gcweb --tag 'Core'
   kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import --group gcweb --tag 'Menu'
@@ -102,10 +99,6 @@ kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush en s3fs -y
 
 Running with Istio sidecar injection?
 
-1. The MySQL service will not function due to https://github.com/istio/istio/issues/13484. Rename it with:
-
-  kubectl --namespace {{ .Release.Namespace }} patch service {{ .Release.Name }}-mysql --type=json -p='[{"op":"replace", "path":"/spec/ports/0/name", "value":"tcp-mysql"}]'
-
-2. The jobs won't finish, so you'll need to monitor the pods and once they reach 1/2 ready, terminate the proxy:
+1. The jobs won't finish, so you'll need to monitor the pods and once they reach 1/2 ready, terminate the proxy:
 
   kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -c istio-proxy -- kill -INT 1

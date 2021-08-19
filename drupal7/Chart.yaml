@@ -36,6 +36,6 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
     condition: redis.enabled
   - name: varnish
-    version: 0.2.0
+    version: 0.2.1
     repository: https://statcan.github.io/charts
     condition: varnish.enabled

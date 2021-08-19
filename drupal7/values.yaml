@@ -519,7 +519,7 @@ varnish:
 
   nodeSelector: {}
   #   kubernetes.azure.com/scalesetpriority: "spot"
-  
+
   affinity: {}
 
   varnishConfigContent: |

@@ -544,8 +544,18 @@ varnish:
   #  limits:
   #    memory: "1Gi"
   #    cpu: "500m"
-  nodeSelector: {}
+
+  # Example of using both toleration and nodeSelector to deploy varnish on an AKS Spot instance
+  # node pool:
   tolerations: []
+  # - key: "kubernetes.azure.com/scalesetpriority"
+  #   operator: "Equal"
+  #   value: "spot"
+  #   effect: "NoSchedule"
+
+  nodeSelector: {}
+  #   kubernetes.azure.com/scalesetpriority: "spot"
+
   affinity: {}
 
   varnishConfigContent: |
@@ -739,14 +749,3 @@ varnish:
     #   synthetic(std.fileread("/data/configuration/varnish/errors/503.html"));
     #   return (deliver);
     # }
-
-  # Example of using both toleration and nodeSelector to deploy varnish on an AKS Spot instance
-  # node pool:
-  tolerations: []
-  # - key: "kubernetes.azure.com/scalesetpriority"
-  #   operator: "Equal"
-  #   value: "spot"
-  #   effect: "NoSchedule"
-
-  nodeSelector: {}
-  #   kubernetes.azure.com/scalesetpriority: "spot"

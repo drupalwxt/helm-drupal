@@ -22,7 +22,7 @@ drupal:
   image: drupalwxt/site-wxt
 
   ## Note that by default we use appVersion to get image tag
-  # tag: 4.0.7
+  # tag: 4.1.0
 
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -127,7 +127,7 @@ drupal:
     # Defaults to once an hour
     schedule: '0 * * * *'
 
-  additionalCrons: []
+  additionalCrons: {}
     # example:
     #   # Run at midnight UTC
     #   schedule: '0 0 * * *'
@@ -253,12 +253,23 @@ drupal:
   #   securityContext:
   #     runAsUser: 0
 
+  # Example of using both toleration and nodeSelector to deploy drupal on an AKS Spot instance
+  # node pool:
+  tolerations: []
+  # - key: "kubernetes.azure.com/scalesetpriority"
+  #   operator: "Equal"
+  #   value: "spot"
+  #   effect: "NoSchedule"
+
+  nodeSelector: {}
+  #   kubernetes.azure.com/scalesetpriority: "spot"
+
 nginx:
   ## Nginx image version
   ## ref: https://hub.docker.com/drupalwxt/site-wxt/tags/
   image: drupalwxt/site-wxt
   ## Note that by default we use appVersion to get image tag
-  # tag: 4.0.7-nginx
+  # tag: 4.1.0-nginx
 
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -312,6 +323,17 @@ nginx:
 
   client_max_body_size: 20m
   real_ip_header: X-Forwarded-For
+
+  # Example of using both toleration and nodeSelector to deploy nginx on an AKS Spot instance
+  # node pool:
+  tolerations: []
+  # - key: "kubernetes.azure.com/scalesetpriority"
+  #   operator: "Equal"
+  #   value: "spot"
+  #   effect: "NoSchedule"
+
+  nodeSelector: {}
+  #   kubernetes.azure.com/scalesetpriority: "spot"
 
 # Specify an external database
 # Useful for managed offerings from your Cloud Provider
@@ -413,6 +435,17 @@ mysql:
       table_open_cache = 8192
       innodb_flush_log_at_trx_commit=2
 
+  # Example of using both toleration and nodeSelector to deploy mysql on an AKS Spot instance
+  # node pool:
+  tolerations: []
+  # - key: "kubernetes.azure.com/scalesetpriority"
+  #   operator: "Equal"
+  #   value: "spot"
+  #   effect: "NoSchedule"
+
+  nodeSelector: {}
+  #   kubernetes.azure.com/scalesetpriority: "spot"
+
 ## Configuration values for the PostgreSQL dependency sub-chart
 ## ref: https://github.com/kubernetes/charts/blob/master/stable/postgresql/README.md
 postgresql:
@@ -511,8 +544,18 @@ varnish:
   #  limits:
   #    memory: "1Gi"
   #    cpu: "500m"
-  nodeSelector: {}
+
+  # Example of using both toleration and nodeSelector to deploy varnish on an AKS Spot instance
+  # node pool:
   tolerations: []
+  # - key: "kubernetes.azure.com/scalesetpriority"
+  #   operator: "Equal"
+  #   value: "spot"
+  #   effect: "NoSchedule"
+
+  nodeSelector: {}
+  #   kubernetes.azure.com/scalesetpriority: "spot"
+
   affinity: {}
 
   varnishConfigContent: |

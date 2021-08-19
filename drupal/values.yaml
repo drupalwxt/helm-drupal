@@ -253,6 +253,17 @@ drupal:
   #   securityContext:
   #     runAsUser: 0
 
+  # Example of using both toleration and nodeSelector to deploy drupal on an AKS Spot instance
+  # node pool:
+  tolerations: []
+  # - key: "kubernetes.azure.com/scalesetpriority"
+  #   operator: "Equal"
+  #   value: "spot"
+  #   effect: "NoSchedule"
+
+  nodeSelector: {}
+  #   kubernetes.azure.com/scalesetpriority: "spot"
+
 nginx:
   ## Nginx image version
   ## ref: https://hub.docker.com/drupalwxt/site-wxt/tags/
@@ -312,6 +323,17 @@ nginx:
 
   client_max_body_size: 20m
   real_ip_header: X-Forwarded-For
+
+  # Example of using both toleration and nodeSelector to deploy nginx on an AKS Spot instance
+  # node pool:
+  tolerations: []
+  # - key: "kubernetes.azure.com/scalesetpriority"
+  #   operator: "Equal"
+  #   value: "spot"
+  #   effect: "NoSchedule"
+
+  nodeSelector: {}
+  #   kubernetes.azure.com/scalesetpriority: "spot"
 
 # Specify an external database
 # Useful for managed offerings from your Cloud Provider
@@ -412,6 +434,17 @@ mysql:
       table_definition_cache = 4096
       table_open_cache = 8192
       innodb_flush_log_at_trx_commit=2
+
+  # Example of using both toleration and nodeSelector to deploy mysql on an AKS Spot instance
+  # node pool:
+  tolerations: []
+  # - key: "kubernetes.azure.com/scalesetpriority"
+  #   operator: "Equal"
+  #   value: "spot"
+  #   effect: "NoSchedule"
+
+  nodeSelector: {}
+  #   kubernetes.azure.com/scalesetpriority: "spot"
 
 ## Configuration values for the PostgreSQL dependency sub-chart
 ## ref: https://github.com/kubernetes/charts/blob/master/stable/postgresql/README.md
@@ -706,3 +739,14 @@ varnish:
     #   synthetic(std.fileread("/data/configuration/varnish/errors/503.html"));
     #   return (deliver);
     # }
+
+  # Example of using both toleration and nodeSelector to deploy varnish on an AKS Spot instance
+  # node pool:
+  tolerations: []
+  # - key: "kubernetes.azure.com/scalesetpriority"
+  #   operator: "Equal"
+  #   value: "spot"
+  #   effect: "NoSchedule"
+
+  nodeSelector: {}
+  #   kubernetes.azure.com/scalesetpriority: "spot"

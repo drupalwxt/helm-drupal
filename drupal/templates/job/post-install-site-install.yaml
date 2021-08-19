@@ -138,8 +138,10 @@ spec:
               drush -y updatedb
 
               # Lightning updates
+              {{- if .Values.drupal.lightningUpdate }}
               drush -y cache:rebuild
               drush -y update:lightning
+              {{- end }}
 
               # WxT updates
               drush -y cache:rebuild

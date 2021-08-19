@@ -30,6 +30,14 @@ spec:
 {{ toYaml .Values.nginx.podAnnotations | indent 8 }}
 {{- end }}
     spec:
+{{- if .Values.nginx.tolerations }}
+      tolerations:
+{{ toYaml .Values.nginx.tolerations | indent 6 }}
+{{- end }}
+{{- if .Values.nginx.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nginx.nodeSelector | indent 8 }}
+{{- end }}
       initContainers:
 {{- if not (eq .Values.drupal.siteRoot "/") }}
         - name: init-site-root

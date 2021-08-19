@@ -1,7 +1,7 @@
 name: drupal7
 apiVersion: v2
 type: application
-version: 0.1.17
+version: 0.1.18
 appVersion: "4.54"
 description: Drupal 7 variant of the Web Experience Toolkit (WetKit).
 keywords:
@@ -36,6 +36,6 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
     condition: redis.enabled
   - name: varnish
-    version: 0.2.0
+    version: 0.2.1
     repository: https://statcan.github.io/charts
     condition: varnish.enabled

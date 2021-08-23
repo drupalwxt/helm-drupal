@@ -32,13 +32,13 @@ spec:
             app.kubernetes.io/instance: {{ $release.Name }}
             app.kubernetes.io/managed-by: {{ $release.Service }}
         spec:
-{{- if .Values.drupal.tolerations }}
+{{- if $values.drupal.tolerations }}
           tolerations:
-{{ toYaml .Values.drupal.tolerations | indent 10 }}
+{{ toYaml $values.drupal.tolerations | indent 10 }}
 {{- end }}
-{{- if .Values.drupal.nodeSelector }}
+{{- if $values.drupal.nodeSelector }}
           nodeSelector:
-{{ toYaml .Values.drupal.nodeSelector | indent 12 }}
+{{ toYaml $values.drupal.nodeSelector | indent 12 }}
 {{- end }}
           restartPolicy: OnFailure
           containers:

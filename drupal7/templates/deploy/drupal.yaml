@@ -27,6 +27,14 @@ spec:
 {{ toYaml .Values.drupal.podAnnotations | indent 8 }}
 {{- end }}
     spec:
+{{- if .Values.drupal.tolerations }}
+      tolerations:
+{{ toYaml .Values.drupal.tolerations | indent 6 }}
+{{- end }}
+{{- if .Values.drupal.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.drupal.nodeSelector | indent 8 }}
+{{- end }}
 {{- if or (.Values.drupal.initContainers) (or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled)) }}
       initContainers:
 {{- if .Values.sharedDisk.enabled }}

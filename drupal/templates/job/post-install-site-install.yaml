@@ -21,6 +21,14 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
         app.kubernetes.io/managed-by: {{ .Release.Service }}
     spec:
+{{- if .Values.drupal.tolerations }}
+      tolerations:
+{{ toYaml .Values.drupal.tolerations | indent 6 }}
+{{- end }}
+{{- if .Values.drupal.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.drupal.nodeSelector | indent 8 }}
+{{- end }}
       restartPolicy: OnFailure
 {{- if or (.Values.drupal.initContainers) (or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled)) }}
       initContainers:
@@ -130,8 +138,10 @@ spec:
               drush -y updatedb
 
               # Lightning updates
+              {{- if .Values.drupal.lightningUpdate }}
               drush -y cache:rebuild
               drush -y update:lightning
+              {{- end }}
 
               # WxT updates
               drush -y cache:rebuild

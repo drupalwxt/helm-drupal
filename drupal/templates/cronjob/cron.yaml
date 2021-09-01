@@ -32,6 +32,14 @@ spec:
             app.kubernetes.io/instance: {{ $release.Name }}
             app.kubernetes.io/managed-by: {{ $release.Service }}
         spec:
+{{- if $values.drupal.tolerations }}
+          tolerations:
+{{ toYaml $values.drupal.tolerations | indent 10 }}
+{{- end }}
+{{- if $values.drupal.nodeSelector }}
+          nodeSelector:
+{{ toYaml $values.drupal.nodeSelector | indent 12 }}
+{{- end }}
           restartPolicy: OnFailure
           containers:
           - name: cron

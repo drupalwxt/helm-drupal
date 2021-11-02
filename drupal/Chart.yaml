@@ -1,7 +1,7 @@
 name: drupal
 apiVersion: v2
 type: application
-version: 0.12.0
+version: 0.12.1
 appVersion: 4.1.1
 description: Drupal 8/9 variant of the Web Experience Toolkit (WxT).
 keywords:
@@ -36,6 +36,6 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
     condition: redis.enabled
   - name: varnish
-    version: 0.2.1
+    version: 0.2.2
     repository: https://statcan.github.io/charts
     condition: varnish.enabled

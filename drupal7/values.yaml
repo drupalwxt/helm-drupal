@@ -254,6 +254,8 @@ nginx:
 
   serviceType: ClusterIP
 
+  customLocations: ""
+
   persistence:
     enabled: false
     ## A manually managed Persistent Volume and Claim

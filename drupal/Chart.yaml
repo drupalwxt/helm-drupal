@@ -1,8 +1,8 @@
 name: drupal
 apiVersion: v2
 type: application
-version: 0.12.2
-appVersion: 4.1.1
+version: 0.12.3
+appVersion: 4.1.2
 description: Drupal 8/9 variant of the Web Experience Toolkit (WxT).
 keywords:
 - drupal

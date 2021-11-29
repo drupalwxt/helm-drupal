@@ -926,6 +926,7 @@ if (extension_loaded('redis')) {
   $settings['redis.connection']['port'] = '{{ .Values.redis.master.service.port }}';
   {{- end }}
   $settings['redis.connection']['password'] = getenv('REDIS_PASSWORD') ?: '';
+  $settings['redis.connection']['persistent'] = FALSE;
 
   // Allow the services to work before the Redis module itself is enabled.
   $settings['container_yamls'][] = 'modules/contrib/redis/example.services.yml';

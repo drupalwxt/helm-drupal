@@ -173,6 +173,10 @@ spec:
           mountPath: /var/www/html/sites/default/extra.settings.php
           subPath: extra.settings.php
           readOnly: true
+        - name: cm-drupal
+          mountPath: /var/www/html/sites/default/services.yml
+          subPath: services.yml
+          readOnly: true
         - name: ssmtp
           mountPath: /etc/ssmtp/ssmtp.conf
           subPath: ssmtp.conf

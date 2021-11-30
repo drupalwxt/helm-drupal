@@ -180,6 +180,10 @@ spec:
           mountPath: /var/www/html/sites/default/extra.settings.php
           subPath: extra.settings.php
           readOnly: true
+        - name: cm-drupal
+          mountPath: /var/www/html/sites/default/services.yml
+          subPath: services.yml
+          readOnly: true
         - name: twig-cache
           mountPath: /cache/twig
 {{- if not .Values.drupal.disableDefaultFilesMount }}

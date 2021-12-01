@@ -29,6 +29,8 @@ data:
 {{- if .Values.drupal.services }}
   services.yml: |
     {{ .Values.drupal.services | nindent 4}}
+{{- else }}
+  services.yml: ''
 {{- end }}
 
 {{- if .Values.drupal.extraSettings }}

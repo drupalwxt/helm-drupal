@@ -22,9 +22,13 @@ spec:
     probesRequireAuth: true
   customSolrKubeOptions:
     podOptions:
+      livenessProbe:
+        timeoutSeconds: 5
+      readinessProbe:
+        timeoutSeconds: 5
       resources:
         limits:
-          memory: "1G"
+          memory: "4G"
         requests:
           cpu: "65m"
           memory: "156Mi"

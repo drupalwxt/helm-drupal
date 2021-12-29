@@ -44,7 +44,7 @@ spec:
             - name: files-public
               mountPath: /mnt/azure
 {{- end }}
-{{- if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
+{{- if or (and .Values.azureFile.enabled .Values.azureFile.initMediaIconsFolder) (and .Values.sharedDisk.enabled .Values.sharedDisk.initMediaIconsFolder) }}
         - name: init-media-icons-folder
           image: 'alpine:3.10'
           command:

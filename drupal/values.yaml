@@ -367,6 +367,10 @@ external:
   database: wxt
   user: wxt
   password: password
+  # initCommands:
+  #   - isolation: "SET SESSION tx_isolation='READ-COMMITTED'"
+  # pdo:
+  #   - PDO::MYSQL_ATTR_SSL_CA: '/etc/ssl/certs/ca-certificates.crt'
 
 # Shared Disk logic
 sharedDisk:

@@ -105,6 +105,16 @@ $databases['default']['default'] = [
   'namespace' => 'Drupal\Core\Database\Driver\{{ .Values.external.driver }}',
   'driver' => '{{ .Values.external.driver }}',
   'collation' => 'utf8mb4_general_ci',
+  {{- if .Values.external.initCommands }}
+  'init_commands' => [
+  {{- range .Values.external.initCommands }}
+    {{- range $key, $value := . }}
+    '{{ $key }}' => {{ $value | quote }},
+    {{- end }}
+  {{- end }}
+  ],
+  {{- end }}
+  {{- if .Values.external.pdo }}
   'pdo' => [
   {{- range .Values.external.pdo }}
     {{- range $key, $value := . }}
@@ -112,6 +122,7 @@ $databases['default']['default'] = [
     {{- end }}
   {{- end }}
   ],
+  {{- end }}
 ];
 {{- else if .Values.mysql.enabled }}
 $databases['default']['default'] = [

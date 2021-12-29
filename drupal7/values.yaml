@@ -4,8 +4,8 @@
 ##
 ingress:
   enabled: false
+  # className: nginx
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   path: /
   hosts:
@@ -313,6 +313,10 @@ external:
   database: wetkit
   user: wetkit
   password: password
+  # initCommands:
+  #   - isolation: "SET SESSION tx_isolation='READ-COMMITTED'"
+  # pdo:
+  #   - PDO::MYSQL_ATTR_SSL_CA: '/etc/ssl/certs/ca-certificates.crt'
 
 # Shared Disk logic
 sharedDisk:

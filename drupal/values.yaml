@@ -375,6 +375,7 @@ external:
 # Shared Disk logic
 sharedDisk:
   enabled: false
+  initMediaIconsFolder: true
 
   annotations: {}
   accessMode: ReadWriteMany
@@ -392,6 +393,7 @@ sharedDisk:
 # Azure File logic
 azureFile:
   enabled: false
+  initMediaIconsFolder: true
 
   annotations: {}
   accessMode: ReadWriteMany

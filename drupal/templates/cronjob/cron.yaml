@@ -7,7 +7,11 @@
 {{- $values := .Values }}
 {{- range $cronName, $cron := .Values.drupal.additionalCrons }}
 ---
+{{- if semverCompare ">=1.21" $.Capabilities.KubeVersion.GitVersion }}
+apiVersion: batch/v1
+{{- else }}
 apiVersion: batch/v1beta1
+{{- end }}
 kind: CronJob
 metadata:
   name: {{ $fullName }}-{{ $cronName }}

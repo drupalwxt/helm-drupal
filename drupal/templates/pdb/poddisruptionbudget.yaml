@@ -1,0 +1,32 @@
+{{- if .Values.drupal.podDisruptionBudget }}
+{{- $name := include "drupal.name" . -}}
+{{- $fullName := include "drupal.fullname" . -}}
+{{- $chartName := include "drupal.chart" . -}}
+{{- $release := .Release }}
+{{- $values := .Values }}
+---
+{{- if semverCompare ">=1.21" $.Capabilities.KubeVersion.GitVersion }}
+apiVersion: policy/v1
+{{- else }}
+apiVersion: policy/v1beta1
+{{- end }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ $fullName }}
+  labels:
+    app.kubernetes.io/name: {{ $name }}
+    helm.sh/chart: {{ $chartName }}
+    app.kubernetes.io/instance: {{ $release.Name }}
+    app.kubernetes.io/managed-by: {{ $release.Service }}
+spec:
+  {{- if $values.drupal.podDisruptionBudget.minAvailable }}
+  minAvailable: {{ $values.drupal.podDisruptionBudget.minAvailable }}
+  {{- end }}
+  {{- if $values.drupal.podDisruptionBudget.maxUnavailable }}
+  maxUnavailable: {{ $values.drupal.podDisruptionBudget.maxUnavailable }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $name }}
+      app.kubernetes.io/instance: {{ $release.Name }}
+{{- end }}

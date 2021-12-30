@@ -112,6 +112,10 @@ drupal:
   reconfigure: true
   cacheRebuildBeforeDatabaseMigration: true
 
+  # podDisruptionBudget:
+  #   minAvailable: 1
+  #   maxUnavailable: 1
+
   # Configure the Drupal cron
   cron:
     # When enabled, a CronJob will run the job based on the schedule

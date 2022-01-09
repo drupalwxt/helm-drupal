@@ -103,6 +103,16 @@ $databases['default']['default'] = array (
   'prefix' => '',
   'namespace' => 'Drupal\Core\Database\Driver\{{ .Values.external.driver }}',
   'driver' => '{{ .Values.external.driver }}',
+  {{- if .Values.external.initCommands }}
+  'init_commands' => array (
+  {{- range .Values.external.initCommands }}
+    {{- range $key, $value := . }}
+    '{{ $key }}' => {{ $value | quote }},
+    {{- end }}
+  {{- end }}
+  ),
+  {{- end }}
+  {{- if .Values.external.pdo }}
   'pdo' => array (
   {{- range .Values.external.pdo }}
     {{- range $key, $value := . }}
@@ -110,6 +120,7 @@ $databases['default']['default'] = array (
     {{- end }}
   {{- end }}
   ),
+  {{- end }}
 );
 {{- else if .Values.mysql.enabled }}
 $databases['default']['default'] = array (
@@ -890,6 +901,7 @@ if (extension_loaded('redis')) {
   $settings['redis.connection']['port'] = '{{ .Values.redis.master.service.port }}';
   {{- end }}
   $settings['redis.connection']['password'] = getenv('REDIS_PASSWORD') ?: '';
+  $settings['redis.connection']['persistent'] = FALSE;
 
   // Allow the services to work before the Redis module itself is enabled.
   $settings['container_yamls'][] = 'modules/contrib/redis/example.services.yml';

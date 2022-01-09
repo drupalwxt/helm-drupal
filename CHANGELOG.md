@@ -1,3 +1,7 @@
+## 0.12.x
+
+- Updated extension logic, which requires WxT 4.0.7 or newer
+
 ## 0.11.x
 
 - Added Redis sentinel

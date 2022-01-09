@@ -26,6 +26,13 @@ data:
     // Unknown drupal version specified.
 {{- end }}
 
+{{- if .Values.drupal.services }}
+  services.yml: |
+    {{ .Values.drupal.services | nindent 4}}
+{{- else }}
+  services.yml: ''
+{{- end }}
+
 {{- if .Values.drupal.extraSettings }}
   extra.settings.php: |
     <?php

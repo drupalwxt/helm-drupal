@@ -4,8 +4,8 @@
 ##
 ingress:
   enabled: false
+  # className: nginx
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   path: /
   hosts:
@@ -22,7 +22,7 @@ drupal:
   image: drupalwxt/site-wxt
 
   ## Note that by default we use appVersion to get image tag
-  # tag: 4.1.0
+  # tag: 4.2.0
 
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -72,6 +72,24 @@ drupal:
   ##
   version: d9
 
+  services: ''
+  #  |-
+  # parameters:
+  #   cors.config:
+  #     enabled: false
+  #     # Specify allowed headers, like 'x-allowed-header'.
+  #     allowedHeaders: []
+  #     # Specify allowed request methods, specify ['*'] to allow all possible ones.
+  #     allowedMethods: []
+  #     # Configure requests allowed from specific origins.
+  #     allowedOrigins: ['*']
+  #     # Sets the Access-Control-Expose-Headers header.
+  #     exposedHeaders: false
+  #     # Sets the Access-Control-Max-Age header.
+  #     maxAge: false
+  #     # Sets the Access-Control-Allow-Credentials header.
+  #     supportsCredentials: false
+
   ## Extra settings.php settings
   ##
   ## Note that if using Varnish and 'trusted_host_patterns' you need a pattern for your Helm release name:
@@ -117,6 +135,10 @@ drupal:
   reconfigure: true
   cacheRebuildBeforeDatabaseMigration: true
   lightningUpdate: true
+
+  # podDisruptionBudget:
+  #   minAvailable: 1
+  #   maxUnavailable: 1
 
   # Configure the Drupal cron
   cron:
@@ -269,7 +291,7 @@ nginx:
   ## ref: https://hub.docker.com/drupalwxt/site-wxt/tags/
   image: drupalwxt/site-wxt
   ## Note that by default we use appVersion to get image tag
-  # tag: 4.1.0-nginx
+  # tag: 4.2.0-nginx
 
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -289,6 +311,8 @@ nginx:
   resolver: kube-dns.kube-system.svc.cluster.local
 
   serviceType: ClusterIP
+
+  customLocations: ""
 
   persistence:
     enabled: false
@@ -347,10 +371,15 @@ external:
   database: wxt
   user: wxt
   password: password
+  # initCommands:
+  #   - isolation: "SET SESSION tx_isolation='READ-COMMITTED'"
+  # pdo:
+  #   - PDO::MYSQL_ATTR_SSL_CA: '/etc/ssl/certs/ca-certificates.crt'
 
 # Shared Disk logic
 sharedDisk:
   enabled: false
+  initMediaIconsFolder: true
 
   annotations: {}
   accessMode: ReadWriteMany
@@ -368,6 +397,7 @@ sharedDisk:
 # Azure File logic
 azureFile:
   enabled: false
+  initMediaIconsFolder: true
 
   annotations: {}
   accessMode: ReadWriteMany

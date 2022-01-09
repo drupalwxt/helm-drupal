@@ -4,8 +4,8 @@
 ##
 ingress:
   enabled: false
+  # className: nginx
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   path: /
   hosts:
@@ -111,6 +111,10 @@ drupal:
   # Reconfigure on upgrade
   reconfigure: true
   cacheRebuildBeforeDatabaseMigration: true
+
+  # podDisruptionBudget:
+  #   minAvailable: 1
+  #   maxUnavailable: 1
 
   # Configure the Drupal cron
   cron:
@@ -254,6 +258,8 @@ nginx:
 
   serviceType: ClusterIP
 
+  customLocations: ""
+
   persistence:
     enabled: false
     ## A manually managed Persistent Volume and Claim
@@ -311,10 +317,15 @@ external:
   database: wetkit
   user: wetkit
   password: password
+  # initCommands:
+  #   - isolation: "SET SESSION tx_isolation='READ-COMMITTED'"
+  # pdo:
+  #   - PDO::MYSQL_ATTR_SSL_CA: '/etc/ssl/certs/ca-certificates.crt'
 
 # Shared Disk logic
 sharedDisk:
   enabled: false
+  initMediaIconsFolder: true
 
   annotations: {}
   accessMode: ReadWriteMany
@@ -332,6 +343,7 @@ sharedDisk:
 # Azure File logic
 azureFile:
   enabled: false
+  initMediaIconsFolder: true
 
   annotations: {}
   accessMode: ReadWriteMany

@@ -325,8 +325,13 @@ external:
 # Shared Disk logic
 sharedDisk:
   enabled: false
-  # Uncomment if you want to disable the manual creation of PV and let the PVC handle it automatically
+  
+  # Uncomment next line if you want to disable specifying a volume name on the public and private PVCs
   # disableVolumeName: true
+  
+  # Uncomment next line if you want to disable the manual creation of PV and let the PVC handle it automatically
+  # disablePrivatePVCreation: true
+
   initMediaIconsFolder: true
 
   annotations: {}
@@ -337,6 +342,14 @@ sharedDisk:
   maxShares: 2
 
   private:
+    # mountOptions:
+    #   - dir_mode=0777
+    #   - file_mode=0777
+    #   - uid=82
+    #   - gid=82
+    #   - mfsymlinks
+    #   - nobrl
+    #   - cache=none
     azureFile:
       secretName: drupal-storage
       shareName: drupal-private
@@ -345,8 +358,10 @@ sharedDisk:
 # Azure File logic
 azureFile:
   enabled: false
-  # Uncomment if you want to disable the manual creation of PV and let the PVC handle it automatically
+  
+  # Uncomment next line if you want to disable specifying a volume name on the public and private PVCs
   # disableVolumeName: true
+
   initMediaIconsFolder: true
 
   annotations: {}

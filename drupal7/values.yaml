@@ -315,6 +315,8 @@ external:
 # Shared Disk logic
 sharedDisk:
   enabled: false
+  # Uncomment if you want to disable the manual creation of PV and let the PVC handle it automatically
+  # disableVolumeName: true
 
   annotations: {}
   accessMode: ReadWriteMany
@@ -332,6 +334,8 @@ sharedDisk:
 # Azure File logic
 azureFile:
   enabled: false
+  # Uncomment if you want to disable the manual creation of PV and let the PVC handle it automatically
+  # disableVolumeName: true
 
   annotations: {}
   accessMode: ReadWriteMany

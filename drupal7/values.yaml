@@ -328,7 +328,7 @@ sharedDisk:
   
   # Uncomment next line if you want to disable specifying a volume name on the public and private PVCs
   # disableVolumeName: true
-  
+
   # Uncomment next line if you want to disable the manual creation of PV and let the PVC handle it automatically
   # disablePrivatePVCreation: true
 

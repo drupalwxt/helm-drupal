@@ -1,5 +1,9 @@
 {{- if .Values.drupal.cron.enabled }}
+{{- if semverCompare ">=1.21" $.Capabilities.KubeVersion.GitVersion }}
+apiVersion: batch/v1
+{{- else }}
 apiVersion: batch/v1beta1
+{{- end }}
 kind: CronJob
 metadata:
   name: {{ template "drupal.fullname" . }}-drupal-cron
@@ -110,6 +114,10 @@ spec:
             - name: cm-drupal
               mountPath: /var/www/html/sites/default/extra.settings.php
               subPath: extra.settings.php
+              readOnly: true
+            - name: cm-drupal
+              mountPath: /var/www/html/sites/default/services.yml
+              subPath: services.yml
               readOnly: true
             - name: ssmtp
               mountPath: /etc/ssmtp/ssmtp.conf

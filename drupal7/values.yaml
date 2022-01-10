@@ -325,7 +325,7 @@ external:
 # Shared Disk logic
 sharedDisk:
   enabled: false
-  
+
   # Uncomment next line if you want to disable specifying a volume name on the public and private PVCs
   # disableVolumeName: true
 
@@ -358,7 +358,7 @@ sharedDisk:
 # Azure File logic
 azureFile:
   enabled: false
-  
+
   # Uncomment next line if you want to disable specifying a volume name on the public and private PVCs
   # disableVolumeName: true
 

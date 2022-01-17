@@ -13,6 +13,7 @@ metadata:
     "helm.sh/hook-weight": "10"
     "helm.sh/hook-delete-policy": before-hook-creation
 spec:
+  backoffLimit: {{ default "" .Values.drupal.backoffLimitReconfigure }}
   template:
     metadata:
       labels:

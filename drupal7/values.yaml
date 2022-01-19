@@ -88,6 +88,11 @@ drupal:
   #  drush config-set system.performance js.preprocess 0 -y;
   #  drush config-set system.performance css.preprocess 0 -y;
 
+  extraDBAvailabilityScript: ''
+  #  |-
+  #  until drush sql:query 'SHOW GLOBAL STATUS LIKE "Uptime";'; do echo Waiting for DB; sleep 3; done;
+  #  echo DB available;
+
   # Install Drupal automatically
   install: true
 

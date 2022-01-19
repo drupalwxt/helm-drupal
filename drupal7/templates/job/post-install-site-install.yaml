@@ -71,8 +71,12 @@ spec:
               set -e
 
               # Wait for DB to be available
+              {{- if .Values.drupal.extraDBAvailabilityScript }}
+              {{ .Values.drupal.extraDBAvailabilityScript | nindent 14}}
+              {{- else }}
               until drush sql:query 'SHOW TABLES;'; do echo Waiting for DB; sleep 3; done
               echo DB available
+              {{- end }}
 
               {{- if .Values.redis.enabled }}
               {{- if and .Values.redis.cluster.enabled .Values.redis.sentinel.enabled }}

@@ -113,7 +113,7 @@ drupal:
 
   extraDBAvailabilityScript: ''
   #  |-
-  #  until drush sql:query 'SHOW TABLES;'; do echo Waiting for DB; sleep 3; done;
+  #  until drush sql:query 'SHOW GLOBAL STATUS LIKE "Uptime";'; do echo Waiting for DB; sleep 3; done;
   #  echo DB available;
 
   # Install Drupal automatically

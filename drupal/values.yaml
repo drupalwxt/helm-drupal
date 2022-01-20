@@ -111,6 +111,7 @@ drupal:
   #  drush config-set system.performance js.preprocess 0 -y;
   #  drush config-set system.performance css.preprocess 0 -y;
 
+  # This value allow you to customise the default script used to detect when the DB is ready
   DBAvailabilityScript:
     |-
     until drush sql:query 'SHOW TABLES;'; do echo Waiting for DB; sleep 3; done

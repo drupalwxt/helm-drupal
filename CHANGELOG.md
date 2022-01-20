@@ -5,6 +5,11 @@
 > If you receive an error failing to update the `master` statefulset, run:
 > `kubectl delete statefulset $release-redis-master` to remove it
 > and then re-run your `helm upgrade` command.
+>
+> Also note that the replicas have been renamed
+> from `slave` to `replicas`, and therefore
+> new Redis disks will be provisioned. You may
+> wish to delete the old ones after the upgrade.
 
 ## 0.12.x
 

@@ -549,21 +549,15 @@ proxysql:
 ## ref: https://github.com/bitnami/charts/blob/master/bitnami/redis/README.md
 redis:
   enabled: false
-  image:
-    registry: docker.io
-    repository: bitnami/redis
-    tag: 6.0.12-debian-10-r33
-    # clientInterface: PhpRedis
-  cluster:
+  replica:
     enabled: true
-    slaveCount: 2
-  sentinel:
-    enabled: false
-  master:
+    replicaCount: 2
     service:
       type: ClusterIP
     disableCommands: []
-  slave:
+  sentinel:
+    enabled: false
+  master:
     service:
       type: ClusterIP
     disableCommands: []

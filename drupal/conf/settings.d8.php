@@ -893,7 +893,7 @@ if (extension_loaded('redis')) {
   $settings['cache']['default'] = 'cache.backend.redis';
   $settings['redis.connection']['interface'] = '{{ default "PhpRedis" .Values.redis.clientInterface }}';
   $settings['redis.connection']['scheme'] = 'http';
-  {{- if and .Values.redis.cluster.enabled .Values.redis.sentinel.enabled }}
+  {{- if .Values.redis.sentinel.enabled }}
   $settings['redis.connection']['host'] = ['{{ .Release.Name }}-redis:{{ .Values.redis.sentinel.service.sentinelPort }}'];
   $settings['redis.connection']['instance']  = '{{ .Values.redis.sentinel.masterSet }}';
   {{- else }}

@@ -112,9 +112,9 @@ drupal:
   #  drush config-set system.performance css.preprocess 0 -y;
 
   DBAvailabilityScript:
-   |-
-   until drush sql:query 'SHOW TABLES;'; do echo Waiting for DB; sleep 3; done
-   echo DB available
+    |-
+    until drush sql:query 'SHOW TABLES;'; do echo Waiting for DB; sleep 3; done
+    echo DB available
 
   # Install Drupal automatically
   install: true

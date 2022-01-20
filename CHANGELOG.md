@@ -1,3 +1,11 @@
+## 0.14.x
+
+- Upgrade Redis subchart to 15.7.4
+
+> If you receive an error failing to update the `master` statefulset, run:
+> `kubectl delete statefulset $release-redis-master` to remove it
+> and then re-run your `helm upgrade` command.
+
 ## 0.12.x
 
 - Updated extension logic, which requires WxT 4.0.7 or newer

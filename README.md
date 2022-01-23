@@ -4,7 +4,7 @@ A **[Helm chart][helm]** for **[Drupal WxT][wxt]**.
 
 This chart will deploy a highly available and performant enterprise Drupal site with the following integrations:
 
-- File Storage (Azure Files) for Stateless
+- File Storage (Azure Files) for Stateless Design
 - MySQL configured with ProxySQL
 - PostgreSQL configured with PGBouncer
 - Redis

@@ -30,7 +30,7 @@ You can consult the `values.yaml` file for the full range of options available t
 > **Note:** We try out best to follow `https://semver.org` so that it's clear patch, minor and major releases for breaking changes.
 
 [architectural_diagram]: https://github.com/drupalwxt/helm-drupal/blob/master/docs/diagram-drupal.pdf
-[drupal7]: https://github.com/drupalwxt/helm-drupal/tree/master/drupal7
-[drupal9]: https://github.com/drupalwxt/helm-drupal/tree/master/drupal
+[drupal7]: drupal/README.md
+[drupal9]: drupal7/README.md
 [helm]: https://helm.sh/
 [wxt]: https://drupalwxt.github.io

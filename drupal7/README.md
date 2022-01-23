@@ -26,6 +26,32 @@ Drupal 7 variant of the Web Experience Toolkit (WetKit).
 | https://charts.helm.sh/stable | mysql | 1.6.2 |
 | https://statcan.github.io/charts | varnish | 0.2.2 |
 
+## Prerequisites
+
+- Kubernetes 1.7+
+- Helm v3.0.0+
+
+## Installing the Chart
+
+To install the chart with the release name `my-release`:
+
+```sh
+helm repo add drupalwxt https://drupalwxt.github.io/helm-drupal
+"drupalwxt" has been added to your repositories
+
+helm install my-release drupalwxt/drupal
+NAME: my-release
+```
+
+Optionally you can git clone the helm chart and select the appropriate values file:
+
+```sh
+git clone https://github.com/drupalwxt/helm-drupal
+cd helm-drupal/drupal
+cp values-azurefile.yaml values-override.yaml
+helm install --name drupal -f values-override.yaml
+```
+
 ## Ingress
 
 | Key | Type | Default | Description |

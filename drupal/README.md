@@ -2,7 +2,7 @@
 
 ![Version: 0.14.0](https://img.shields.io/badge/Version-0.14.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.2.0](https://img.shields.io/badge/AppVersion-4.2.0-informational?style=flat-square)
 
-Drupal 8/9 variant of the Web Experience Toolkit (WxT).
+Drupal 9 variant of the Web Experience Toolkit (WxT).
 
 **Homepage:** <http://www.drupal.org/project/wxt>
 
@@ -25,6 +25,32 @@ Drupal 8/9 variant of the Web Experience Toolkit (WxT).
 | https://charts.bitnami.com/bitnami | redis | 15.7.4 |
 | https://charts.helm.sh/stable | mysql | 1.6.2 |
 | https://statcan.github.io/charts | varnish | 0.2.2 |
+
+## Prerequisites
+
+- Kubernetes 1.7+
+- Helm v3.0.0+
+
+## Installing the Chart
+
+To install the chart with the release name `my-release`:
+
+```sh
+helm repo add drupalwxt https://drupalwxt.github.io/helm-drupal
+"drupalwxt" has been added to your repositories
+
+helm install my-release drupalwxt/drupal
+NAME: my-release
+```
+
+Optionally you can git clone the helm chart and select the appropriate values file:
+
+```sh
+git clone https://github.com/drupalwxt/helm-drupal
+cd helm-drupal/drupal
+cp values-azurefile.yaml values-override.yaml
+helm install --name drupal -f values-override.yaml
+```
 
 ## Ingress
 

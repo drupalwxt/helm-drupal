@@ -71,7 +71,7 @@ spec:
               set -e
 
               # Wait for DB to be available
-              {{ .Values.drupal.DBAvailabilityScript | nindent 14}}
+              {{ .Values.drupal.dbAvailabilityScript | nindent 14}}
 
               {{- if .Values.redis.enabled }}
               {{- if and .Values.redis.cluster.enabled .Values.redis.sentinel.enabled }}

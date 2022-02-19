@@ -88,6 +88,12 @@ drupal:
   #  drush config-set system.performance js.preprocess 0 -y;
   #  drush config-set system.performance css.preprocess 0 -y;
 
+  # -- default script used to detect when the DB is ready
+  dbAvailabilityScript:
+    |-
+    until drush sql:query 'SHOW TABLES;'; do echo Waiting for DB; sleep 3; done
+    echo DB available
+
   # Install Drupal automatically
   install: true
 
@@ -111,6 +117,10 @@ drupal:
   # Reconfigure on upgrade
   reconfigure: true
   cacheRebuildBeforeDatabaseMigration: true
+
+  # Restrict how many attempt install and/or reconfigure jobs will try in case of failure. Default is 6.
+  # backoffLimitInstall: 1
+  # backoffLimitReconfigure: 1
 
   # podDisruptionBudget:
   #   minAvailable: 1
@@ -159,6 +169,14 @@ drupal:
     sqlDumpArgs: ''
       # additional arguments for sql-dump command
       # --skip-tables-list="table_0,table_1"
+
+    filesArgs: ''
+      # additional arguments for tar command that backup public files
+      # --exclude="sites/default/files/js" --exclude="sites/default/files/css"
+
+    privateArgs: ''
+      # additional arguments for sql-dump command that backup private files
+      # --exclude="/private/junk"
 
   # php-fpm healthcheck
   # Requires https://github.com/renatomefi/php-fpm-healthcheck in the container.

@@ -58,9 +58,12 @@ spec:
                 # Run cron
                 BACKUPNAME=$(date +%Y%m%d.%H%M%S)
                 mkdir -p /backup/$BACKUPNAME
+                echo "Backup DB"
                 drush -y sql-dump {{ .Values.drupal.backup.sqlDumpArgs }} | gzip > /backup/$BACKUPNAME/db.sql.gz
-                tar czvf /backup/$BACKUPNAME/files.tar.gz --directory=sites/default/files .
-                tar czvf /backup/$BACKUPNAME/private.tar.gz --directory=/private .
+                echo "Backup public files"
+                tar {{ .Values.drupal.backup.filesArgs }} -czvf /backup/$BACKUPNAME/files.tar.gz --directory=sites/default/files .
+                echo "Backup private files"
+                tar {{ .Values.drupal.backup.privateArgs }} -czvf /backup/$BACKUPNAME/private.tar.gz --directory=/private .
             env:
 {{- if .Values.external.enabled }}
             - name: EXTERNAL_PASSWORD

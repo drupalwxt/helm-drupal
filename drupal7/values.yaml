@@ -520,24 +520,27 @@ proxysql:
 ## ref: https://github.com/bitnami/charts/blob/master/bitnami/redis/README.md
 redis:
   enabled: false
-  image:
-    registry: docker.io
-    repository: bitnami/redis
-    tag: 6.0.12-debian-10-r33
-  # clientInterface: PhpRedis
-  cluster:
-    enabled: true
-    slaveCount: 2
+  replica:
+    enabled: false
+    replicaCount: 0
+    service:
+      type: ClusterIP
+    disableCommands: []
+    persistence:
+      enabled: false
   sentinel:
     enabled: false
   master:
     service:
       type: ClusterIP
     disableCommands: []
-  slave:
-    service:
-      type: ClusterIP
-    disableCommands: []
+    persistence:
+      enabled: false
+  commonConfiguration: |-
+    # Disable AOF https://redis.io/topics/persistence#append-only-file
+    appendonly no
+    # Disable RDB persistence.
+    save ""
 
 ## Configuration values for the Varnish dependency sub-chart
 ## ref: https://github.com/StatCan/charts/blob/master/stable/varnish/README.md

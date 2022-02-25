@@ -576,17 +576,26 @@ proxysql:
 redis:
   enabled: false
   replica:
-    enabled: true
-    replicaCount: 2
+    enabled: false
+    replicaCount: 0
     service:
       type: ClusterIP
     disableCommands: []
+    persistence:
+      enabled: false
   sentinel:
     enabled: false
   master:
     service:
       type: ClusterIP
     disableCommands: []
+    persistence:
+      enabled: false
+  commonConfiguration: |-
+    # Disable AOF https://redis.io/topics/persistence#append-only-file
+    appendonly no
+    # Disable RDB persistence.
+    save ""
 
 ## Configuration values for the Varnish dependency sub-chart
 ## ref: https://github.com/StatCan/charts/blob/master/stable/varnish/README.md

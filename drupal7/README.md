@@ -1,6 +1,6 @@
 # drupal7
 
-![Version: 0.1.26](https://img.shields.io/badge/Version-0.1.26-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.54](https://img.shields.io/badge/AppVersion-4.54-informational?style=flat-square)
+![Version: 0.1.27](https://img.shields.io/badge/Version-0.1.27-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.54](https://img.shields.io/badge/AppVersion-4.54-informational?style=flat-square)
 
 Drupal 7 variant of the Web Experience Toolkit (WetKit).
 
@@ -76,6 +76,7 @@ helm install --name drupal -f values-override.yaml
 | drupal.cacheRebuildBeforeDatabaseMigration | bool | `true` |  |
 | drupal.cron.enabled | bool | `true` |  |
 | drupal.cron.schedule | string | `"0 * * * *"` |  |
+| drupal.dbAvailabilityScript | string | `"until drush sql:query 'SHOW TABLES;'; do echo Waiting for DB; sleep 3; done\necho DB available"` | default script used to detect when the DB is ready |
 | drupal.disableDefaultFilesMount | bool | `false` |  |
 | drupal.extraInstallScripts | string | `""` |  |
 | drupal.extraSettings | string | `""` |  |

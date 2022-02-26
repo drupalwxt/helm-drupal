@@ -99,8 +99,10 @@ spec:
               {{- end }}
 
               # WxT updates
+              {{- if .Values.drupal.wxtUpdate }}
               drush -y cache:rebuild
               drush -y update:wxt
+              {{- end }}
 
               # Change WxT theme
               {{- if .Values.drupal.wxtTheme }}

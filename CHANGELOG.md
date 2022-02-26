@@ -1,3 +1,20 @@
+## 0.16.x
+
+- WxT update scripts are now guarded and opt-in
+
+> If you want to similar behavior to earlier releases where WxT updates
+> are automatically run for you simply set the following.
+
+```sh
+drupal:
+  lightningUpdate: true
+  wxtUpdate: true
+```
+
+## 0.15.x
+
+- Add functionality to disable volume name
+
 ## 0.14.x
 
 - Upgrade Redis subchart to 15.7.4

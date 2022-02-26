@@ -1,8 +1,8 @@
 # drupal
 
-![Version: 0.14.0](https://img.shields.io/badge/Version-0.14.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.2.0](https://img.shields.io/badge/AppVersion-4.2.0-informational?style=flat-square)
+![Version: 0.16.0](https://img.shields.io/badge/Version-0.16.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.2.1](https://img.shields.io/badge/AppVersion-4.2.1-informational?style=flat-square)
 
-Drupal 9 variant of the Web Experience Toolkit (WxT).
+Drupal 8/9 variant of the Web Experience Toolkit (WxT).
 
 **Homepage:** <http://www.drupal.org/project/wxt>
 
@@ -77,6 +77,7 @@ helm install --name drupal -f values-override.yaml
 | drupal.configSplit.enabled | bool | `false` |  |
 | drupal.cron.enabled | bool | `true` |  |
 | drupal.cron.schedule | string | `"0 * * * *"` |  |
+| drupal.dbAvailabilityScript | string | `"until drush sql:query 'SHOW TABLES;'; do echo Waiting for DB; sleep 3; done\necho DB available"` | default script used to detect when the DB is ready |
 | drupal.disableDefaultFilesMount | bool | `false` |  |
 | drupal.extensions.enabled | bool | `false` |  |
 | drupal.extraInstallScripts | string | `""` |  |
@@ -86,7 +87,7 @@ helm install --name drupal -f values-override.yaml
 | drupal.image | string | `"drupalwxt/site-wxt"` |  |
 | drupal.imagePullPolicy | string | `"IfNotPresent"` |  |
 | drupal.install | bool | `true` |  |
-| drupal.lightningUpdate | bool | `true` |  |
+| drupal.lightningUpdate | bool | `false` |  |
 | drupal.migrate | bool | `true` |  |
 | drupal.nodeSelector | object | `{}` |  |
 | drupal.persistence.accessMode | string | `"ReadWriteOnce"` |  |
@@ -127,6 +128,7 @@ helm install --name drupal -f values-override.yaml
 | drupal.volumePermissions.enabled | bool | `false` |  |
 | drupal.volumes | string | `nil` |  |
 | drupal.wxtTheme | string | `"theme-gcweb"` |  |
+| drupal.wxtUpdate | bool | `false` |  |
 
 ## Nginx
 

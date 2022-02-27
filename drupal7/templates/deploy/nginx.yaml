@@ -29,6 +29,7 @@ spec:
       annotations:
 {{ toYaml .Values.nginx.podAnnotations | indent 8 }}
 {{- end }}
+        checksum/config: {{ include (print $.Template.BasePath "/cm/nginx.yaml") . | sha256sum }}
     spec:
 {{- if .Values.nginx.tolerations }}
       tolerations:

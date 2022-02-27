@@ -26,6 +26,7 @@ spec:
       annotations:
 {{ toYaml .Values.drupal.podAnnotations | indent 8 }}
 {{- end }}
+        checksum/config: {{ include (print $.Template.BasePath "/cm/drupal.yaml") . | sha256sum }}
     spec:
 {{- if .Values.drupal.tolerations }}
       tolerations:

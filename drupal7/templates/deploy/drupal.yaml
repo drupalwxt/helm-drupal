@@ -22,8 +22,8 @@ spec:
         app.kubernetes.io/name: {{ include "drupal7.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
         tier: drupal7
-{{- if .Values.drupal.podAnnotations }}
       annotations:
+{{- if .Values.drupal.podAnnotations }}
 {{ toYaml .Values.drupal.podAnnotations | indent 8 }}
 {{- end }}
         checksum/config: {{ include (print $.Template.BasePath "/cm/drupal.yaml") . | sha256sum }}

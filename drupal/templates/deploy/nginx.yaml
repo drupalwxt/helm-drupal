@@ -25,8 +25,8 @@ spec:
 {{- if .Values.nginx.podLabels }}
 {{ toYaml .Values.nginx.podLabels | indent 8 }}
 {{- end }}
-{{- if .Values.nginx.podAnnotations }}
       annotations:
+{{- if .Values.nginx.podAnnotations }}
 {{ toYaml .Values.nginx.podAnnotations | indent 8 }}
 {{- end }}
         checksum/config: {{ include (print $.Template.BasePath "/cm/nginx.yaml") . | sha256sum }}

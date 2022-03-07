@@ -1,6 +1,6 @@
 # drupal7
 
-![Version: 0.1.27](https://img.shields.io/badge/Version-0.1.27-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.54](https://img.shields.io/badge/AppVersion-4.54-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.54](https://img.shields.io/badge/AppVersion-4.54-informational?style=flat-square)
 
 Drupal 7 variant of the Web Experience Toolkit (WetKit).
 
@@ -22,7 +22,7 @@ Drupal 7 variant of the Web Experience Toolkit (WetKit).
 | Repository | Name | Version |
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | postgresql | 8.6.4 |
-| https://charts.bitnami.com/bitnami | redis | 12.10.1 |
+| https://charts.bitnami.com/bitnami | redis | 15.7.4 |
 | https://charts.helm.sh/stable | mysql | 1.6.2 |
 | https://statcan.github.io/charts | varnish | 0.2.2 |
 
@@ -257,17 +257,17 @@ helm install --name drupal -f values-override.yaml
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| redis.cluster.enabled | bool | `true` |  |
-| redis.cluster.slaveCount | int | `2` |  |
+| redis.commonConfiguration | string | `"# Disable AOF https://redis.io/topics/persistence#append-only-file\nappendonly no\n# Disable RDB persistence.\nsave \"\""` |  |
 | redis.enabled | bool | `false` |  |
-| redis.image.registry | string | `"docker.io"` |  |
-| redis.image.repository | string | `"bitnami/redis"` |  |
-| redis.image.tag | string | `"6.0.12-debian-10-r33"` |  |
 | redis.master.disableCommands | list | `[]` |  |
+| redis.master.persistence.enabled | bool | `false` |  |
 | redis.master.service.type | string | `"ClusterIP"` |  |
+| redis.replica.disableCommands | list | `[]` |  |
+| redis.replica.enabled | bool | `false` |  |
+| redis.replica.persistence.enabled | bool | `false` |  |
+| redis.replica.replicaCount | int | `0` |  |
+| redis.replica.service.type | string | `"ClusterIP"` |  |
 | redis.sentinel.enabled | bool | `false` |  |
-| redis.slave.disableCommands | list | `[]` |  |
-| redis.slave.service.type | string | `"ClusterIP"` |  |
 
 ## Varnish
 

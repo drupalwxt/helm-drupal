@@ -1,6 +1,6 @@
 # drupal
 
-![Version: 0.16.0](https://img.shields.io/badge/Version-0.16.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.2.1](https://img.shields.io/badge/AppVersion-4.2.1-informational?style=flat-square)
+![Version: 0.17.0](https://img.shields.io/badge/Version-0.17.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.2.1](https://img.shields.io/badge/AppVersion-4.2.1-informational?style=flat-square)
 
 Drupal 8/9 variant of the Web Experience Toolkit (WxT).
 
@@ -264,12 +264,15 @@ helm install --name drupal -f values-override.yaml
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| redis.commonConfiguration | string | `"# Disable AOF https://redis.io/topics/persistence#append-only-file\nappendonly no\n# Disable RDB persistence.\nsave \"\""` |  |
 | redis.enabled | bool | `false` |  |
 | redis.master.disableCommands | list | `[]` |  |
+| redis.master.persistence.enabled | bool | `false` |  |
 | redis.master.service.type | string | `"ClusterIP"` |  |
 | redis.replica.disableCommands | list | `[]` |  |
-| redis.replica.enabled | bool | `true` |  |
-| redis.replica.replicaCount | int | `2` |  |
+| redis.replica.enabled | bool | `false` |  |
+| redis.replica.persistence.enabled | bool | `false` |  |
+| redis.replica.replicaCount | int | `0` |  |
 | redis.replica.service.type | string | `"ClusterIP"` |  |
 | redis.sentinel.enabled | bool | `false` |  |
 

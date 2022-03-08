@@ -744,7 +744,7 @@ $conf['cache_default_class']    = 'Redis_Cache';
 $conf['cache_class_cache_form'] = 'DrupalDatabaseCache';
 // The 'cache_field' bin must be transactional.
 $conf['cache_class_cache_field'] = 'DrupalDatabaseCache';
-$conf['redis_client_password'] = "{{ .Values.redis.password }}";
+$conf['redis_client_password'] = getenv('REDIS_PASSWORD') ?: '';
 }
 {{- end }}
 

@@ -117,6 +117,7 @@ drupal:
   # Reconfigure on upgrade
   reconfigure: true
   cacheRebuildBeforeDatabaseMigration: true
+  updateDBBeforeDatabaseMigration: true
 
   # Restrict how many attempt install and/or reconfigure jobs will try in case of failure. Default is 6.
   # backoffLimitInstall: 1

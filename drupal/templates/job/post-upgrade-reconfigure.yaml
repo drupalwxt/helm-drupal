@@ -90,7 +90,9 @@ spec:
               {{- if .Values.drupal.cacheRebuildBeforeDatabaseMigration }}
               drush -y cache:rebuild
               {{- end }}
+              {{- if .Values.drupal.updateDBBeforeDatabaseMigration }}
               drush -y updatedb
+              {{- end }}
 
               # Lightning updates
               {{- if .Values.drupal.lightningUpdate }}

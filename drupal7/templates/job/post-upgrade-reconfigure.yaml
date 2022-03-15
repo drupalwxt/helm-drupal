@@ -90,7 +90,9 @@ spec:
               {{- if .Values.drupal.cacheRebuildBeforeDatabaseMigration }}
               drush -y cc all
               {{- end }}
+              {{- if .Values.drupal.updateDBBeforeDatabaseMigration }}
               drush -y updatedb
+              {{- end }}
 
               # Change WxT theme
               {{- if .Values.drupal.wxtTheme }}

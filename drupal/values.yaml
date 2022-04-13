@@ -140,6 +140,7 @@ drupal:
   # Reconfigure on upgrade
   reconfigure: true
   cacheRebuildBeforeDatabaseMigration: true
+  updateDBBeforeDatabaseMigration: true
   lightningUpdate: false
   wxtUpdate: false
 

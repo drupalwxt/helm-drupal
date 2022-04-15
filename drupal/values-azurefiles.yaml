@@ -7,7 +7,7 @@ drupal:
   ## ref: https://hub.docker.com/drupalwxt/site-wxt/tags/
   ##
   image: drupalwxt/site-wxt
-  tag: 4.2.2
+  tag: 4.2.3
 
   ## Site configuration
   ##
@@ -74,7 +74,7 @@ drupal:
 ## Ref: https://github.com/drupalwxt/helm-drupal
 nginx:
   image: drupalwxt/site-wxt
-  tag: 4.2.2-nginx
+  tag: 4.2.3-nginx
 
   # Set your cluster's DNS resolution service here
   resolver: 10.0.0.10

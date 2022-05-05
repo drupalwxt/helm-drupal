@@ -103,6 +103,7 @@ drupal:
     name: latest
     db: true
     files: false
+    suppressTarErrors: false
 
     # Convert MyISAM to InnoDB
     convert: false

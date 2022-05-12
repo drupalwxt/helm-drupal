@@ -126,8 +126,14 @@ spec:
               set -e
 
               echo "Restoring files"
+              {{- if .Values.drupal.restore.suppressTarErrors }}
+              set +e
+              {{- end }}
               tar -zxf /backup/$BACKUPNAME/files.tar.gz --directory sites/default/files --no-acls --no-xattrs -m --no-same-permissions --no-overwrite-dir
               tar -zxf /backup/$BACKUPNAME/private.tar.gz --directory /private --no-acls --no-xattrs -m --no-same-permissions --no-overwrite-dir
+              {{- if .Values.drupal.restore.suppressTarErrors }}
+              set -e
+              {{- end }}
               echo "Files restored"
               {{- end }}
 

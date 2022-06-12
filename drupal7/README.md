@@ -1,6 +1,6 @@
 # drupal7
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.54](https://img.shields.io/badge/AppVersion-4.54-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.54](https://img.shields.io/badge/AppVersion-4.54-informational?style=flat-square)
 
 Drupal 7 variant of the Web Experience Toolkit (WetKit).
 
@@ -21,9 +21,9 @@ Drupal 7 variant of the Web Experience Toolkit (WetKit).
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | postgresql | 8.6.4 |
+| https://charts.bitnami.com/bitnami | mysql | 9.1.7 |
+| https://charts.bitnami.com/bitnami | postgresql | 11.6.6 |
 | https://charts.bitnami.com/bitnami | redis | 15.7.4 |
-| https://charts.helm.sh/stable | mysql | 1.6.2 |
 | https://statcan.github.io/charts | varnish | 0.2.2 |
 
 ## Prerequisites
@@ -102,6 +102,7 @@ helm install --name drupal -f values-override.yaml
 | drupal.restore.enabled | bool | `false` |  |
 | drupal.restore.files | bool | `false` |  |
 | drupal.restore.name | string | `"latest"` |  |
+| drupal.restore.suppressTarErrors | bool | `false` |  |
 | drupal.restore.volume | object | `{}` |  |
 | drupal.securityContext.fsGroup | int | `82` |  |
 | drupal.securityContext.runAsGroup | int | `82` |  |
@@ -117,6 +118,7 @@ helm install --name drupal -f values-override.yaml
 | drupal.smtp.starttls | bool | `true` |  |
 | drupal.smtp.tls | bool | `true` |  |
 | drupal.tolerations | list | `[]` |  |
+| drupal.updateDBBeforeDatabaseMigration | bool | `true` |  |
 | drupal.username | string | `"admin"` |  |
 | drupal.version | string | `"d7"` |  |
 | drupal.volumeMounts | string | `nil` |  |
@@ -129,6 +131,7 @@ helm install --name drupal -f values-override.yaml
 |-----|------|---------|-------------|
 | nginx.client_max_body_size | string | `"20m"` |  |
 | nginx.customLocations | string | `""` |  |
+| nginx.gzip | bool | `true` |  |
 | nginx.image | string | `"drupalwxt/site-wetkit"` |  |
 | nginx.imagePullPolicy | string | `"IfNotPresent"` |  |
 | nginx.nodeSelector | object | `{}` |  |
@@ -150,15 +153,16 @@ helm install --name drupal -f values-override.yaml
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| mysql.configurationFiles."mysql.cnf" | string | `"[mysqld]\nmax_allowed_packet = 256M\ninnodb_buffer_pool_size = 4096M\ninnodb_buffer_pool_instances = 4\ntable_definition_cache = 4096\ntable_open_cache = 8192\ninnodb_flush_log_at_trx_commit=2"` |  |
+| mysql.auth.database | string | `"wxt"` |  |
+| mysql.auth.password | string | `""` |  |
+| mysql.auth.rootPassword | string | `""` |  |
+| mysql.auth.username | string | `"wxt"` |  |
 | mysql.enabled | bool | `true` |  |
-| mysql.imageTag | string | `"5.7.28"` |  |
-| mysql.mysqlDatabase | string | `"wetkit"` |  |
-| mysql.mysqlUser | string | `"wetkit"` |  |
-| mysql.nodeSelector | object | `{}` |  |
-| mysql.persistence.enabled | bool | `true` |  |
-| mysql.persistence.size | string | `"128Gi"` |  |
-| mysql.tolerations | list | `[]` |  |
+| mysql.image.tag | string | `"8.0.29-debian-11-r3"` |  |
+| mysql.primary.configuration | string | `"[mysqld]\ndefault_authentication_plugin=mysql_native_password\nskip-name-resolve\nexplicit_defaults_for_timestamp\nbasedir=/opt/bitnami/mysql\nplugin_dir=/opt/bitnami/mysql/lib/plugin\nport=3306\nsocket=/opt/bitnami/mysql/tmp/mysql.sock\ndatadir=/bitnami/mysql/data\ntmpdir=/opt/bitnami/mysql/tmp\nmax_allowed_packet=16M\nbind-address=0.0.0.0\npid-file=/opt/bitnami/mysql/tmp/mysqld.pid\nlog-error=/opt/bitnami/mysql/logs/mysqld.log\ncharacter-set-server=UTF8\ncollation-server=utf8_general_ci\nslow_query_log=0\nslow_query_log_file=/opt/bitnami/mysql/logs/mysqld.log\nlong_query_time=10.0\n\nmax_allowed_packet = 256M\ninnodb_buffer_pool_size = 4096M\ninnodb_buffer_pool_instances = 4\ntable_definition_cache = 4096\ntable_open_cache = 8192\ninnodb_flush_log_at_trx_commit=2\n[client]\nport=3306\nsocket=/opt/bitnami/mysql/tmp/mysql.sock\ndefault-character-set=UTF8\nplugin_dir=/opt/bitnami/mysql/lib/plugin\n[manager]\nport=3306\nsocket=/opt/bitnami/mysql/tmp/mysql.sock\npid-file=/opt/bitnami/mysql/tmp/mysqld.pid"` |  |
+| mysql.primary.persistence.enabled | bool | `true` |  |
+| mysql.primary.persistence.size | string | `"128Gi"` |  |
+| mysql.volumePermissions.enabled | bool | `true` |  |
 
 ### ProxySQL
 
@@ -177,26 +181,16 @@ helm install --name drupal -f values-override.yaml
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| postgresql.auth.database | string | `"wxt"` |  |
+| postgresql.auth.enablePostgresUser | bool | `true` |  |
+| postgresql.auth.password | string | `""` |  |
+| postgresql.auth.postgresPassword | string | `""` |  |
+| postgresql.auth.username | string | `"wxt"` |  |
 | postgresql.enabled | bool | `false` |  |
-| postgresql.image.tag | string | `"11.6.0-debian-9-r0"` |  |
-| postgresql.nodeSelector | object | `{}` |  |
-| postgresql.persistence.enabled | bool | `true` |  |
-| postgresql.persistence.size | string | `"50Gi"` |  |
-| postgresql.postgresqlConfiguration.byteaOutput | string | `"'escape'"` |  |
-| postgresql.postgresqlConfiguration.effectiveCacheSize | string | `"512MB"` |  |
-| postgresql.postgresqlConfiguration.listenAddresses | string | `"'*'"` |  |
-| postgresql.postgresqlConfiguration.maintenanceWorkMem | string | `"32MB"` |  |
-| postgresql.postgresqlConfiguration.maxConnections | string | `"200"` |  |
-| postgresql.postgresqlConfiguration.maxWalSize | string | `"512MB"` |  |
-| postgresql.postgresqlConfiguration.minWalSize | string | `"512MB"` |  |
-| postgresql.postgresqlConfiguration.sharedBuffers | string | `"512MB"` |  |
-| postgresql.postgresqlConfiguration.walBuffers | string | `"8048kB"` |  |
-| postgresql.postgresqlConfiguration.workMem | string | `"2048MB"` |  |
-| postgresql.postgresqlDatabase | string | `"wetkit"` |  |
-| postgresql.postgresqlPassword | string | `""` |  |
-| postgresql.postgresqlUsername | string | `"wetkit"` |  |
-| postgresql.resources | object | `{}` |  |
-| postgresql.service.port | int | `5432` |  |
+| postgresql.image.tag | string | `"14.3.0-debian-11-r3"` |  |
+| postgresql.primary.configuration | string | `"listenAddresses: \"'*'\"\nmaxConnections: \"200\"\nsharedBuffers: 512MB\nworkMem: 2048MB\neffectiveCacheSize: 512MB\nmaintenanceWorkMem: 32MB\nminWalSize: 512MB\nmaxWalSize: 512MB\nwalBuffers: 8048kB\nbyteaOutput: \"'escape'\""` |  |
+| postgresql.primary.persistence.enabled | bool | `true` |  |
+| postgresql.primary.persistence.size | string | `"128Gi"` |  |
 | postgresql.volumePermissions.enabled | bool | `true` |  |
 
 ### PGBouncer

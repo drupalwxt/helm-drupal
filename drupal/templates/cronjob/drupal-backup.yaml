@@ -75,8 +75,6 @@ spec:
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  # This is not ideal, but calling {{ include "mysql.secretName" . }}
-                  # was returning the wrong result.
                   name: "{{ .Release.Name }}-mysql"
                   key: mysql-password
 {{- else if .Values.postgresql.enabled }}

@@ -97,16 +97,14 @@ varnish:
   enabled: true
 
 ## MySQL
-## Ref: https://github.com/bitnami/charts/tree/master/bitnami/mysql
+## ref: https://github.com/bitnami/charts/blob/master/bitnami/mysql/README.md
 mysql:
-  imageTag: 5.7.28
   enabled: true
-  mysqlPassword: testPassword
-
-  persistence:
-    enabled: true
-    storageClass: managed-premium
-    size: 256Gi
+  primary:
+    persistence:
+      enabled: true
+      storageClass: managed-premium
+      size: 128Gi
 
 ## ProxySQL
 ## Ref: https://github.com/drupalwxt/helm-drupal

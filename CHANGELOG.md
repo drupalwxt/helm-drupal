@@ -1,3 +1,16 @@
+## 0.18.x
+
+- Switch to Bitnami's MySQL Helm Chart
+
+> In general you should only be using the containerized database installs
+> for testing and development and should be using a managed db solution.
+>
+> However if you were using a containerized installation this is a
+> breaking change and you will need to backup your database and then
+> restore it into the newly created database.
+
+- Updated Bitnami's PostgreSQL Helm Chart
+
 ## 0.16.x
 
 - WxT update scripts are now guarded and opt-in

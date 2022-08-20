@@ -8,6 +8,10 @@
 > However if you were using a containerized installation this is a
 > breaking change and you will need to backup your database and then
 > restore it into the newly created database.
+>
+> As a result of this change the MySQL chart is now a statefulset and as
+> such the PVCs are not cleaned up automatically for you and will need to
+> be deleted prior.
 
 - Updated Bitnami's PostgreSQL Helm Chart
 

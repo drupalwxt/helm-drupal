@@ -89,8 +89,7 @@ drupal:
   #  drush config-set system.performance css.preprocess 0 -y;
 
   # -- default script used to detect when the DB is ready
-  dbAvailabilityScript:
-    |-
+  dbAvailabilityScript: |-
     until drush sql:query 'SHOW TABLES;'; do echo Waiting for DB; sleep 3; done
     echo DB available
 
@@ -414,89 +413,90 @@ azureFile:
   #   - cache=none
 
 ## Configuration values for the MySQL dependency sub-chart
-## ref: https://github.com/kubernetes/charts/blob/master/stable/mysql/README.md
+## ref: https://github.com/bitnami/charts/blob/master/bitnami/mysql/README.md
 mysql:
   enabled: true
-  imageTag: 5.7.28
-
-  ## Specify password for root user
-  ##
-  ## Default: random 10 character string
-  # mysqlRootPassword: testing
-
-  ## Create a database user
-  ##
-  mysqlUser: wetkit
-  ## Default: random 10 character string
-  # mysqlPassword:
-
-  ## Create a database
-  ##
-  mysqlDatabase: wetkit
-
-  ## Persist data to a persistent volume
-  persistence:
-    enabled: true
-    # storageClass: managed-premium
-    size: 128Gi
-
-  # Custom mysql configuration files used to override default mysql settings
-  configurationFiles:
-    mysql.cnf: |-
+  image:
+    tag: 8.0.29-debian-11-r3
+  auth:
+    rootPassword: ""
+    database: wxt
+    username: wxt
+    password: ""
+  primary:
+    persistence:
+      enabled: true
+      # storageClass: managed-premium
+      size: 128Gi
+    configuration: |-
       [mysqld]
+      default_authentication_plugin=mysql_native_password
+      skip-name-resolve
+      explicit_defaults_for_timestamp
+      basedir=/opt/bitnami/mysql
+      plugin_dir=/opt/bitnami/mysql/lib/plugin
+      port=3306
+      socket=/opt/bitnami/mysql/tmp/mysql.sock
+      datadir=/bitnami/mysql/data
+      tmpdir=/opt/bitnami/mysql/tmp
+      max_allowed_packet=16M
+      bind-address=0.0.0.0
+      pid-file=/opt/bitnami/mysql/tmp/mysqld.pid
+      log-error=/opt/bitnami/mysql/logs/mysqld.log
+      character-set-server=UTF8
+      collation-server=utf8_general_ci
+      slow_query_log=0
+      slow_query_log_file=/opt/bitnami/mysql/logs/mysqld.log
+      long_query_time=10.0
+
       max_allowed_packet = 256M
       innodb_buffer_pool_size = 4096M
       innodb_buffer_pool_instances = 4
       table_definition_cache = 4096
       table_open_cache = 8192
       innodb_flush_log_at_trx_commit=2
-
-  # Example of using both toleration and nodeSelector to deploy mysql on an AKS Spot instance
-  # node pool:
-  tolerations: []
-  # - key: "kubernetes.azure.com/scalesetpriority"
-  #   operator: "Equal"
-  #   value: "spot"
-  #   effect: "NoSchedule"
-
-  nodeSelector: {}
-  #   kubernetes.azure.com/scalesetpriority: "spot"
+      [client]
+      port=3306
+      socket=/opt/bitnami/mysql/tmp/mysql.sock
+      default-character-set=UTF8
+      plugin_dir=/opt/bitnami/mysql/lib/plugin
+      [manager]
+      port=3306
+      socket=/opt/bitnami/mysql/tmp/mysql.sock
+      pid-file=/opt/bitnami/mysql/tmp/mysqld.pid
+  volumePermissions:
+    enabled: true
 
 ## Configuration values for the PostgreSQL dependency sub-chart
-## ref: https://github.com/kubernetes/charts/blob/master/stable/postgresql/README.md
+## ref: https://github.com/bitnami/charts/blob/master/bitnami/postgresql/README.md
 postgresql:
   enabled: false
   image:
-    tag: 11.6.0-debian-9-r0
-  postgresqlUsername: wetkit
-  postgresqlPassword: ""
-  postgresqlDatabase: wetkit
-  postgresqlConfiguration:
-    listenAddresses: "'*'"
-    maxConnections: "200"
-    sharedBuffers: 512MB
-    workMem: 2048MB
-    effectiveCacheSize: 512MB
-    maintenanceWorkMem: 32MB
-    minWalSize: 512MB
-    maxWalSize: 512MB
-    walBuffers: 8048kB
-    byteaOutput: "'escape'"
-  persistence:
-    enabled: true
-    size: 50Gi
+    tag: 14.3.0-debian-11-r3
+  auth:
+    enablePostgresUser: true
+    postgresPassword: ""
+    username: "wxt"
+    password: ""
+    database: "wxt"
+  primary:
+    persistence:
+      enabled: true
+      # storageClass: managed-premium
+      size: 128Gi
+    configuration: |-
+      listenAddresses: "'*'"
+      maxConnections: "200"
+      sharedBuffers: 512MB
+      workMem: 2048MB
+      effectiveCacheSize: 512MB
+      maintenanceWorkMem: 32MB
+      minWalSize: 512MB
+      maxWalSize: 512MB
+      walBuffers: 8048kB
+      byteaOutput: "'escape'"
   volumePermissions:
     enabled: true
-  service:
-    port: 5432
-  resources: {}
-  #  requests:
-  #    memory: "512Mi"
-  #    cpu: "100m"
-  #  limits:
-  #    memory: "1Gi"
-  #    cpu: "500m"
-  nodeSelector: {}
 
 pgbouncer:
   enabled: false

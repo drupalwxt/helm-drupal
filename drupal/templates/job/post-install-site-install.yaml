@@ -156,9 +156,9 @@ spec:
               time drush site:install {{ .Values.drupal.profile }} \
                 --sites-subdir=default \
                 {{- if .Values.mysql.enabled }}
-                --db-url="mysql://{{ .Values.mysql.mysqlUser }}:$MYSQL_PASSWORD@{{ .Release.Name }}-mysql:{{ .Values.mysql.service.port }}/{{ .Values.mysql.mysqlDatabase }}" \
+                --db-url="mysql://{{ .Values.mysql.auth.username }}:$MYSQL_PASSWORD@{{ .Release.Name }}-mysql:{{ .Values.mysql.primary.service.ports.mysql }}/{{ .Values.mysql.auth.database }}" \
                 {{- else if .Values.postgresql.enabled }}
-                --db-url="pgsql://{{ .Values.postgresql.postgresqlUsername }}:$POSTGRES_PASSWORD@{{ .Release.Name }}-postgresql:{{ .Values.postgresql.service.port }}/{{ .Values.postgresql.postgresqlDatabase }}" \
+                --db-url="pgsql://{{ .Values.postgresql.auth.username }}:$POSTGRES_PASSWORD@{{ .Release.Name }}-postgresql:{{ .Values.postgresql.primary.service.ports.postgresql }}/{{ .Values.postgresql.auth.database }}" \
                 {{- end }}
                 --account-name={{ .Values.drupal.username }} \
                 --account-pass=$DRUPAL_ADMIN_PASSWORD \
@@ -212,8 +212,6 @@ spec:
         - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              # This is not ideal, but calling {{ include "mysql.secretName" . }}
-              # was returning the wrong result.
               name: "{{ .Release.Name }}-mysql"
               key: mysql-password
 {{- else if .Values.postgresql.enabled }}

@@ -121,10 +121,9 @@ varnish:
   enabled: true
 
 ## MySQL
-## Ref: https://github.com/bitnami/charts/tree/master/bitnami/mysql
+## ref: https://github.com/bitnami/charts/blob/master/bitnami/mysql/README.md
 mysql:
   enabled: true
-  mysqlPassword: testPassword
 
 ## ProxySQL
 ## Ref: https://github.com/drupalwxt/helm-drupal

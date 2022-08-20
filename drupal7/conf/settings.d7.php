@@ -293,15 +293,15 @@ $databases = array (
   array (
     'default' =>
     array (
-      'database' => {{ .Values.mysql.mysqlDatabase | quote }},
-      'username' => {{ .Values.mysql.mysqlUser | quote }},
+      'database' => {{ .Values.mysql.auth.database | quote }},
+      'username' => {{ .Values.mysql.auth.username | quote }},
       'password' => getenv('MYSQL_PASSWORD') ?: '',
       {{- if .Values.proxysql.enabled }}
       'host' => '127.0.0.1',
       {{- else }}
       'host' => '{{ .Release.Name }}-mysql',
       {{- end }}
-      'port' => {{ .Values.mysql.service.port | quote }},
+      'port' => {{ .Values.mysql.primary.service.ports.mysql | quote }},
       'driver' => 'mysql',
       'prefix' => '',
     ),
@@ -313,15 +313,15 @@ $databases = array (
   array (
     'default' =>
     array (
-      'database' => {{ .Values.postgresql.postgresqlDatabase | quote }},
-      'username' => {{ .Values.postgresql.postgresqlUsername | quote }},
+      'database' => {{ .Values.postgresql.auth.database | quote }},
+      'username' => {{ .Values.postgresql.auth.username | quote }},
       'password' => getenv('POSTGRES_PASSWORD') ?: '',
       {{- if .Values.pgbouncer.enabled }}
       'host' => 'localhost',
       {{- else }}
       'host' => '{{ .Release.Name }}-postgresql',
       {{- end }}
-      'port' => {{ .Values.postgresql.service.port | quote }},
+      'port' => {{ .Values.postgresql.primary.service.ports.postgresql | quote }},
       'driver' => 'pgsql',
       'prefix' => '',
     ),

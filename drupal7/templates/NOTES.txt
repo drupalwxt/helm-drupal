@@ -16,7 +16,7 @@ export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.
 # Run drush site:install
 kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush si {{ .Values.drupal.profile }} \
     --sites-subdir=default \
-    --db-url={{ print "mysql://" .Values.mysql.mysqlUser ":YOUR_MYSQL_PASSWORD@" .Release.Name "-mysql:3306/ " .Values.mysql.mysqlDatabase | quote }} \
+    --db-url={{ print "mysql://" .Values.mysql.auth.username ":YOUR_MYSQL_PASSWORD@" .Release.Name "-mysql:3306/ " .Values.mysql.auth.database | quote }} \
     --account-name={{ .Values.drupal.username | quote }} \
     --account-pass=YOUR_ACCOUNT_PASSWORD \
     --site-mail={{ .Values.drupal.siteEmail | quote }} \

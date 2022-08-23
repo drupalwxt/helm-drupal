@@ -74,7 +74,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: "{{ $release.Name }}-postgresql"
-                  key: postgresql-password
+                  key: password
 {{- end }}
 {{- if $values.redis.enabled }}
             - name: REDIS_PASSWORD

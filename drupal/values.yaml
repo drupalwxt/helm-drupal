@@ -540,16 +540,16 @@ postgresql:
       # storageClass: managed-premium
       size: 128Gi
     configuration: |-
-      listenAddresses: "'*'"
-      maxConnections: "200"
-      sharedBuffers: 512MB
-      workMem: 2048MB
-      effectiveCacheSize: 512MB
-      maintenanceWorkMem: 32MB
-      minWalSize: 512MB
-      maxWalSize: 512MB
-      walBuffers: 8048kB
-      byteaOutput: "'escape'"
+      listen_addresses='*'
+      max_connections=200
+      shared_buffers='512MB'
+      work_mem='2048MB'
+      effective_cache_size='512MB'
+      maintenance_work_mem='32MB'
+      min_wal_size='512MB'
+      max_wal_size='512MB'
+      wal_buffer='8048kB'
+      bytea_output='escape'
   volumePermissions:
     enabled: true
 

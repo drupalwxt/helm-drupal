@@ -1,6 +1,6 @@
 # solr
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.11.1](https://img.shields.io/badge/AppVersion-8.11.1-informational?style=flat-square)
+![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 8.11.1](https://img.shields.io/badge/AppVersion-8.11.1-informational?style=flat-square)
 
 A Helm chart for a Solr instance using the official Solr Operator
 
@@ -8,6 +8,7 @@ A Helm chart for a Solr instance using the official Solr Operator
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| basicAuthSecret | string | `nil` |  |
 | destinationRule.enabled | bool | `false` |  |
 | destinationRule.mode | string | `"DISABLE"` |  |
 | ingress.annotations | object | `{}` |  |

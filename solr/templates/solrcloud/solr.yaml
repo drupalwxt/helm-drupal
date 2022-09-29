@@ -20,6 +20,7 @@ spec:
   solrSecurity:
     authenticationType: Basic
     probesRequireAuth: true
+    basicAuthSecret: {{ .Values.basicAuthSecret }}
   customSolrKubeOptions:
     podOptions:
       livenessProbe:

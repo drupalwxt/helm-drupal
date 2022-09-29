@@ -15,6 +15,9 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+# https://github.com/apache/solr-operator/blob/main/docs/solr-cloud/solr-cloud-crd.md#k8s-oper-user
+basicAuthSecret:
+
 ## Configure Istio
 ## ref: http://istio.io
 ##

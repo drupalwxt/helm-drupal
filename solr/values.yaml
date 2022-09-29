@@ -19,9 +19,9 @@ ingress:
 ## ref: http://istio.io
 ##
 destinationRule:
-  enabled: true
+  enabled: false
   mode: DISABLE
 
 ## Solr
 ## Ref: https://github.com/drupalwxt/helm-drupal/tree/master/solr
-replicas: 3
+replicas: 1

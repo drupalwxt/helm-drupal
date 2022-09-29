@@ -13,7 +13,7 @@ spec:
           resources:
             requests:
               storage: "5Gi"
-  replicas: 1
+  replicas: {{ .Values.replicas }}
   solrImage:
     tag: {{ .Chart.AppVersion }}
   solrJavaMem: "-Xms1g -Xmx3g"

@@ -16,8 +16,30 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-# https://github.com/apache/solr-operator/blob/main/docs/solr-cloud/solr-cloud-crd.md#k8s-oper-user
-basicAuthSecret:
+solr:
+  # https://github.com/apache/solr-operator/blob/main/docs/solr-cloud/solr-cloud-crd.md#k8s-oper-user
+  basicAuthSecret:
+  solrJavaMem: "-Xms1g -Xmx5g"
+  resources: {}
+    # requests:
+    #   memory: "256Mi"
+    #   cpu: "100m"
+    # limits:
+    #   memory: "1Gi"
+    #   cpu: "500m"
+  storage:
+    size: 5Gi
+
+zookeeper:
+  resources: {}
+    # requests:
+    #   memory: "256Mi"
+    #   cpu: "100m"
+    # limits:
+    #   memory: "1Gi"
+    #   cpu: "500m"
+  storage:
+    size: 5Gi
 
 ## Configure Istio
 ## ref: http://istio.io

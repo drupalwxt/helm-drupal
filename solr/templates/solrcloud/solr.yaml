@@ -12,27 +12,25 @@ spec:
         spec:
           resources:
             requests:
-              storage: "5Gi"
+              storage: "{{ .Values.solr.storage.size }}"
   replicas: {{ .Values.replicas }}
   solrImage:
     tag: {{ .Chart.AppVersion }}
-  solrJavaMem: "-Xms1g -Xmx3g"
+  solrJavaMem: "{{ .Values.solr.solrJavaMem }}"
   solrSecurity:
     authenticationType: Basic
     probesRequireAuth: true
-    basicAuthSecret: {{ .Values.basicAuthSecret }}
+    basicAuthSecret: {{ .Values.solr.basicAuthSecret }}
   customSolrKubeOptions:
     podOptions:
       livenessProbe:
         timeoutSeconds: 5
       readinessProbe:
         timeoutSeconds: 5
+{{- if .Values.solr.resources }}
       resources:
-        limits:
-          memory: "4G"
-        requests:
-          cpu: "65m"
-          memory: "156Mi"
+{{ toYaml .Values.solr.resources | indent 8 }}
+{{- end  }}
   zookeeperRef:
     provided:
       chroot: "/this/will/be/auto/created"
@@ -41,14 +39,12 @@ spec:
           storageClassName: "default"
           resources:
             requests:
-              storage: "5Gi"
+              storage: "{{ .Values.zookeeper.storage.size }}"
       replicas: {{ .Values.replicas }}
       zookeeperPodPolicy:
+{{- if .Values.zookeeper.resources }}
         resources:
-          limits:
-            memory: "1G"
-          requests:
-            cpu: "65m"
-            memory: "156Mi"
+{{ toYaml .Values.zookeeper.resources | indent 10 }}
+{{- end  }}
   solrOpts: "-Dsolr.autoSoftCommit.maxTime=10000"
   solrGCTune: "-XX:SurvivorRatio=4 -XX:TargetSurvivorRatio=90 -XX:MaxTenuringThreshold=8"

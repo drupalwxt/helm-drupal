@@ -15,7 +15,7 @@ spec:
               storage: "{{ .Values.solr.storage.size }}"
   replicas: {{ .Values.replicas }}
   solrImage:
-    tag: {{ .Chart.AppVersion }}
+    tag: "{{ default .Chart.AppVersion .Values.solr.tag }}"
   solrJavaMem: "{{ .Values.solr.solrJavaMem }}"
   solrSecurity:
     authenticationType: Basic

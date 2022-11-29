@@ -2,6 +2,7 @@
 {{- $fullName := include "solr.fullname" . -}}
 {{- $releaseName := .Release.Name -}}
 {{- $ingressPath := .Values.ingress.path -}}
+{{- $ingressPathType := .Values.ingress.pathType -}}
 {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
 apiVersion: networking.k8s.io/v1
 {{- else }}
@@ -36,7 +37,7 @@ spec:
       http:
         paths:
         {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
-          - pathType: Prefix
+          - pathType: {{ $ingressPathType }}
             path: {{ $ingressPath }}
             backend:
               service:

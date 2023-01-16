@@ -141,7 +141,8 @@ drupal:
   reconfigure: true
   cacheRebuildBeforeDatabaseMigration: true
   updateDBBeforeDatabaseMigration: true
-  lightningUpdate: false
+
+  # Run WxT specific commands
   wxtUpdate: false
 
   # Restrict how many attempt install and/or reconfigure jobs will try in case of failure. Default is 6.

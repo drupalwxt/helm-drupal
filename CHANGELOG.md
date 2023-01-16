@@ -14,6 +14,8 @@
 > be deleted prior.
 
 - Updated Bitnami's PostgreSQL Helm Chart
+- Removed lightningUpdate command
+- Fixed missing guard for wxtUpdate
 
 ## 0.16.x
 

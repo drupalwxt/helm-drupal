@@ -143,15 +143,12 @@ spec:
               {{- end }}
               drush -y updatedb
 
-              # Lightning updates
-              {{- if .Values.drupal.lightningUpdate }}
-              drush -y cache:rebuild
-              drush -y update:lightning
-              {{- end }}
-
               # WxT updates
+              {{- if .Values.drupal.wxtUpdate }}
               drush -y cache:rebuild
               drush -y update:wxt
+              {{- end }}
+
               {{- else }}
               time drush site:install {{ .Values.drupal.profile }} \
                 --sites-subdir=default \

@@ -16,6 +16,7 @@
 - Updated Bitnami's PostgreSQL Helm Chart
 - Removed lightningUpdate command
 - Fixed missing guard for wxtUpdate
+- Upgrade Redis subchart to 16.13.2
 
 ## 0.16.x
 

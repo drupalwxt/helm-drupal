@@ -23,7 +23,7 @@ Drupal 8/9 variant of the Web Experience Toolkit (WxT).
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | mysql | 9.1.7 |
 | https://charts.bitnami.com/bitnami | postgresql | 11.6.6 |
-| https://charts.bitnami.com/bitnami | redis | 15.7.4 |
+| https://charts.bitnami.com/bitnami | redis | 16.13.2 |
 | https://statcan.github.io/charts | varnish | 0.2.2 |
 
 ## Prerequisites

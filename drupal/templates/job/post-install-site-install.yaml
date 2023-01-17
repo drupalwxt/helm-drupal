@@ -78,7 +78,7 @@ spec:
               {{- if .Values.redis.sentinel.enabled }}
               until [[ $(printf "AUTH $REDIS_PASSWORD\r\n" | nc -w 2 {{ .Release.Name }}-redis {{ .Values.redis.sentinel.service.sentinelPort }}) == $(printf "+OK\r\n") ]]; do echo Waiting for Redis; sleep 3; done
               {{- else }}
-              until [[ $(printf "AUTH $REDIS_PASSWORD\r\n" | nc -w 2 {{ .Release.Name }}-redis-master {{ .Values.redis.master.service.port }}) == $(printf "+OK\r\n") ]]; do echo Waiting for Redis; sleep 3; done
+              until [[ $(printf "AUTH $REDIS_PASSWORD\r\n" | nc -w 2 {{ .Release.Name }}-redis-master {{ .Values.redis.master.service.ports.redis }}) == $(printf "+OK\r\n") ]]; do echo Waiting for Redis; sleep 3; done
               {{- end }}
               echo Redis available
               {{- end }}
@@ -91,7 +91,7 @@ spec:
               {{- if .Values.redis.sentinel.enabled }}
               printf "AUTH $REDIS_PASSWORD\r\nFLUSHDB\r\n" | nc -w 2 {{ .Release.Name }}-redis {{ .Values.redis.sentinel.service.sentinelPort }}
               {{- else }}
-              printf "AUTH $REDIS_PASSWORD\r\nFLUSHDB\r\n" | nc -w 2 {{ .Release.Name }}-redis-master {{ .Values.redis.master.service.port }}
+              printf "AUTH $REDIS_PASSWORD\r\nFLUSHDB\r\n" | nc -w 2 {{ .Release.Name }}-redis-master {{ .Values.redis.master.service.ports.redis }}
               {{- end }}
               {{- end }}
 

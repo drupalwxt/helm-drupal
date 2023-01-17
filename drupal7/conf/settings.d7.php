@@ -735,7 +735,7 @@ $conf['redis_client_host'] = "{{ .Release.Name }}-redis";
 $conf['redis_client_port'] = "{{ .Values.redis.sentinel.service.sentinelPort }}";
 {{- else }}
 $conf['redis_client_host'] = "{{ .Release.Name }}-redis-master";
-$conf['redis_client_port'] = "{{ .Values.redis.master.service.port }}";
+$conf['redis_client_port'] = "{{ .Values.redis.master.service.ports.redis }}";
 {{- end }}
 $conf['redis_client_interface'] = '{{ default "Predis" .Values.redis.clientInterface }}';
 $conf['cache_backends'][]       = 'sites/all/modules/contrib/redis/redis.autoload.inc';

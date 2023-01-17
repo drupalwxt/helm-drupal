@@ -898,7 +898,7 @@ if (extension_loaded('redis')) {
   $settings['redis.connection']['instance']  = '{{ .Values.redis.sentinel.masterSet }}';
   {{- else }}
   $settings['redis.connection']['host'] = '{{ .Release.Name }}-redis-master';
-  $settings['redis.connection']['port'] = '{{ .Values.redis.master.service.port }}';
+  $settings['redis.connection']['port'] = '{{ .Values.redis.master.service.ports.redis }}';
   {{- end }}
   $settings['redis.connection']['password'] = getenv('REDIS_PASSWORD') ?: '';
   $settings['redis.connection']['persistent'] = FALSE;

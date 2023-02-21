@@ -251,6 +251,13 @@ drupal:
   nodeSelector: {}
   #   kubernetes.azure.com/scalesetpriority: "spot"
 
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 11
+    targetCPUUtilizationPercentage: 50
+    targetMemoryUtilizationPercentage: 50
+
 nginx:
   ## Nginx image version
   ## ref: https://hub.docker.com/drupalwxt/site-wetkit/tags/
@@ -324,6 +331,13 @@ nginx:
 
   nodeSelector: {}
   #   kubernetes.azure.com/scalesetpriority: "spot"
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 11
+    targetCPUUtilizationPercentage: 50
+    targetMemoryUtilizationPercentage: 50
 
 # Specify an external database
 # Useful for managed offerings from your Cloud Provider

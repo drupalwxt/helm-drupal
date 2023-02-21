@@ -1,3 +1,7 @@
+## 0.19.x
+
+- Added HPA's for both Nginx and PHP-FPM
+
 ## 0.18.x
 
 - Switch to Bitnami's MySQL Helm Chart

@@ -1,0 +1,31 @@
+{{- if .Values.drupal.autoscaling.enabled }}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "drupal.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "drupal.name" . }}
+    helm.sh/chart: {{ include "drupal.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "drupal.fullname" . }}
+  minReplicas: {{ .Values.drupal.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.drupal.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.drupal.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.drupal.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.drupal.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.drupal.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}

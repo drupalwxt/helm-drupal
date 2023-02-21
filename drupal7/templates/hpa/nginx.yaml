@@ -2,10 +2,10 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "drupal.fullname" . }}-nginx
+  name: {{ include "drupal7.fullname" . }}-nginx
   labels:
-    app.kubernetes.io/name: {{ include "drupal.name" . }}
-    helm.sh/chart: {{ include "drupal.chart" . }}
+    app.kubernetes.io/name: {{ include "drupal7.name" . }}
+    helm.sh/chart: {{ include "drupal7.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:

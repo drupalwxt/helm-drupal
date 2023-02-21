@@ -12,7 +12,7 @@ spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ .Chart.Name }}
+    name: {{ include "drupal7.fullname" . }}
   minReplicas: {{ .Values.drupal.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.drupal.autoscaling.maxReplicas }}
   metrics:

@@ -1,6 +1,6 @@
 # drupal
 
-![Version: 0.18.3](https://img.shields.io/badge/Version-0.18.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.0](https://img.shields.io/badge/AppVersion-4.4.0-informational?style=flat-square)
+![Version: 0.19.0](https://img.shields.io/badge/Version-0.19.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.2](https://img.shields.io/badge/AppVersion-4.4.2-informational?style=flat-square)
 
 Drupal 8/9 variant of the Web Experience Toolkit (WxT).
 
@@ -67,6 +67,11 @@ helm install --name drupal -f values-override.yaml
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | drupal.additionalCrons | object | `{}` |  |
+| drupal.autoscaling.enabled | bool | `false` |  |
+| drupal.autoscaling.maxReplicas | int | `11` |  |
+| drupal.autoscaling.minReplicas | int | `1` |  |
+| drupal.autoscaling.targetCPUUtilizationPercentage | int | `50` |  |
+| drupal.autoscaling.targetMemoryUtilizationPercentage | int | `50` |  |
 | drupal.backup.enabled | bool | `false` |  |
 | drupal.backup.filesArgs | string | `""` |  |
 | drupal.backup.privateArgs | string | `""` |  |
@@ -135,6 +140,11 @@ helm install --name drupal -f values-override.yaml
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| nginx.autoscaling.enabled | bool | `false` |  |
+| nginx.autoscaling.maxReplicas | int | `11` |  |
+| nginx.autoscaling.minReplicas | int | `1` |  |
+| nginx.autoscaling.targetCPUUtilizationPercentage | int | `50` |  |
+| nginx.autoscaling.targetMemoryUtilizationPercentage | int | `50` |  |
 | nginx.client_max_body_size | string | `"20m"` |  |
 | nginx.customLocations | string | `""` |  |
 | nginx.gzip | bool | `true` |  |

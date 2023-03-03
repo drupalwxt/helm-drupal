@@ -842,7 +842,7 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
 
-$settings["config_sync_directory"] = '/private/config/sync';
+$settings["config_sync_directory"] = '{{ .Values.drupal.configSync.directory }}';
 
 {{- if .Values.drupal.configSplit.enabled }}
 /**

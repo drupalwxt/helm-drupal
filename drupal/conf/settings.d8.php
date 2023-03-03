@@ -806,7 +806,7 @@ if ($drupal_settings === 'development' && file_exists(__DIR__ . '/settings.local
 * settings.
 */
 
-$config_directories[CONFIG_SYNC_DIRECTORY] = '/private/config/sync';
+$config_directories[CONFIG_SYNC_DIRECTORY] = '{{ .Values.drupal.configSync.directory }}';
 
 {{- if .Values.drupal.configSplit.enabled }}
 /**

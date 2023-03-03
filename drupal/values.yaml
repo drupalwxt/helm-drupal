@@ -261,6 +261,9 @@ drupal:
       # Note: sSMTP only supports LOGIN and CRAM-MD5
       method: LOGIN
 
+  configSync:
+    directory: "/private/config/sync"
+
   # Use advanced configuration split logic
   configSplit:
     enabled: false

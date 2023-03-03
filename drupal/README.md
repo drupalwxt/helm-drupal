@@ -80,6 +80,7 @@ helm install --name drupal -f values-override.yaml
 | drupal.backup.volume | object | `{}` |  |
 | drupal.cacheRebuildBeforeDatabaseMigration | bool | `true` |  |
 | drupal.configSplit.enabled | bool | `false` |  |
+| drupal.configSync.directory | string | `"/private/config/sync"` |  |
 | drupal.cron.enabled | bool | `true` |  |
 | drupal.cron.schedule | string | `"0 * * * *"` |  |
 | drupal.dbAvailabilityScript | string | `"until drush sql:query 'SHOW TABLES;'; do echo Waiting for DB; sleep 3; done\necho DB available"` | default script used to detect when the DB is ready |

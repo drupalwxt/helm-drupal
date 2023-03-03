@@ -1,6 +1,7 @@
 ## 0.19.x
 
 - Added HPA's for both Nginx and PHP-FPM
+- Made the config_sync_directory configurable
 
 ## 0.18.x
 

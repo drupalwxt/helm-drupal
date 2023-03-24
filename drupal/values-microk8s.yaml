@@ -94,7 +94,7 @@ drupal:
 ## Ref: https://github.com/drupalwxt/helm-drupal
 nginx:
   image: drupalwxt/site-wxt
-  tag: 4.5.0-nginx
+  tag: 4.4.3-nginx
 
   # Set your cluster's DNS resolution service here
   # Default for microk8s is set, but may vary depending on installation.

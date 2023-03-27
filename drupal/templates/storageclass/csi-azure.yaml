@@ -1,4 +1,4 @@
-{{- if or (.Values.azure.azureFile.enabled) (.Values.azure.sharedDisk.enabled) -}}
+{{- if or (.Values.azure.azureFile.enabled) (.Values.azure.sharedDisk.enabled) (.Values.azure.storageClass.create) -}}
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:

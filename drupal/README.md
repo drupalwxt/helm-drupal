@@ -1,6 +1,6 @@
 # drupal
 
-![Version: 0.19.1](https://img.shields.io/badge/Version-0.19.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.4.2](https://img.shields.io/badge/AppVersion-4.4.2-informational?style=flat-square)
+![Version: 0.20.1](https://img.shields.io/badge/Version-0.20.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.5.1](https://img.shields.io/badge/AppVersion-4.5.1-informational?style=flat-square)
 
 Drupal 8/9 variant of the Web Experience Toolkit (WxT).
 
@@ -237,32 +237,26 @@ helm install --name drupal -f values-override.yaml
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| azureFile.accessMode | string | `"ReadWriteMany"` |  |
-| azureFile.annotations | object | `{}` |  |
-| azureFile.enabled | bool | `false` |  |
-| azureFile.initMediaIconsFolder | bool | `true` |  |
-| azureFile.private.azureFile.readOnly | bool | `false` |  |
-| azureFile.private.azureFile.secretName | string | `"drupal-storage"` |  |
-| azureFile.private.azureFile.shareName | string | `"drupal-private"` |  |
-| azureFile.public.azureFile.readOnly | bool | `false` |  |
-| azureFile.public.azureFile.secretName | string | `"drupal-storage"` |  |
-| azureFile.public.azureFile.shareName | string | `"drupal-public"` |  |
-| azureFile.size | string | `"100Gi"` |  |
-| azureFile.storageClass | string | `"azurefile"` |  |
+| azure.azureFile.accessMode | string | `"ReadWriteMany"` |  |
+| azure.azureFile.annotations | object | `{}` |  |
+| azure.azureFile.enabled | bool | `false` |  |
+| azure.azureFile.initMediaIconsFolder | bool | `true` |  |
+| azure.azureFile.private.spec | object | `{}` |  |
+| azure.azureFile.public.spec | object | `{}` |  |
+| azure.azureFile.size | string | `"256Gi"` |  |
 
 ## Shared Disk
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| sharedDisk.accessMode | string | `"ReadWriteMany"` |  |
-| sharedDisk.annotations | object | `{}` |  |
-| sharedDisk.enabled | bool | `false` |  |
-| sharedDisk.initMediaIconsFolder | bool | `true` |  |
-| sharedDisk.maxShares | int | `2` |  |
-| sharedDisk.private.azureFile.readOnly | bool | `false` |  |
-| sharedDisk.private.azureFile.secretName | string | `"drupal-storage"` |  |
-| sharedDisk.private.azureFile.shareName | string | `"drupal-private"` |  |
-| sharedDisk.size | string | `"256Gi"` |  |
+| azure.sharedDisk.accessMode | string | `"ReadWriteMany"` |  |
+| azure.sharedDisk.annotations | object | `{}` |  |
+| azure.sharedDisk.enabled | bool | `false` |  |
+| azure.sharedDisk.initMediaIconsFolder | bool | `true` |  |
+| azure.sharedDisk.maxShares | int | `2` |  |
+| azure.sharedDisk.private.spec | object | `{}` |  |
+| azure.sharedDisk.public.spec | object | `{}` |  |
+| azure.sharedDisk.size | string | `"256Gi"` |  |
 
 ## Redis
 

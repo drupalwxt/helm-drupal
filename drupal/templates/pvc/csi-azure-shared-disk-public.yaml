@@ -16,7 +16,9 @@ spec:
 {{- if not .Values.azure.sharedDisk.disableVolumeName }}
   volumeName: {{ include "drupal.fullname" . }}-public
 {{- end }}
-{{- if eq "-" .Values.azure.sharedDisk.storageClass }}
+{{- if .Values.azure.storageClass.create }}
+  storageClassName: {{ include "drupal.fullname" . }}-csi-azure
+{{- else if eq "-" .Values.azure.sharedDisk.storageClass }}
   storageClassName: ""
 {{- else if .Values.azure.sharedDisk.storageClass }}
   storageClassName: "{{ .Values.azure.sharedDisk.storageClass }}"

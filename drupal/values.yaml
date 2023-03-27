@@ -416,6 +416,9 @@ external:
   #   - PDO::MYSQL_ATTR_SSL_CA: '/etc/ssl/certs/ca-certificates.crt'
 
 azure:
+  storageClass:
+    create: false
+
   # Azure File logic
   azureFile:
     enabled: false

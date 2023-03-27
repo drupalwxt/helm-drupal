@@ -13,7 +13,9 @@ spec:
     storage: {{ .Values.azure.azureFile.size }}
   accessModes:
     - {{ .Values.azure.azureFile.accessMode }}
-{{- if eq "-" .Values.azure.azureFile.storageClass }}
+{{- if .Values.azure.storageClass.create }}
+  storageClassName: {{ include "drupal.fullname" . }}-csi-azure
+{{- else if eq "-" .Values.azure.azureFile.storageClass }}
   storageClassName: ""
 {{- else if .Values.azure.azureFile.storageClass }}
   storageClassName: "{{ .Values.azure.azureFile.storageClass }}"

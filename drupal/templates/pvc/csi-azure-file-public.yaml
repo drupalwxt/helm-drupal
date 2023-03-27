@@ -16,7 +16,9 @@ spec:
 {{- if not .Values.azure.azureFile.disableVolumeName }}
   volumeName: {{ include "drupal.fullname" . }}-public
 {{- end }}
-{{- if eq "-" .Values.azure.azureFile.storageClass }}
+{{- if .Values.azure.storageClass.create }}
+  storageClassName: {{ include "drupal.fullname" . }}-csi-azure
+{{- else if eq "-" .Values.azure.azureFile.storageClass }}
   storageClassName: ""
 {{- else if .Values.azure.azureFile.storageClass }}
   storageClassName: "{{ .Values.azure.azureFile.storageClass }}"

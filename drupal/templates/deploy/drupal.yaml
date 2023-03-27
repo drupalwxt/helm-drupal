@@ -36,7 +36,7 @@ spec:
       nodeSelector:
 {{ toYaml .Values.drupal.nodeSelector | indent 8 }}
 {{- end }}
-{{- if or (.Values.drupal.initContainers) (.Values.drupal.volumePermissions.enabled) (or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled)) }}
+{{- if or (.Values.drupal.initContainers) (.Values.drupal.volumePermissions.enabled) (or (.Values.azure.azureFile.enabled) (.Values.azure.sharedDisk.enabled)) }}
       initContainers:
 {{- if .Values.drupal.volumePermissions.enabled }}
         - name: set-volume-permissions
@@ -55,7 +55,7 @@ spec:
           securityContext:
             runAsUser: 0
 {{- end }}
-{{- if .Values.sharedDisk.enabled }}
+{{- if .Values.azure.sharedDisk.enabled }}
         - name: init-chown
           image: 'alpine:3.10'
           command:
@@ -67,7 +67,7 @@ spec:
             - name: files-public
               mountPath: /mnt/azure
 {{- end }}
-{{- if or (and .Values.azureFile.enabled .Values.azureFile.initMediaIconsFolder) (and .Values.sharedDisk.enabled .Values.sharedDisk.initMediaIconsFolder) }}
+{{- if or (and .Values.azure.azureFile.enabled .Values.azure.azureFile.initMediaIconsFolder) (and .Values.azure.sharedDisk.enabled .Values.azure.sharedDisk.initMediaIconsFolder) }}
         - name: init-media-icons-folder
           image: 'alpine:3.10'
           command:
@@ -263,7 +263,7 @@ spec:
       - name: files
         persistentVolumeClaim:
           claimName: {{ template "drupal.fullname" . }}-drupal
-{{- else if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
+{{- else if or (.Values.azure.azureFile.enabled) (.Values.azure.sharedDisk.enabled) }}
       - name: files-public
         persistentVolumeClaim:
           claimName: {{ include "drupal.fullname" . }}-public

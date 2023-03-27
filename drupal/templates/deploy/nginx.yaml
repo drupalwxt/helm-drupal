@@ -106,7 +106,7 @@ spec:
       - name: cm-nginx
         configMap:
           name: {{ include "drupal.fullname" . }}-nginx
-{{- if or (.Values.azureFile.enabled) (.Values.sharedDisk.enabled) }}
+{{- if or (.Values.azure.azureFile.enabled) (.Values.azure.sharedDisk.enabled) }}
       - name: files-public
         persistentVolumeClaim:
           claimName: {{ include "drupal.fullname" . }}-public

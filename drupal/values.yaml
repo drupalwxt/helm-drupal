@@ -447,6 +447,7 @@ azure:
         #   readOnly: false
 
         # csi:
+        #   driver: file.csi.azure.com
         #   volumeHandle: ""
         #   volumeAttributes:
         #     resourceGroup: ""
@@ -472,6 +473,7 @@ azure:
         #   readOnly: false
 
         # csi:
+        #   driver: file.csi.azure.com
         #   volumeHandle: ""
         #   volumeAttributes:
         #     resourceGroup: ""

@@ -56,6 +56,18 @@ azure:
       #   - cache=none
 ```
 
+> There are breaking changes in this release please use caution and carefully review the changes
+>
+> In particular please pay attention to the renamed values and the storage class name being changed
+> which will cause a delete / re-create to happen.
+>
+> You are strongly advised to use a command similar to the following to preview your manifests
+> ahead of time.
+
+```sh
+helm template . -f values-override.yaml --output-dir ../tpl
+```
+
 ## 0.19.x
 
 - Added HPA's for both Nginx and PHP-FPM

@@ -1,0 +1,32 @@
+{{- if or (.Values.azure.storageClass.create) -}}
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{ include "drupal.fullname" . }}-csi-azure
+  labels:
+    app.kubernetes.io/name: {{ include "drupal.name" . }}
+    helm.sh/chart: {{ include "drupal.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- if .Values.azure.azureFile.enabled -}}
+{{- if semverCompare ">=1.21-0" $.Capabilities.KubeVersion.GitVersion }}
+provisioner: file.csi.azure.com
+{{- else }}
+provisioner: kubernetes.io/azure-file
+{{- end }}
+parameters:
+  skuName: Premium_LRS
+  protocol: {{ .Values.azure.azureFile.protocol }}
+{{- end }}
+{{- if .Values.azure.sharedDisk.enabled -}}
+{{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+provisioner: disk.csi.azure.com
+{{- else }}
+provisioner: kubernetes.io/azure-disk
+{{- end }}
+parameters:
+  skuname: Premium_LRS
+  cachingMode: None
+  maxShares: "{{ .Values.azure.sharedDisk.maxShares }}"
+{{- end }}
+{{- end }}

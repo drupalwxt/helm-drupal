@@ -1,0 +1,31 @@
+{{- if .Values.azure.sharedDisk.enabled }}
+{{- if not .Values.azure.sharedDisk.disablePVCreation }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+{{- if .Values.azure.sharedDisk.annotations }}
+  annotations:
+{{ toYaml .Values.azure.sharedDisk.annotations | indent 4 }}
+{{- end }}
+  name: {{ include "drupal.fullname" . }}-private
+spec:
+  capacity:
+    storage: {{ .Values.azure.sharedDisk.size }}
+  accessModes:
+    - {{ .Values.azure.sharedDisk.accessMode }}
+{{- if .Values.azure.storageClass.create }}
+  storageClassName: {{ include "drupal.fullname" . }}-csi-azure
+{{- else if eq "-" .Values.azure.sharedDisk.storageClass }}
+  storageClassName: ""
+{{- else if .Values.azure.sharedDisk.storageClass }}
+  storageClassName: "{{ .Values.azure.sharedDisk.storageClass }}"
+{{- end }}
+{{- if .Values.azure.sharedDisk.private.spec }}
+{{ toYaml .Values.azure.sharedDisk.private.spec | indent 2 }}
+{{- end }}
+{{- if .Values.azure.sharedDisk.private.mountOptions }}
+  mountOptions:
+{{ toYaml .Values.azure.sharedDisk.private.mountOptions | indent 4 }}
+{{- end }}
+{{- end }}
+{{- end }}

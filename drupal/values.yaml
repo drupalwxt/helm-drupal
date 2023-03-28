@@ -415,75 +415,127 @@ external:
   # pdo:
   #   - PDO::MYSQL_ATTR_SSL_CA: '/etc/ssl/certs/ca-certificates.crt'
 
-# Shared Disk logic
-sharedDisk:
-  enabled: false
+azure:
+  storageClass:
+    create: false
 
-  # Uncomment next line if you want to disable specifying a volume name on the public and private PVCs
-  # disableVolumeName: true
+  # Azure File logic
+  azureFile:
+    enabled: false
 
-  # Uncomment next line if you want to disable the manual creation of PV and let the PVC handle it automatically
-  # disablePrivatePVCreation: true
+    # Uncomment next line if you want to disable specifying a volume name on the public and private PVCs
+    # disableVolumeName: true
 
-  initMediaIconsFolder: true
+    # Uncomment next line if you want to disable the manual creation of PV and let the PVC handle it automatically
+    # disablePVCreation: true
 
-  annotations: {}
-  accessMode: ReadWriteMany
-  size: 256Gi
-  # storageClass: "-"
+    initMediaIconsFolder: true
 
-  maxShares: 2
+    annotations: {}
+    accessMode: ReadWriteMany
+    size: 256Gi
+    # storageClass: "-"
 
-  private:
-    # mountOptions:
-    #   - dir_mode=0777
-    #   - file_mode=0777
-    #   - uid=82
-    #   - gid=82
-    #   - mfsymlinks
-    #   - nobrl
-    #   - cache=none
-    azureFile:
-      secretName: drupal-storage
-      shareName: drupal-private
-      readOnly: false
+    public:
+      spec: {}
+        # azureFile:
+        #   secretName: drupal-storage
+        #   shareName: drupal-public
+        #   secretNamespace: ""
+        #   readOnly: false
 
-# Azure File logic
-azureFile:
-  enabled: false
+        # csi:
+        #   volumeHandle: ""
+        #   volumeAttributes:
+        #     resourceGroup: ""
+        #     storageAccount: ""
+        #     shareName: public
+        #     protocol: nfs
 
-  # Uncomment next line if you want to disable specifying a volume name on the public and private PVCs
-  # disableVolumeName: true
+      # mountOptions:
+      #   - dir_mode=0777
+      #   - file_mode=0777
+      #   - uid=82
+      #   - gid=82
+      #   - mfsymlinks
+      #   - nobrl
+      #   - cache=none
 
-  initMediaIconsFolder: true
+    private:
+      spec: {}
+        # azureFile:
+        #   secretName: drupal-storage
+        #   shareName: drupal-private
+        #   secretNamespace: ""
+        #   readOnly: false
 
-  annotations: {}
-  accessMode: ReadWriteMany
-  size: 100Gi
-  storageClass: "azurefile"
+        # csi:
+        #   volumeHandle: ""
+        #   volumeAttributes:
+        #     resourceGroup: ""
+        #     storageAccount: ""
+        #     shareName: private
+        #     protocol: nfs
 
-  public:
-    azureFile:
-      secretName: drupal-storage
-      shareName: drupal-public
-      # secretNamespace: ""
-      readOnly: false
+      # mountOptions:
+      #   - dir_mode=0777
+      #   - file_mode=0777
+      #   - uid=82
+      #   - gid=82
+      #   - mfsymlinks
+      #   - nobrl
+      #   - cache=none
 
-  private:
-    azureFile:
-      secretName: drupal-storage
-      shareName: drupal-private
-      # secretNamespace: ""
-      readOnly: false
+  # Shared Disk logic
+  sharedDisk:
+    enabled: false
 
-  # mountOptions:
-  #   - dir_mode=0777
-  #   - file_mode=0777
-  #   - uid=82
-  #   - gid=82
-  #   - mfsymlinks
-  #   - nobrl
-  #   - cache=none
+    # Uncomment next line if you want to disable specifying a volume name on the public and private PVCs
+    # disableVolumeName: true
+
+    # Uncomment next line if you want to disable the manual creation of PV and let the PVC handle it automatically
+    # disablePVCreation: true
+
+    initMediaIconsFolder: true
+
+    annotations: {}
+    accessMode: ReadWriteMany
+    size: 256Gi
+    # storageClass: "-"
+
+    maxShares: 2
+
+    public:
+      spec: {}
+        # azureFile:
+        #   secretName: drupal-storage
+        #   shareName: drupal-public
+        #   readOnly: false
+
+      # mountOptions:
+      #   - dir_mode=0777
+      #   - file_mode=0777
+      #   - uid=82
+      #   - gid=82
+      #   - mfsymlinks
+      #   - nobrl
+      #   - cache=none
+
+    private:
+      spec: {}
+        # azureFile:
+        #   secretName: drupal-storage
+        #   shareName: drupal-private
+        #   readOnly: false
+
+      # mountOptions:
+      #   - dir_mode=0777
+      #   - file_mode=0777
+      #   - uid=82
+      #   - gid=82
+      #   - mfsymlinks
+      #   - nobrl
+      #   - cache=none
 
 ## Configuration values for the MySQL dependency sub-chart
 ## ref: https://github.com/bitnami/charts/blob/master/bitnami/mysql/README.md

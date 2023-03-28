@@ -202,7 +202,7 @@ spec:
           - name: files
             persistentVolumeClaim:
               claimName: {{ $fullName }}-drupal
-{{- else if or ($values.azureFile.enabled) ($values.sharedDisk.enabled) }}
+{{- else if or ($values.azure.azureFile.enabled) ($values.azure.sharedDisk.enabled) }}
           - name: files-public
             persistentVolumeClaim:
               claimName: {{ $fullName }}-public

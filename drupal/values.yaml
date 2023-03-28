@@ -436,6 +436,8 @@ azure:
     size: 256Gi
     # storageClass: "-"
 
+    protocol: smb
+
     public:
       spec: {}
         # azureFile:

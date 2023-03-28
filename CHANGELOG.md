@@ -1,4 +1,4 @@
-## 0.20.1-beta1
+## 0.20.1-beta2
 
 - Removed extra `values-<type>.yaml` files
 - The `azureFile` and `sharedDisk` spec have been moved to under `azure`

@@ -1,0 +1,31 @@
+{{- if .Values.azure.azureFile.enabled -}}
+{{- if not .Values.azure.azureFile.disablePVCreation }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+{{- if .Values.azure.azureFile.annotations }}
+  annotations:
+{{ toYaml .Values.azure.azureFile.annotations | indent 4 }}
+{{- end }}
+  name: {{ include "drupal.fullname" . }}-tmp
+spec:
+  capacity:
+    storage: {{ .Values.azure.azureFile.size }}
+  accessModes:
+    - {{ .Values.azure.azureFile.accessMode }}
+{{- if .Values.azure.storageClass.create }}
+  storageClassName: {{ include "drupal.fullname" . }}-csi-azure
+{{- else if eq "-" .Values.azure.azureFile.storageClass }}
+  storageClassName: ""
+{{- else if .Values.azure.azureFile.storageClass }}
+  storageClassName: "{{ .Values.azure.azureFile.storageClass }}"
+{{- end }}
+{{- if .Values.azure.azureFile.tmp.spec }}
+{{ toYaml .Values.azure.azureFile.tmp.spec | indent 2 }}
+{{- end }}
+{{- if .Values.azure.azureFile.tmp.mountOptions }}
+  mountOptions:
+{{ toYaml .Values.azure.azureFile.tmp.mountOptions | indent 4 }}
+{{- end }}
+{{- end }}
+{{- end }}

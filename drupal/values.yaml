@@ -490,6 +490,58 @@ azure:
       #   - nobrl
       #   - cache=none
 
+    backup:
+      spec: {}
+        # azureFile:
+        #   secretName: drupal-storage
+        #   shareName: drupal-backup
+        #   secretNamespace: ""
+        #   readOnly: false
+
+        # csi:
+        #   driver: file.csi.azure.com
+        #   volumeHandle: ""
+        #   volumeAttributes:
+        #     resourceGroup: ""
+        #     storageAccount: ""
+        #     shareName: backup
+        #     protocol: nfs
+
+      # mountOptions:
+      #   - dir_mode=0777
+      #   - file_mode=0777
+      #   - uid=82
+      #   - gid=82
+      #   - mfsymlinks
+      #   - nobrl
+      #   - cache=none
+
+    tmp:
+      spec: {}
+        # azureFile:
+        #   secretName: drupal-storage
+        #   shareName: drupal-tmp
+        #   secretNamespace: ""
+        #   readOnly: false
+
+        # csi:
+        #   driver: file.csi.azure.com
+        #   volumeHandle: ""
+        #   volumeAttributes:
+        #     resourceGroup: ""
+        #     storageAccount: ""
+        #     shareName: tmp
+        #     protocol: nfs
+
+      # mountOptions:
+      #   - dir_mode=0777
+      #   - file_mode=0777
+      #   - uid=82
+      #   - gid=82
+      #   - mfsymlinks
+      #   - nobrl
+      #   - cache=none
+
   # Shared Disk logic
   sharedDisk:
     enabled: false

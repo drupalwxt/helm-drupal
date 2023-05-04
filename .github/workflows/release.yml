@@ -5,6 +5,13 @@ on:
     branches:
       - master
 
+# Environment variables available to all jobs and steps in this workflow
+env:
+  K3D_VERSION: 5.4.4
+  HELM_VERSION: 3.11.3
+  KUBECTL_VERSION: 1.23.4
+  KUSTOMIZE_VERSION: 4.5.7
+
 jobs:
   release:
     # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
@@ -21,6 +28,41 @@ jobs:
       - name: Helm linting
         run: |
           ./test/lint.sh
+
+      - name: Dependencies
+        run: |
+          mkdir -p ${GITHUB_WORKSPACE}/bin/
+
+          # install kubectl
+          curl -L https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl -o ${GITHUB_WORKSPACE}/bin/kubectl && chmod +x ${GITHUB_WORKSPACE}/bin/kubectl
+
+          # install helm
+          curl -L https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz -o helm-v${HELM_VERSION}-linux-amd64.tar.gz && tar -zxvf helm-v${HELM_VERSION}-linux-amd64.tar.gz && chmod +x linux-amd64/helm && mv linux-amd64/helm ${GITHUB_WORKSPACE}/bin/helm
+
+          # install kustomize
+          curl -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz -o kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz && tar -zxvf kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz && chmod +x kustomize && mv kustomize ${GITHUB_WORKSPACE}/bin/kustomize
+
+          # install k3d
+          curl -s https://raw.githubusercontent.com/rancher/k3d/main/install.sh | TAG=v${K3D_VERSION} bash
+
+          # install taskfile
+          curl -sL https://taskfile.dev/install.sh | sh
+
+          # install yq
+          sudo snap install yq
+
+      - name: GitHub Path
+        run: |
+          echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
+
+      - name: Create Kubernetes Cluster
+        run: |
+          k3d cluster create --config=cluster/config.yaml
+
+      - name: Test Drupal Helm Chart
+        run: |
+          cd drupal
+          helm install drupal -f values.yaml .
 
       - name: Configure Git
         run: |

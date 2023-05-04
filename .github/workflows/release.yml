@@ -1,0 +1,45 @@
+name: Release Charts
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release:
+    # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
+    # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Helm linting
+        run: |
+          ./test/lint.sh
+
+      - name: Configure Git
+        run: |
+          git config user.name "chart-releaser"
+          git config user.email "chart-releaser@users.noreply.github.com"
+
+      - name: Install Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.8.1
+
+      - name: Add repositories
+        run: |
+          for repo in $(yq '.chart-repos[]' test/config.yaml); do helm repo add $(echo $repo | cut -d'=' -f1) $(echo $repo | cut -d'=' -f2) --force-update; done
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.4.0
+        with:
+          charts_dir: .
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          CR_SKIP_EXISTING: 'true'

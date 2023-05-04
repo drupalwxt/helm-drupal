@@ -184,14 +184,11 @@ spec:
               drush -y cache:rebuild
 
               # Migrate content
-              {{- if .Values.drupal.migrate }}
+              {{- if and .Values.drupal.migrate .Values.drupal.extensions.enabled }}
               drush -y migrate:import wxt_file
               drush -y migrate:import --group wxt --tag 'Core'
               drush -y migrate:import --group gcweb --tag 'Core'
               drush -y migrate:import --group gcweb --tag 'Menu'
-
-              # Disable maintenance mode
-              drush -y state:set system.maintenance_mode FALSE
               {{- end }}
 
               # Extra installation scripts

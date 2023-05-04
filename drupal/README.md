@@ -1,6 +1,6 @@
 # drupal
 
-![Version: 0.20.1](https://img.shields.io/badge/Version-0.20.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.5.1](https://img.shields.io/badge/AppVersion-4.5.1-informational?style=flat-square)
+![Version: 0.20.1-beta6](https://img.shields.io/badge/Version-0.20.1--beta6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.5.3](https://img.shields.io/badge/AppVersion-4.5.3-informational?style=flat-square)
 
 Drupal 8/9 variant of the Web Experience Toolkit (WxT).
 
@@ -85,7 +85,7 @@ helm install --name drupal -f values-override.yaml
 | drupal.cron.schedule | string | `"0 * * * *"` |  |
 | drupal.dbAvailabilityScript | string | `"until drush sql:query 'SHOW TABLES;'; do echo Waiting for DB; sleep 3; done\necho DB available"` | default script used to detect when the DB is ready |
 | drupal.disableDefaultFilesMount | bool | `false` |  |
-| drupal.extensions.enabled | bool | `false` |  |
+| drupal.extensions.enabled | bool | `true` |  |
 | drupal.extraInstallScripts | string | `""` |  |
 | drupal.extraSettings | string | `""` |  |
 | drupal.extraUpgradeScripts | string | `""` |  |
@@ -239,11 +239,14 @@ helm install --name drupal -f values-override.yaml
 |-----|------|---------|-------------|
 | azure.azureFile.accessMode | string | `"ReadWriteMany"` |  |
 | azure.azureFile.annotations | object | `{}` |  |
+| azure.azureFile.backup.spec | object | `{}` |  |
 | azure.azureFile.enabled | bool | `false` |  |
 | azure.azureFile.initMediaIconsFolder | bool | `true` |  |
 | azure.azureFile.private.spec | object | `{}` |  |
+| azure.azureFile.protocol | string | `"smb"` |  |
 | azure.azureFile.public.spec | object | `{}` |  |
 | azure.azureFile.size | string | `"256Gi"` |  |
+| azure.azureFile.tmp.spec | object | `{}` |  |
 
 ## Shared Disk
 

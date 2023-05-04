@@ -1,5 +1,6 @@
 ## 0.20.1-beta3
 
+- Enable all of the WxT extension modules for default site install (drupal.extensions.enabled)
 - Removed extra `values-<type>.yaml` files
 - The `azureFile` and `sharedDisk` spec have been moved to under `azure`
 - The storage class has been renamed and is now guarded via the `storageClass.create` flag

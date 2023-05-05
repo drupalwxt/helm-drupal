@@ -1,6 +1,6 @@
 # drupal
 
-![Version: 0.20.1-beta6](https://img.shields.io/badge/Version-0.20.1--beta6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.5.3](https://img.shields.io/badge/AppVersion-4.5.3-informational?style=flat-square)
+![Version: 0.20.1-beta7](https://img.shields.io/badge/Version-0.20.1--beta7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 4.5.3](https://img.shields.io/badge/AppVersion-4.5.3-informational?style=flat-square)
 
 Drupal 8/9 variant of the Web Experience Toolkit (WxT).
 
@@ -152,10 +152,6 @@ helm install --name drupal -f values-override.yaml
 | nginx.image | string | `"drupalwxt/site-wxt"` |  |
 | nginx.imagePullPolicy | string | `"IfNotPresent"` |  |
 | nginx.nodeSelector | object | `{}` |  |
-| nginx.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| nginx.persistence.annotations | object | `{}` |  |
-| nginx.persistence.enabled | bool | `false` |  |
-| nginx.persistence.size | string | `"8Gi"` |  |
 | nginx.real_ip_header | string | `"X-Forwarded-For"` |  |
 | nginx.replicas | int | `1` |  |
 | nginx.resolver | string | `"kube-dns.kube-system.svc.cluster.local"` |  |

@@ -108,8 +108,8 @@ spec:
               # Rebuild caches
               drush -y cache:rebuild
 
-              {{- if .Values.drupal.migrate }}
               # Migrate content
+              {{- if and .Values.drupal.migrate .Values.drupal.extensions.enabled }}
               drush -y migrate:import wxt_file
               drush -y migrate:import --group wxt --tag 'Core'
               drush -y migrate:import --group gcweb --tag 'Core'

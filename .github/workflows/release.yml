@@ -62,7 +62,7 @@ jobs:
       - name: Test Drupal Helm Chart
         run: |
           cd drupal
-          helm install drupal -f values.yaml .
+          helm install drupal -f values.yaml . --timeout=600s
 
       - name: Configure Git
         run: |

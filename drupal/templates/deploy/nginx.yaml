@@ -88,6 +88,11 @@ spec:
           name: cm-nginx
           readOnly: true
           subPath: nginx.conf
+{{- if not .Values.drupal.disableDefaultFilesMount }}
+        - name: files
+          mountPath: /var/www/html/sites/default/files
+          subPath: public
+{{- end }}
 {{- if not (eq .Values.drupal.siteRoot "/") }}
         - name: webroot
           mountPath: /webroot
@@ -106,10 +111,17 @@ spec:
       - name: cm-nginx
         configMap:
           name: {{ include "drupal.fullname" . }}-nginx
-{{- if or (.Values.azure.azureFile.enabled) (.Values.azure.sharedDisk.enabled) }}
+{{- if .Values.drupal.persistence.enabled }}
+      - name: files
+        persistentVolumeClaim:
+          claimName: {{ template "drupal.fullname" . }}-drupal
+{{- else if or (.Values.azure.azureFile.enabled) (.Values.azure.sharedDisk.enabled) }}
       - name: files-public
         persistentVolumeClaim:
           claimName: {{ include "drupal.fullname" . }}-public
+{{- else if not .Values.drupal.disableDefaultFilesMount }}
+      - name: files
+        emptyDir: {}
 {{- end }}
 {{- if not (eq .Values.drupal.siteRoot "/") }}
       - name: webroot

@@ -217,7 +217,7 @@ drupal:
   serviceType: ClusterIP
 
   persistence:
-    enabled: true
+    enabled: false
     ## A manually managed Persistent Volume and Claim
     ## Requires persistence.enabled: true
     ## If defined, PVC must be created manually before volume will be bound
@@ -766,12 +766,12 @@ varnish:
       if (req.url == "/_healthcheck" || req.url == "/healthcheck.txt") {
         return (synth(700, "HEALTHCHECK"));
       }
-      set req.backend_hint = backends.backend();
 
-      # Answer healthcheck
-      if (req.url == "/_healthcheck" || req.url == "/healthcheck.txt") {
-        return (synth(700, "HEALTHCHECK"));
-      }
+      # Answer splashpage
+      # if (req.url == "/") {
+      #   return (synth(701, "SPLASH"));
+      # }
+
       set req.backend_hint = backends.backend();
 
       # Always cache certain file types
@@ -807,11 +807,11 @@ varnish:
       set bereq.http.Host = "{{ include "backend.fullname" . }}-nginx";
 
       # Don't add 127.0.0.1 to X-Forwarded-For
-      set bereq.http.X-Forwarded-For = regsub(bereq.http.X-Forwarded-For, "(, )?127\.0\.0\.1$", "");
+      set bereq.http.X-Forwarded-For = regsub(bereq.http.X-Forwarded-For, "(, )?127\.0\.0\.\d$", "");
     }
 
     sub vcl_backend_response {
-      if (beresp.http.Location) {
+      if (beresp.http.Location && beresp.http.Location !~ "^https://api.twitter.com/") {
         set beresp.http.Location = regsub(
           beresp.http.Location,
           "^https?://[^/]+/",
@@ -852,14 +852,23 @@ varnish:
       # }
 
       # Add X-Frame-Options
-      if (req.url ~ "^/livechat" || req.url ~ "^/(en/|fr/)?entity-browser/") {
-        set resp.http.X-Frame-Options = "SAMEORIGIN";
-      } else {
-        set resp.http.X-Frame-Options = "DENY";
-      }
+      # if (req.url ~ "^/(en/|fr/)?media/") {
+      #   set resp.http.X-Frame-Options = "SAMEORIGIN";
+      # } else {
+      #   set resp.http.X-Frame-Options = "DENY";
+      # }
 
       set resp.http.X-Content-Type-Options = "nosniff";
       set resp.http.X-XSS-Protection = "1; mode=block";
+      set resp.http.Strict-Transport-Security = "max-age=2629800";
+
+      if (req.http.host ~ "site.example.ca") {
+        set resp.http.X-Robots-Tag = "noindex, nofollow";
+      }
+
+      if (req.url ~ "^/(en/|fr/)?(search/|recherche/)site/") {
+        set resp.http.X-Robots-Tag = "noindex, nofollow";
+      }
 
       # Happens when we have all the pieces we need, and are about to send the
       # response to the client.
@@ -893,6 +902,8 @@ varnish:
       # set resp.http.X-Frame-Options = "DENY";
       # set resp.http.X-XSS-Protection = "1; mode=block";
 
+      set resp.http.Strict-Transport-Security = "max-age=2629800";
+
       # if (resp.status >= 500 && resp.status <= 599) {
       #   set resp.http.Content-Type = "text/html; charset=utf-8";
       #   synthetic(std.fileread("/data/configuration/varnish/errors/503.html"));
@@ -920,6 +931,12 @@ varnish:
         synthetic ( {"OK"} );
         return (deliver);
       }
+      # elseif (resp.status == 701) { # Respond to splash
+      #   set resp.status = 200;
+      #   set resp.http.Content-Type = "text/html";
+      #   synthetic(std.fileread("/splash/index.html"));
+      #   return (deliver);
+      # }
     }
 
     ##

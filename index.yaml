@@ -3,6 +3,50 @@ entries:
   drupal:
   - apiVersion: v2
     appVersion: 5.0.1
+    created: "2023-12-03T18:31:22.991186204Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.bitnami.com/bitnami
+      version: 9.1.7
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.6.6
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.13.2
+    - condition: solr.enabled
+      name: solr
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.5.1
+    description: Drupal 9/10 variant of the Web Experience Toolkit (WxT).
+    digest: a009e714ec62b031569a8f14a6e46db5d33ffccf9601a3f6f47fb8e915e4699e
+    home: http://www.drupal.org/project/wxt
+    icon: https://bitnami.com/assets/stacks/drupal/img/drupal-stack-220x234.png
+    keywords:
+    - drupal
+    - cms
+    - wxt
+    - http
+    - web
+    - application
+    - php
+    maintainers:
+    - email: william.hearn@canada.ca
+      name: sylus
+    - email: zachary.seguin@canada.ca
+      name: zachomedia
+    name: drupal
+    sources:
+    - https://github.com/drupalwxt/wxt
+    type: application
+    urls:
+    - https://github.com/drupalwxt/helm-drupal/releases/download/drupal-1.0.0-beta1/drupal-1.0.0-beta1.tgz
+    version: 1.0.0-beta1
+  - apiVersion: v2
+    appVersion: 5.0.1
     created: "2023-11-03T01:38:48.995417781Z"
     dependencies:
     - condition: mysql.enabled
@@ -67,50 +111,6 @@ entries:
       version: 0.2.2
     description: Drupal 8/9 variant of the Web Experience Toolkit (WxT).
     digest: bf425ae79bc3bac0d8709ea2134308ec002cca050d6279f4bbeacaeb77b227d8
-    home: http://www.drupal.org/project/wxt
-    icon: https://bitnami.com/assets/stacks/drupal/img/drupal-stack-220x234.png
-    keywords:
-    - drupal
-    - cms
-    - wxt
-    - http
-    - web
-    - application
-    - php
-    maintainers:
-    - email: william.hearn@canada.ca
-      name: sylus
-    - email: zachary.seguin@canada.ca
-      name: zachomedia
-    name: drupal
-    sources:
-    - https://github.com/drupalwxt/wxt
-    type: application
-    urls:
-    - https://github.com/drupalwxt/helm-drupal/releases/download/drupal-0.20.1-beta8/drupal-0.20.1-beta8.tgz
-    version: 0.20.1-beta8
-  - apiVersion: v2
-    appVersion: 4.5.4
-    created: "2023-08-14T02:40:37.671256472Z"
-    dependencies:
-    - condition: mysql.enabled
-      name: mysql
-      repository: https://charts.bitnami.com/bitnami
-      version: 9.1.7
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://charts.bitnami.com/bitnami
-      version: 11.6.6
-    - condition: redis.enabled
-      name: redis
-      repository: https://charts.bitnami.com/bitnami
-      version: 16.13.2
-    - condition: varnish.enabled
-      name: varnish
-      repository: https://statcan.github.io/charts
-      version: 0.2.2
-    description: Drupal 8/9 variant of the Web Experience Toolkit (WxT).
-    digest: e5b32f6f5114bf628ab42d844f30afec2b2b21de32b11e7b7762246fca57db41
     home: http://www.drupal.org/project/wxt
     icon: https://bitnami.com/assets/stacks/drupal/img/drupal-stack-220x234.png
     keywords:
@@ -243,6 +243,50 @@ entries:
       version: 0.2.2
     description: Drupal 8/9 variant of the Web Experience Toolkit (WxT).
     digest: 7c160f4ac37287294c750fc405d14d6bc40ab3b2919278fb0ec0abe32b7a4a90
+    home: http://www.drupal.org/project/wxt
+    icon: https://bitnami.com/assets/stacks/drupal/img/drupal-stack-220x234.png
+    keywords:
+    - drupal
+    - cms
+    - wxt
+    - http
+    - web
+    - application
+    - php
+    maintainers:
+    - email: william.hearn@canada.ca
+      name: sylus
+    - email: zachary.seguin@canada.ca
+      name: zachomedia
+    name: drupal
+    sources:
+    - https://github.com/drupalwxt/wxt
+    type: application
+    urls:
+    - https://github.com/drupalwxt/helm-drupal/releases/download/drupal-0.20.1-beta8/drupal-0.20.1-beta8.tgz
+    version: 0.20.1-beta8
+  - apiVersion: v2
+    appVersion: 4.5.4
+    created: "2023-08-14T02:40:37.671256472Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.bitnami.com/bitnami
+      version: 9.1.7
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.6.6
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.13.2
+    - condition: varnish.enabled
+      name: varnish
+      repository: https://statcan.github.io/charts
+      version: 0.2.2
+    description: Drupal 8/9 variant of the Web Experience Toolkit (WxT).
+    digest: e5b32f6f5114bf628ab42d844f30afec2b2b21de32b11e7b7762246fca57db41
     home: http://www.drupal.org/project/wxt
     icon: https://bitnami.com/assets/stacks/drupal/img/drupal-stack-220x234.png
     keywords:
@@ -8701,4 +8745,23 @@ entries:
     urls:
     - https://drupalwxt.github.io/helm-drupal/solr-0.1.0.tgz
     version: 0.1.0
-generated: "2023-11-03T01:38:48.99675407Z"
+  varnish:
+  - apiVersion: v2
+    appVersion: 6.6.0
+    created: "2023-12-03T18:31:23.445627471Z"
+    description: A Helm chart for using Varnish.
+    digest: c1075ee23fbc13d697bb35cd9c61a965f34f2689d82b0c5f480b1ae5919a7b98
+    home: https://www.varnish-software.com
+    maintainers:
+    - email: william.hearn@canada.ca
+      name: sylus
+    - email: zachary.seguin@canada.ca
+      name: zachomedia
+    name: varnish
+    sources:
+    - https://github.com/varnish
+    type: application
+    urls:
+    - https://github.com/drupalwxt/helm-drupal/releases/download/varnish-0.2.5/varnish-0.2.5.tgz
+    version: 0.2.5
+generated: "2023-12-03T18:31:23.447044607Z"

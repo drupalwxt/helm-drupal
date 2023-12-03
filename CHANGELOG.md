@@ -1,4 +1,4 @@
-## 1.0.0-beta2
+## 1.0.0-beta3
 
 - Breaking Changes
   - Drupal 7 Chart has been removed

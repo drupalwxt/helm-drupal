@@ -81,9 +81,9 @@ drupal:
 
   ## Version of the application
   ##
-  ## Supported versions: d8
+  ## Supported versions: d9, d10
   ##
-  version: d9
+  version: d10
 
   services: ''
   #  |-

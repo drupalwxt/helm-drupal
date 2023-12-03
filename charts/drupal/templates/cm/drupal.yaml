@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "drupal.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "drupal.name" . }}
+    helm.sh/chart: {{ include "drupal.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+data:
+  php.ini: |
+    {{- tpl (.Files.Get "conf/php.ini") . | nindent 4 }}
+  opcache-recommended.ini: |
+    {{- tpl (.Files.Get "conf/opcache-recommended.ini") . | nindent 4 }}
+  www.conf: |
+    {{- tpl (.Files.Get "conf/www.conf") . | nindent 4 }}
+    {{- .Values.drupal.php.fpm | nindent 4}}
+  settings.php: |
+  {{- if eq "d9" .Values.drupal.version }}
+  {{- tpl (.Files.Get "conf/settings.d9.php") . | nindent 4 }}
+  {{- else if eq "d10" .Values.drupal.version }}
+  {{- tpl (.Files.Get "conf/settings.d10.php") . | nindent 4 }}
+  {{- else }}
+  settings.php:
+    <?php
+
+    // Unknown drupal version specified.
+  {{- end }}
+  {{- if .Values.drupal.services }}
+  services.yml: |
+    {{- .Values.drupal.services | nindent 4}}
+  {{- else }}
+  services.yml: ''
+  {{- end }}
+  {{- if .Values.drupal.extraSettings }}
+  extra.settings.php: |
+    <?php
+
+    {{- .Values.drupal.extraSettings | nindent 4}}
+  {{- end }}

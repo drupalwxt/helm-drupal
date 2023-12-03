@@ -1,0 +1,41 @@
+name: drupal
+apiVersion: v2
+type: application
+version: 1.0.0
+appVersion: 5.0.1
+description: Drupal 9/10 variant of the Web Experience Toolkit (WxT).
+keywords:
+- drupal
+- cms
+- wxt
+- http
+- web
+- application
+- php
+home: http://www.drupal.org/project/wxt
+icon: https://bitnami.com/assets/stacks/drupal/img/drupal-stack-220x234.png
+sources:
+- https://github.com/drupalwxt/wxt
+maintainers:
+- name: sylus
+  email: william.hearn@canada.ca
+- name: zachomedia
+  email: zachary.seguin@canada.ca
+engine: gotpl
+dependencies:
+  - name: mysql
+    version: 9.1.7
+    repository: https://charts.bitnami.com/bitnami
+    condition: mysql.enabled
+  - name: postgresql
+    version: 11.6.6
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+  - name: redis
+    version: 16.13.2
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
+  - name: solr
+    version: 7.5.1
+    repository: https://charts.bitnami.com/bitnami
+    condition: solr.enabled

@@ -1,3 +1,7 @@
+## 1.0.0
+
+- Breaking Changes
+
 ## 0.20.1-beta3
 
 - Enable all of the WxT extension modules for default site install (drupal.extensions.enabled)

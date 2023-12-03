@@ -1,0 +1,86 @@
+# Default values for varnish.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+varnishd:
+  ## Varnish image version
+  ## ref: https://hub.docker.com/_/varnish?tab=tags
+  ##
+  image: varnish
+
+  ## Note that by default we use appVersion to get image tag
+  # tag: 6.4.0
+
+  ## Optionally specify an array of imagePullSecrets.
+  ## Secrets must be manually created in the namespace.
+  ## ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
+  ##
+  # imagePullSecrets:
+  #   - name: myRegistryKeySecretName
+
+  ## Specify a imagePullPolicy
+  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
+  imagePullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+# annotations: {}
+
+destinationRule:
+  enabled: false
+  mode: DISABLE
+
+# Varnish port
+service:
+  type: ClusterIP
+  port: 80
+
+# The size of the Varnish memory
+# (e.g., 100M, 1G)
+memorySize: 100M
+
+# Admin
+admin:
+  enable: false
+  port: 6082
+
+  # Set admin secret
+  # (when unset, a random value is generated and should be copied from the secret into your values)
+  # secret: replaceme
+
+# Use this property to override the default content with
+# the --set-file option: helm install --set-file varnishConfigContent=varnish.vcl
+# varnishConfigContent:
+
+#   volumes:
+#   - name: example-cron-disk
+#     azureFile:
+#       shareName: ''
+#       secretName: ''
+
+#   volumeMounts:
+#   - name: example-cron-disk
+#     mountPath: /path/to/folder
+#     readOnly: true
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

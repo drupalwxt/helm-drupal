@@ -1,0 +1,188 @@
+{{- if .Values.drupal.install }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "drupal.fullname" . }}-site-install
+  labels:
+    app.kubernetes.io/name: {{ include "drupal.name" . }}
+    helm.sh/chart: {{ include "drupal.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "10"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  backoffLimit: {{ default "" .Values.drupal.backoffLimitInstall }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "drupal.name" . }}
+        helm.sh/chart: {{ include "drupal.chart" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+      annotations:
+        {{- if .Values.drupal.podAnnotations }}
+        {{- toYaml .Values.drupal.podAnnotations | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ include "drupal.serviceAccountName" . }}
+      {{- if .Values.drupal.tolerations }}
+      tolerations:
+        {{- toYaml .Values.drupal.tolerations | nindent 8 }}
+      {{- end }}
+      {{- if .Values.drupal.nodeSelector }}
+      nodeSelector:
+        {{- toYaml .Values.drupal.nodeSelector | nindent 8 }}
+      {{- end }}
+      restartPolicy: OnFailure
+      {{- if or (.Values.drupal.initContainers) (or (.Values.azure.azureFile.enabled) (.Values.azure.sharedDisk.enabled)) }}
+      initContainers:
+        {{- include "drupal.initContainers" . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: drush
+        image: "{{ .Values.drupal.image }}:{{ default .Chart.AppVersion .Values.drupal.tag }}"
+        imagePullPolicy: {{ default "" .Values.drupal.imagePullPolicy | quote }}
+        command:
+          - '/bin/sh'
+          - '-c'
+          - |
+              # Errors should fail the job
+              set -e
+
+              # Pre Install scripts
+              {{- if .Values.drupal.preInstallScripts }}
+              {{ toYaml .Values.drupal.preInstallScripts | nindent 14}}
+              {{- end }}
+
+              # Wait for DB to be available
+              {{ .Values.drupal.dbAvailabilityScript | nindent 14}}
+
+              {{- if .Values.redis.enabled }}
+              {{- if .Values.redis.sentinel.enabled }}
+              until [[ $(printf "AUTH $REDIS_PASSWORD\r\n" | nc -w 2 {{ .Release.Name }}-redis {{ .Values.redis.sentinel.service.sentinelPort }}) == $(printf "+OK\r\n") ]]; do echo Waiting for Redis; sleep 3; done
+              {{- else }}
+              until [[ $(printf "AUTH $REDIS_PASSWORD\r\n" | nc -w 2 {{ .Release.Name }}-redis-master {{ .Values.redis.master.service.ports.redis }}) == $(printf "+OK\r\n") ]]; do echo Waiting for Redis; sleep 3; done
+              {{- end }}
+              echo Redis available
+              {{- end }}
+
+              # Check Drush status
+              drush status || true
+
+              {{- if .Values.redis.enabled }}
+              # Flush redis caches
+              {{- if .Values.redis.sentinel.enabled }}
+              printf "AUTH $REDIS_PASSWORD\r\nFLUSHDB\r\n" | nc -w 2 {{ .Release.Name }}-redis {{ .Values.redis.sentinel.service.sentinelPort }}
+              {{- else }}
+              printf "AUTH $REDIS_PASSWORD\r\nFLUSHDB\r\n" | nc -w 2 {{ .Release.Name }}-redis-master {{ .Values.redis.master.service.ports.redis }}
+              {{- end }}
+              {{- end }}
+
+              # Run site install
+              {{- if .Values.drupal.restore.enabled }}
+
+              # Check to see if using specific backup else use latest CHECK IF NAME SAYS LATEST
+              {{- if eq .Values.drupal.restore.name "latest"}}
+              BACKUPNAME=$(ls -td -- /backup/* | head -n 1 | sed -e "s/\/backup\///")
+              {{- else }}
+              BACKUPNAME='{{ .Values.drupal.restore.name }}'
+              {{- end }}
+
+              echo "Restoring backup: $BACKUPNAME"
+
+              {{- if .Values.drupal.restore.db }}
+              echo "Drop database"
+              drush sql-drop -y
+              echo "Restore database"
+              gunzip -c /backup/$BACKUPNAME/db.sql.gz{{ if .Values.drupal.restore.convert }} | sed 's/MyISAM/InnoDB/g'{{ end }} | drush sql-cli
+              echo "Database restored"
+              {{- end }}
+
+              {{- if .Values.drupal.restore.files }}
+              echo "Deleting files"
+              # Errors from deleting should not fail the job
+              set +e
+              find sites/default/files/ -type f -print0 | xargs -0 rm
+              find sites/default/files/ -mindepth 1 -type d -print0 | xargs -0 rmdir
+              find /private/ -type f -print0 | xargs -0 rm
+              find /private/ -mindepth 1 -type d -print0 | xargs -0 rmdir
+              set -e
+
+              echo "Restoring files"
+              {{- if .Values.drupal.restore.suppressTarErrors }}
+              set +e
+              {{- end }}
+              tar -zxf /backup/$BACKUPNAME/files.tar.gz --directory sites/default/files --no-acls --no-xattrs -m --no-same-permissions --no-overwrite-dir
+              tar -zxf /backup/$BACKUPNAME/private.tar.gz --directory /private --no-acls --no-xattrs -m --no-same-permissions --no-overwrite-dir
+              {{- if .Values.drupal.restore.suppressTarErrors }}
+              set -e
+              {{- end }}
+              echo "Files restored"
+              {{- end }}
+
+              # Run database updates
+              {{- if .Values.drupal.cacheRebuildBeforeDatabaseMigration }}
+              drush -y cache:rebuild
+              {{- end }}
+              drush -y updatedb
+
+              {{- else }}
+              time drush site:install {{ .Values.drupal.profile }} \
+                --sites-subdir=default \
+                {{- if .Values.mysql.enabled }}
+                --db-url="mysql://{{ .Values.mysql.auth.username }}:$MYSQL_PASSWORD@{{ .Release.Name }}-mysql:{{ .Values.mysql.primary.service.ports.mysql }}/{{ .Values.mysql.auth.database }}" \
+                {{- else if .Values.postgresql.enabled }}
+                --db-url="pgsql://{{ .Values.postgresql.auth.username }}:$POSTGRES_PASSWORD@{{ .Release.Name }}-postgresql:{{ .Values.postgresql.primary.service.ports.postgresql }}/{{ .Values.postgresql.auth.database }}" \
+                {{- end }}
+                --account-name={{ .Values.drupal.username }} \
+                --account-pass=$DRUPAL_ADMIN_PASSWORD \
+                --site-mail={{ .Values.drupal.siteEmail | quote }} \
+                --site-name={{ .Values.drupal.siteName | quote }} \
+                {{- if .Values.drupal.extensions.enabled }}
+                wxt_extension_configure_form.select_all='TRUE' \
+                {{- end }}
+                install_configure_form.update_status_module='array(FALSE,FALSE)' \
+                --yes
+              {{- end }}
+
+              drush -y cache:rebuild
+
+              {{- if .Values.redis.enabled }}
+              # Enable redis
+              drush -y pm:enable redis
+              {{- end }}
+
+              # Rebuild caches
+              drush -y cache:rebuild
+
+              # Extra installation scripts
+              {{- if .Values.drupal.postInstallScripts }}
+              {{ toYaml .Values.drupal.postInstallScripts | nindent 14}}
+              {{- end }}
+        env:
+          {{- include "drupal.env" . | nindent 10 }}
+          {{- if .Values.extraEnvVars }}
+          {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 10 }}
+          {{- end }}
+        volumeMounts:
+          {{- include "drupal.volumeMounts" . | nindent 10 }}
+          {{- if .Values.drupal.volumeMounts }}
+          {{- include "common.tplvalues.render" (dict "value" .Values.drupal.volumeMounts "context" $) | nindent 10 }}
+          {{- end }}
+      {{- include "drupal.connectionPooler" . | nindent 6 }}
+      {{- if .Values.drupal.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml .Values.drupal.imagePullSecrets | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.drupal.securityContext | nindent 8 }}
+      volumes:
+      {{- include "drupal.volumes" . | nindent 6 }}
+      {{- include "drupal.connectionPooler.volumes" . | nindent 6 }}
+      {{- if .Values.drupal.restore.enabled }}
+      - name: backup
+        {{- toYaml .Values.drupal.restore.volume | nindent 8 }}
+      {{- end }}
+{{- end }}

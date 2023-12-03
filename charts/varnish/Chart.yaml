@@ -1,0 +1,15 @@
+apiVersion: v2
+type: application
+description: A Helm chart for using Varnish.
+name: varnish
+version: 0.2.5
+appVersion: 6.6.0
+home: https://www.varnish-software.com
+sources:
+- https://github.com/varnish
+maintainers:
+- name: sylus
+  email: william.hearn@canada.ca
+- name: zachomedia
+  email: zachary.seguin@canada.ca
+engine: gotpl

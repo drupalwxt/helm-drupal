@@ -1,2 +1,6 @@
 packages
 index.yaml
+
+tpl/
+!values-example-*.yaml
+values-*.yaml

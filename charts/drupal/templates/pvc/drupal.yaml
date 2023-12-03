@@ -1,0 +1,31 @@
+{{- if and .Values.drupal.persistence.enabled (not .Values.drupal.persistence.existingClaim) -}}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  {{- if .Values.drupal.persistence.annotations }}
+  annotations:
+    {{- toYaml .Values.drupal.persistence.annotations | nindent 4 }}
+  {{- end }}
+  name: {{ include "drupal.fullname" . }}-drupal
+  labels:
+    app.kubernetes.io/name: {{ include "drupal.name" . }}-drupal
+    helm.sh/chart: {{ include "drupal.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  accessModes:
+    - {{ .Values.drupal.persistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.drupal.persistence.size | quote }}
+      {{- if .Values.drupal.persistence.iops }}
+      iops: {{ .Values.drupal.persistence.iops | quote }}
+      {{- end }}
+  {{- if .Values.drupal.persistence.storageClass }}
+  {{- if (eq "-" .Values.drupal.persistence.storageClass) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: "{{ .Values.drupal.persistence.storageClass }}"
+  {{- end }}
+  {{- end }}
+{{- end }}

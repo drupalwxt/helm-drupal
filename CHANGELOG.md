@@ -1,3 +1,31 @@
+## 1.0.0-beta1
+
+- Breaking Changes
+  - Drupal 7 Chart has been removed
+  - The _helpers.tpl has been leveraged more to reduce duplication
+  - Switches to leverage an unprivileged nginx execution
+- Regular Changes
+  - Varnish chart now exists inside this repository
+  - All charts have been moved under the charts folder
+  - Network Policies have been added
+  - Chart has been tested against an OpenShift deployment model
+
+Upgrade Path:
+
+> The best way for this is to simply run helm template, store the rendered manifests in git
+> then run helm template again on the main branch of the repo and compare the output.
+
+```sh
+git checkout --branch master https://github.com/drupalwxt/helm-drupal
+cd helm-drupal/drupal
+helm template . -f values-override.yaml --output-dir ../tpl/override
+cd ../tpl/override && git init && git add . &&  git commit -m "feat(initial): Initial commit"
+cd ../../
+git checkout main
+cd charts/drupal
+helm template . -f values-override.yaml --output-dir ../tpl/override
+```
+
 ## 0.20.1-beta3
 
 - Enable all of the WxT extension modules for default site install (drupal.extensions.enabled)

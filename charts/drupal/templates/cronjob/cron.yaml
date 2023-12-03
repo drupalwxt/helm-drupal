@@ -1,0 +1,99 @@
+{{- if .Values.drupal.additionalCrons }}
+{{- $name := include "drupal.name" . -}}
+{{- $fullName := include "drupal.fullname" . -}}
+{{- $chartName := include "drupal.chart" . -}}
+{{- $chart := .Chart }}
+{{- $release := .Release }}
+{{- $values := .Values }}
+{{- $ctx := . }}
+{{- range $cronName, $cron := .Values.drupal.additionalCrons }}
+---
+{{- if semverCompare ">=1.21" $.Capabilities.KubeVersion.GitVersion }}
+apiVersion: batch/v1
+{{- else }}
+apiVersion: batch/v1beta1
+{{- end }}
+kind: CronJob
+metadata:
+  name: {{ $fullName }}-{{ $cronName }}
+  labels:
+    app.kubernetes.io/name: {{ $name }}
+    helm.sh/chart: {{ $chartName }}
+    app.kubernetes.io/instance: {{ $release.Name }}
+    app.kubernetes.io/managed-by: {{ $release.Service }}
+spec:
+  schedule: "{{ $cron.schedule }}"
+  startingDeadlineSeconds: 100
+  concurrencyPolicy: Replace
+  successfulJobsHistoryLimit: {{ $values.drupal.cron.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ $values.drupal.cron.failedJobsHistoryLimit }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: {{ $name }}
+            helm.sh/chart: {{ $chartName }}
+            app.kubernetes.io/instance: {{ $release.Name }}
+            app.kubernetes.io/managed-by: {{ $release.Service }}
+          {{- if $values.drupal.podAnnotations }}
+          annotations:
+            {{- toYaml $values.drupal.podAnnotations | nindent 12 }}
+          {{- end }}
+        spec:
+          serviceAccountName: {{ include "drupal.serviceAccountName" $ctx }}
+          {{- if $values.drupal.tolerations }}
+          tolerations:
+            {{- toYaml $values.drupal.tolerations | nindent 10 }}
+          {{- end }}
+          {{- if $values.drupal.nodeSelector }}
+          nodeSelector:
+            {{- toYaml $values.drupal.nodeSelector | nindent 12 }}
+          {{- end }}
+          restartPolicy: OnFailure
+          containers:
+          - name: cron
+            image: "{{ $values.drupal.image }}:{{ default $chart.AppVersion $values.drupal.tag }}"
+            imagePullPolicy: {{ default "" $values.drupal.imagePullPolicy | quote }}
+            command:
+            - '/bin/sh'
+            - '-c'
+            - |
+                # Errors should fail the job
+                set -e
+
+                # Pre Install scripts
+                {{- if $values.drupal.cron.preInstallScripts }}
+                {{ toYaml $values.drupal.cron.preInstallScripts | nindent 14}}
+                {{- end }}
+
+{{ $cron.script | indent 16 }}
+
+            env:
+              {{- include "drupal.env" $ctx | nindent 14 }}
+              {{- if $values.extraEnvVars }}
+              {{- include "common.tplvalues.render" (dict "value" $values.extraEnvVars "context" $) | nindent 14 }}
+              {{- end }}
+            volumeMounts:
+              {{- include "drupal.volumeMounts" $ctx | nindent 14 }}
+              {{- if $values.drupal.volumeMounts }}
+              {{- include "common.tplvalues.render" (dict "value" $values.drupal.volumeMounts "context" $) | nindent 14 }}
+              {{- end }}
+              {{- if $cron.volumeMounts }}
+              {{- include "common.tplvalues.render" (dict "value" $cron.volumeMounts "context" $) | nindent 14 }}
+              {{- end }}
+          {{- include "drupal.connectionPooler" $ctx | nindent 10 }}
+          {{- if $values.drupal.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml $values.drupal.imagePullSecrets | nindent 12 }}
+          {{- end }}
+          securityContext:
+            {{- toYaml $values.drupal.securityContext | nindent 12 }}
+          volumes:
+          {{- include "drupal.volumes" $ctx | nindent 10 }}
+          {{- include "drupal.connectionPooler.volumes" $ctx | nindent 10 }}
+          {{- if $cron.volumes }}
+          {{- toYaml $cron.volumes | nindent 10 }}
+          {{- end }}
+{{- end }}
+{{- end }}

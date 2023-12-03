@@ -8,18 +8,18 @@ This chart will deploy a highly available and performant enterprise Drupal site 
 - MySQL configured with ProxySQL
 - PostgreSQL configured with PGBouncer
 - Redis
+- Solr
 - Varnish
 
 Please consult our **Architectural Diagram** for a recommended setup on Azure:
 
-- **[Architectural Diagram][architectural_diagram]**
+- **[Architectural Diagram][diagram]**
 
 ## Individual Charts
 
 Further documentation can be found at the individual chart level:
 
-- **[Drupal 9][drupal9]**
-- **[Drupal 7][drupal7]**
+- **[Drupal 9/10][drupal]**
 
 ## Development
 
@@ -29,8 +29,7 @@ You can consult the `values.yaml` file for the full range of options available t
 
 > **Note:** We try out best to follow `https://semver.org` so that it's clear patch, minor and major releases for breaking changes.
 
-[architectural_diagram]: https://github.com/drupalwxt/helm-drupal/blob/master/docs/diagram-drupal.pdf
-[drupal7]: drupal7/README.md
-[drupal9]: drupal/README.md
+[diagram]: https://github.com/drupalwxt/helm-drupal/blob/master/docs/diagram-drupal.pdf
+[drupal]: drupal/README.md
 [helm]: https://helm.sh/
 [wxt]: https://drupalwxt.github.io

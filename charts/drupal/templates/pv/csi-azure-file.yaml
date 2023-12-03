@@ -1,0 +1,42 @@
+
+{{- $name := include "drupal.name" . -}}
+{{- $fullName := include "drupal.fullname" . -}}
+{{- $chartName := include "drupal.chart" . -}}
+{{- $chart := .Chart }}
+{{- $release := .Release }}
+{{- $values := .Values }}
+{{- $ctx := . }}
+{{- range $k, $v := .Values.azure.azureFile.folders }}
+{{- if $values.azure.azureFile.enabled -}}
+{{- if not $values.azure.azureFile.disablePVCreation }}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  {{- if $values.azure.azureFile.annotations }}
+  annotations:
+    {{- toYaml $values.azure.azureFile.annotations | nindent 4 }}
+  {{- end }}
+  name: {{ $fullName }}-{{ $v }}
+spec:
+  capacity:
+    storage: {{ $values.azure.azureFile.size }}
+  accessModes:
+    - {{ $values.azure.azureFile.accessMode }}
+  {{- if $values.azure.storageClass.create }}
+  storageClassName: {{ $fullName }}-csi-azure
+  {{- else if eq "-" $values.azure.azureFile.storageClass }}
+  storageClassName: ""
+  {{- else if $values.azure.azureFile.storageClass }}
+  storageClassName: "{{ $values.azure.azureFile.storageClass }}"
+  {{- end }}
+  {{- if $values.azure.azureFile.backup.spec }}
+  {{- toYaml $values.azure.azureFile.backup.spec | nindent 2 }}
+  {{- end }}
+  {{- if $values.azure.azureFile.backup.mountOptions }}
+  mountOptions:
+    {{- toYaml $values.azure.azureFile.backup.mountOptions | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

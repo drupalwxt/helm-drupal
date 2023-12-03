@@ -1,0 +1,36 @@
+{{- $name := include "drupal.name" . -}}
+{{- $fullName := include "drupal.fullname" . -}}
+{{- $chartName := include "drupal.chart" . -}}
+{{- $chart := .Chart }}
+{{- $release := .Release }}
+{{- $values := .Values }}
+{{- $ctx := . }}
+{{- range $k, $v := .Values.azure.sharedDisk.folders }}
+{{- if $values.azure.sharedDisk.enabled }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  annotations:
+    {{- if $values.azure.azureFile.enabled }}
+    {{- toYaml $values.azure.azureFile.annotations | nindent 4 }}
+    {{- end }}
+  name: {{ $fullName }}-{{ $v }}
+spec:
+  accessModes:
+    - {{ $values.azure.sharedDisk.accessMode }}
+  resources:
+    requests:
+      storage: {{ $values.azure.sharedDisk.size }}
+  {{- if not $values.azure.sharedDisk.disableVolumeName }}
+  volumeName: {{ $fullName }}-{{ $v }}
+  {{- end }}
+  {{- if $values.azure.storageClass.create }}
+  storageClassName: {{ $fullName }}-csi-azure
+  {{- else if eq "-" $values.azure.sharedDisk.storageClass }}
+  storageClassName: ""
+  {{- else if $values.azure.sharedDisk.storageClass }}
+  storageClassName: "{{ $values.azure.sharedDisk.storageClass }}"
+  {{- end }}
+{{- end }}
+{{- end }}

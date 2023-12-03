@@ -1,0 +1,41 @@
+{{- $name := include "drupal.name" . -}}
+{{- $fullName := include "drupal.fullname" . -}}
+{{- $chartName := include "drupal.chart" . -}}
+{{- $chart := .Chart }}
+{{- $release := .Release }}
+{{- $values := .Values }}
+{{- $ctx := . }}
+{{- range $k, $v := .Values.azure.sharedDisk.folders }}
+{{- if $values.azure.sharedDisk.enabled }}
+{{- if not $values.azure.sharedDisk.disablePVCreation }}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  {{- if $values.azure.sharedDisk.annotations }}
+  annotations:
+    {{- toYaml $values.azure.sharedDisk.annotations | nindent 4 }}
+  {{- end }}
+  name: {{ $fullName }}-{{ $v }}
+spec:
+  capacity:
+    storage: {{ $values.azure.sharedDisk.size }}
+  accessModes:
+    - {{ $values.azure.sharedDisk.accessMode }}
+  {{- if $values.azure.storageClass.create }}
+  storageClassName: {{ $fullName }}-csi-azure
+  {{- else if eq "-" $values.azure.sharedDisk.storageClass }}
+  storageClassName: ""
+  {{- else if $values.azure.sharedDisk.storageClass }}
+  storageClassName: "{{ $values.azure.sharedDisk.storageClass }}"
+  {{- end }}
+  {{- if $values.azure.sharedDisk.private.spec }}
+  {{- toYaml $values.azure.sharedDisk.private.spec | nindent 2 }}
+  {{- end }}
+  {{- if $values.azure.sharedDisk.private.mountOptions }}
+  mountOptions:
+    {{- toYaml $values.azure.sharedDisk.private.mountOptions | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

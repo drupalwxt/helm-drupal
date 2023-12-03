@@ -11,5 +11,8 @@ dependencies:
 - name: solr
   repository: https://charts.bitnami.com/bitnami
   version: 7.5.1
-digest: sha256:e15fab8d13baf578d5c6a36fa9a9cc1d852be8de47ed68064852c56e1512fc6b
-generated: "2023-12-02T22:05:14.382491-05:00"
+- name: varnish
+  repository: https://drupalwxt.github.io/helm-drupal
+  version: 0.2.5
+digest: sha256:15c38c6e588a0089ce4b2d440ff305fd69eabf7ce03dd730f0f7706699e3c7e6
+generated: "2023-12-03T14:02:23.367433-05:00"

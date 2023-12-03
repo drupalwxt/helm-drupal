@@ -1,4 +1,4 @@
-## 1.0.0-beta1
+## 1.0.0-beta2
 
 - Breaking Changes
   - Drupal 7 Chart has been removed
@@ -23,7 +23,7 @@ cd ../tpl/override && git init && git add . &&  git commit -m "feat(initial): In
 cd ../../
 git checkout main
 cd charts/drupal
-helm template . -f values-override.yaml --output-dir ../tpl/override
+helm template . -f values-override.yaml --output-dir ../../tpl/override
 ```
 
 ## 0.20.1-beta3

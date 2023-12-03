@@ -64,7 +64,7 @@ spec:
 
                 # Pre Install scripts
                 {{- if $values.drupal.cron.preInstallScripts }}
-                {{ toYaml $values.drupal.cron.preInstallScripts | nindent 14}}
+                {{ toYaml $values.drupal.cron.preInstallScripts | nindent 16 }}
                 {{- end }}
 
 {{ $cron.script | indent 16 }}

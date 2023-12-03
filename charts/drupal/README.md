@@ -1,6 +1,6 @@
 # drupal
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 5.0.1](https://img.shields.io/badge/AppVersion-5.0.1-informational?style=flat-square)
+![Version: 1.0.0-beta2](https://img.shields.io/badge/Version-1.0.0--beta2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 5.0.1](https://img.shields.io/badge/AppVersion-5.0.1-informational?style=flat-square)
 
 Drupal 9/10 variant of the Web Experience Toolkit (WxT).
 
@@ -25,6 +25,7 @@ Drupal 9/10 variant of the Web Experience Toolkit (WxT).
 | https://charts.bitnami.com/bitnami | postgresql | 11.6.6 |
 | https://charts.bitnami.com/bitnami | redis | 16.13.2 |
 | https://charts.bitnami.com/bitnami | solr | 7.5.1 |
+| https://drupalwxt.github.io/helm-drupal | varnish | 0.2.5 |
 
 ## Prerequisites
 
@@ -245,6 +246,10 @@ helm install --name drupal -f values-<override>.yaml
 | azure.azureFile.annotations | object | `{}` |  |
 | azure.azureFile.backup.spec | object | `{}` |  |
 | azure.azureFile.enabled | bool | `false` |  |
+| azure.azureFile.folders[0] | string | `"backup"` |  |
+| azure.azureFile.folders[1] | string | `"private"` |  |
+| azure.azureFile.folders[2] | string | `"public"` |  |
+| azure.azureFile.folders[3] | string | `"tmp"` |  |
 | azure.azureFile.initMediaIconsFolder | bool | `true` |  |
 | azure.azureFile.private.spec | object | `{}` |  |
 | azure.azureFile.protocol | string | `"smb"` |  |
@@ -259,6 +264,8 @@ helm install --name drupal -f values-<override>.yaml
 | azure.sharedDisk.accessMode | string | `"ReadWriteMany"` |  |
 | azure.sharedDisk.annotations | object | `{}` |  |
 | azure.sharedDisk.enabled | bool | `false` |  |
+| azure.sharedDisk.folders[0] | string | `"private"` |  |
+| azure.sharedDisk.folders[1] | string | `"public"` |  |
 | azure.sharedDisk.initMediaIconsFolder | bool | `true` |  |
 | azure.sharedDisk.maxShares | int | `2` |  |
 | azure.sharedDisk.private.spec | object | `{}` |  |

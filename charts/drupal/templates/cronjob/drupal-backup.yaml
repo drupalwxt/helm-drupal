@@ -55,7 +55,7 @@ spec:
 
                 # Pre Install scripts
                 {{- if .Values.drupal.cron.preInstallScripts }}
-                {{ .Values.drupal.cron.preInstallScripts | nindent 14}}
+                {{ .Values.drupal.cron.preInstallScripts | nindent 16 }}
                 {{- end }}
 
                 # Wait for DB to be available

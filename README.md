@@ -30,6 +30,6 @@ You can consult the `values.yaml` file for the full range of options available t
 > **Note:** We try out best to follow `https://semver.org` so that it's clear patch, minor and major releases for breaking changes.
 
 [diagram]: https://github.com/drupalwxt/helm-drupal/blob/main/docs/diagram-drupal.pdf
-[drupal]: drupal/
+[drupal]: charts/drupal/
 [helm]: https://helm.sh/
 [wxt]: https://drupalwxt.github.io

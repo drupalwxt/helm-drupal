@@ -4,6 +4,7 @@ chart-dirs:
 chart-repos:
   - bitnami=https://charts.bitnami.com/bitnami
   - helm=https://charts.helm.sh/stable
+  - drupal=https://drupalwxt.github.io/helm-drupal
 check-version-increment: true
 validate-maintainers: false
 excluded-charts:

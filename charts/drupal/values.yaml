@@ -213,6 +213,9 @@ drupal:
     # When enabled, a CronJob will run the job based on the schedule
     enabled: false
 
+    cleanup:
+      enabled: false
+
     # CronJob schedule (standard cron syntax)
     # Defaults to midnight
     schedule: '0 0 * * *'

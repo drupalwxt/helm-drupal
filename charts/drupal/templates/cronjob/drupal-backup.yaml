@@ -55,7 +55,7 @@ spec:
 
                 # Pre Install scripts
                 {{- if .Values.drupal.cron.preInstallScripts }}
-                {{ .Values.drupal.cron.preInstallScripts | nindent 16 }}
+                {{ toYaml .Values.drupal.cron.preInstallScripts | nindent 16 }}
                 {{- end }}
 
                 # Wait for DB to be available
@@ -64,6 +64,12 @@ spec:
 
                 # Check Drush status
                 drush status
+
+                # Cleanup old backups
+                {{- if .Values.drupal.backup.cleanup.enabled }}
+                find /backup/ -mindepth 1 -maxdepth 1 -type d -mtime +30 -exec echo "rm -rf " {} \; 2>&1;
+                find /backup/ -mindepth 1 -maxdepth 1 -type d -mtime +30 -exec rm -rf {} \; 2>&1;
+                {{- end }}
 
                 # Run cron
                 BACKUPNAME=$(date +%Y%m%d.%H%M%S)
@@ -87,6 +93,10 @@ spec:
               {{- include "drupal.volumeMounts" . | nindent 14 }}
               {{- if .Values.drupal.volumeMounts }}
               {{- include "common.tplvalues.render" (dict "value" .Values.drupal.volumeMounts "context" $) | nindent 14 }}
+              {{- end }}
+              {{- if .Values.drupal.backup.enabled }}
+              - name: backup
+                mountPath: /backup
               {{- end }}
           {{- include "drupal.connectionPooler" . | nindent 10 }}
           {{- if .Values.drupal.imagePullSecrets }}

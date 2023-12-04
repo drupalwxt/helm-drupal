@@ -1,6 +1,6 @@
 # drupal
 
-![Version: 1.0.0-beta2](https://img.shields.io/badge/Version-1.0.0--beta2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 5.0.1](https://img.shields.io/badge/AppVersion-5.0.1-informational?style=flat-square)
+![Version: 1.0.0-beta5](https://img.shields.io/badge/Version-1.0.0--beta5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 5.0.1](https://img.shields.io/badge/AppVersion-5.0.1-informational?style=flat-square)
 
 Drupal 9/10 variant of the Web Experience Toolkit (WxT).
 
@@ -73,6 +73,7 @@ helm install --name drupal -f values-<override>.yaml
 | drupal.autoscaling.minReplicas | int | `1` |  |
 | drupal.autoscaling.targetCPUUtilizationPercentage | int | `50` |  |
 | drupal.autoscaling.targetMemoryUtilizationPercentage | int | `50` |  |
+| drupal.backup.cleanup.enabled | bool | `false` |  |
 | drupal.backup.enabled | bool | `false` |  |
 | drupal.backup.filesArgs | string | `""` |  |
 | drupal.backup.privateArgs | string | `""` |  |
@@ -141,7 +142,7 @@ helm install --name drupal -f values-<override>.yaml
 | drupal.tolerations | list | `[]` |  |
 | drupal.updateDBBeforeDatabaseMigration | bool | `true` |  |
 | drupal.username | string | `"admin"` |  |
-| drupal.version | string | `"d9"` |  |
+| drupal.version | string | `"d10"` |  |
 | drupal.volumeMounts | string | `nil` |  |
 | drupal.volumePermissions.enabled | bool | `false` |  |
 | drupal.volumes | string | `nil` |  |

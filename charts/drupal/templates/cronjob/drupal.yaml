@@ -6,7 +6,7 @@ apiVersion: batch/v1beta1
 {{- end }}
 kind: CronJob
 metadata:
-  name: {{ template "drupal.fullname" . }}-drupal-cron
+  name: {{ template "drupal.fullname" . }}-cron
   labels:
     app.kubernetes.io/name: {{ include "drupal.name" . }}
     helm.sh/chart: {{ include "drupal.chart" . }}

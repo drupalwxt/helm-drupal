@@ -3,6 +3,54 @@ entries:
   drupal:
   - apiVersion: v2
     appVersion: 5.0.1
+    created: "2023-12-04T01:01:53.924840683Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.bitnami.com/bitnami
+      version: 9.1.7
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.6.6
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.13.2
+    - condition: solr.enabled
+      name: solr
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.5.1
+    - condition: varnish.enabled
+      name: varnish
+      repository: https://drupalwxt.github.io/helm-drupal
+      version: 0.2.5
+    description: Drupal 9/10 variant of the Web Experience Toolkit (WxT).
+    digest: 7e1f945f30da73b91d1ec35df88e192918fb806774545bf26def9e4f9f7c361f
+    home: http://www.drupal.org/project/wxt
+    icon: https://bitnami.com/assets/stacks/drupal/img/drupal-stack-220x234.png
+    keywords:
+    - drupal
+    - cms
+    - wxt
+    - http
+    - web
+    - application
+    - php
+    maintainers:
+    - email: william.hearn@canada.ca
+      name: sylus
+    - email: zachary.seguin@canada.ca
+      name: zachomedia
+    name: drupal
+    sources:
+    - https://github.com/drupalwxt/wxt
+    type: application
+    urls:
+    - https://github.com/drupalwxt/helm-drupal/releases/download/drupal-1.0.0-beta4/drupal-1.0.0-beta4.tgz
+    version: 1.0.0-beta4
+  - apiVersion: v2
+    appVersion: 5.0.1
     created: "2023-12-03T19:33:30.132473523Z"
     dependencies:
     - condition: mysql.enabled
@@ -8860,4 +8908,4 @@ entries:
     urls:
     - https://github.com/drupalwxt/helm-drupal/releases/download/varnish-0.2.5/varnish-0.2.5.tgz
     version: 0.2.5
-generated: "2023-12-03T19:33:30.134559905Z"
+generated: "2023-12-04T01:01:53.926280683Z"

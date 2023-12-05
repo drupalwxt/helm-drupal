@@ -109,7 +109,10 @@ spec:
           {{- include "drupal.volumes" . | nindent 10 }}
           {{- include "drupal.connectionPooler.volumes" . | nindent 10 }}
           - name: backup
-          {{- if .Values.drupal.backup.volume }}
+          {{- if and .Values.drupal.backup.persistence.enabled (not .Values.drupal.backup.persistence.existingClaim) }}
+            persistentVolumeClaim:
+              claimName: {{ template "drupal.fullname" . }}-backup
+          {{- else if .Values.drupal.backup.volume }}
             {{- toYaml .Values.drupal.backup.volume | nindent 12 }}
           {{- else }}
             emptyDir: {}

@@ -1,6 +1,6 @@
 # drupal
 
-![Version: 1.0.0-beta5](https://img.shields.io/badge/Version-1.0.0--beta5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 5.0.1](https://img.shields.io/badge/AppVersion-5.0.1-informational?style=flat-square)
+![Version: 1.0.0-beta6](https://img.shields.io/badge/Version-1.0.0--beta6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 5.0.1](https://img.shields.io/badge/AppVersion-5.0.1-informational?style=flat-square)
 
 Drupal 9/10 variant of the Web Experience Toolkit (WxT).
 
@@ -76,6 +76,10 @@ helm install --name drupal -f values-<override>.yaml
 | drupal.backup.cleanup.enabled | bool | `false` |  |
 | drupal.backup.enabled | bool | `false` |  |
 | drupal.backup.filesArgs | string | `""` |  |
+| drupal.backup.persistence.accessMode | string | `"ReadWriteOnce"` |  |
+| drupal.backup.persistence.annotations | object | `{}` |  |
+| drupal.backup.persistence.enabled | bool | `false` |  |
+| drupal.backup.persistence.size | string | `"8Gi"` |  |
 | drupal.backup.privateArgs | string | `""` |  |
 | drupal.backup.schedule | string | `"0 0 * * *"` |  |
 | drupal.backup.sqlDumpArgs | string | `""` |  |

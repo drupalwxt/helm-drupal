@@ -1,9 +1,9 @@
 name: drupal
 apiVersion: v2
 type: application
-version: 1.0.0-beta6
-appVersion: 5.0.1
-description: Drupal 9/10 variant of the Web Experience Toolkit (WxT).
+version: 1.0.0-beta7
+appVersion: 5.1.0
+description: Drupal 10 variant of the Web Experience Toolkit (WxT).
 keywords:
 - drupal
 - cms

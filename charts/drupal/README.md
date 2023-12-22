@@ -1,8 +1,8 @@
 # drupal
 
-![Version: 1.0.0-beta6](https://img.shields.io/badge/Version-1.0.0--beta6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 5.0.1](https://img.shields.io/badge/AppVersion-5.0.1-informational?style=flat-square)
+![Version: 1.0.0-beta7](https://img.shields.io/badge/Version-1.0.0--beta7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 5.1.0](https://img.shields.io/badge/AppVersion-5.1.0-informational?style=flat-square)
 
-Drupal 9/10 variant of the Web Experience Toolkit (WxT).
+Drupal 10 variant of the Web Experience Toolkit (WxT).
 
 **Homepage:** <http://www.drupal.org/project/wxt>
 

@@ -2,6 +2,54 @@ apiVersion: v1
 entries:
   drupal:
   - apiVersion: v2
+    appVersion: 5.2.0
+    created: "2024-01-18T23:22:31.372645386Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.bitnami.com/bitnami
+      version: 9.1.7
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.6.6
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.13.2
+    - condition: solr.enabled
+      name: solr
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.5.1
+    - condition: varnish.enabled
+      name: varnish
+      repository: https://drupalwxt.github.io/helm-drupal
+      version: 0.2.5
+    description: Drupal 10 variant of the Web Experience Toolkit (WxT).
+    digest: 94df30dc4601f83b9b89667ad962f03412ea2981bcd0f7d60bf73f294c8f211c
+    home: http://www.drupal.org/project/wxt
+    icon: https://bitnami.com/assets/stacks/drupal/img/drupal-stack-220x234.png
+    keywords:
+    - drupal
+    - cms
+    - wxt
+    - http
+    - web
+    - application
+    - php
+    maintainers:
+    - email: william.hearn@canada.ca
+      name: sylus
+    - email: zachary.seguin@canada.ca
+      name: zachomedia
+    name: drupal
+    sources:
+    - https://github.com/drupalwxt/wxt
+    type: application
+    urls:
+    - https://github.com/drupalwxt/helm-drupal/releases/download/drupal-1.0.0-beta7/drupal-1.0.0-beta7.tgz
+    version: 1.0.0-beta7
+  - apiVersion: v2
     appVersion: 5.1.0
     created: "2023-12-22T16:49:27.940205628Z"
     dependencies:
@@ -334,8 +382,8 @@ entries:
     - https://github.com/drupalwxt/helm-drupal/releases/download/drupal-1.0.0-beta1/drupal-1.0.0-beta1.tgz
     version: 1.0.0-beta1
   - apiVersion: v2
-    appVersion: 5.1.1
-    created: "2024-01-18T01:44:36.098137583Z"
+    appVersion: 5.0.1
+    created: "2023-11-03T01:38:48.995417781Z"
     dependencies:
     - condition: mysql.enabled
       name: mysql
@@ -354,7 +402,7 @@ entries:
       repository: https://statcan.github.io/charts
       version: 0.2.2
     description: Drupal 8/9 variant of the Web Experience Toolkit (WxT).
-    digest: 37cc7ea01a7470377536a326951f38a1110220fe3618b10989ea8df07c3c218a
+    digest: 5bf770559ee27f04d835199154e48db668fd051e580079cc6457fbd304b98f34
     home: http://www.drupal.org/project/wxt
     icon: https://bitnami.com/assets/stacks/drupal/img/drupal-stack-220x234.png
     keywords:
@@ -443,50 +491,6 @@ entries:
       version: 0.2.2
     description: Drupal 8/9 variant of the Web Experience Toolkit (WxT).
     digest: e5b32f6f5114bf628ab42d844f30afec2b2b21de32b11e7b7762246fca57db41
-    home: http://www.drupal.org/project/wxt
-    icon: https://bitnami.com/assets/stacks/drupal/img/drupal-stack-220x234.png
-    keywords:
-    - drupal
-    - cms
-    - wxt
-    - http
-    - web
-    - application
-    - php
-    maintainers:
-    - email: william.hearn@canada.ca
-      name: sylus
-    - email: zachary.seguin@canada.ca
-      name: zachomedia
-    name: drupal
-    sources:
-    - https://github.com/drupalwxt/wxt
-    type: application
-    urls:
-    - https://github.com/drupalwxt/helm-drupal/releases/download/drupal-0.20.1-beta8/drupal-0.20.1-beta8.tgz
-    version: 0.20.1-beta8
-  - apiVersion: v2
-    appVersion: 5.0.1
-    created: "2023-11-03T01:38:48.995417781Z"
-    dependencies:
-    - condition: mysql.enabled
-      name: mysql
-      repository: https://charts.bitnami.com/bitnami
-      version: 9.1.7
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://charts.bitnami.com/bitnami
-      version: 11.6.6
-    - condition: redis.enabled
-      name: redis
-      repository: https://charts.bitnami.com/bitnami
-      version: 16.13.2
-    - condition: varnish.enabled
-      name: varnish
-      repository: https://statcan.github.io/charts
-      version: 0.2.2
-    description: Drupal 8/9 variant of the Web Experience Toolkit (WxT).
-    digest: 5bf770559ee27f04d835199154e48db668fd051e580079cc6457fbd304b98f34
     home: http://www.drupal.org/project/wxt
     icon: https://bitnami.com/assets/stacks/drupal/img/drupal-stack-220x234.png
     keywords:
@@ -751,6 +755,50 @@ entries:
       version: 0.2.2
     description: Drupal 8/9 variant of the Web Experience Toolkit (WxT).
     digest: 62e3cab1624f27910e62160354081a33375bf1a6dbf9645164b4bbea711fd158
+    home: http://www.drupal.org/project/wxt
+    icon: https://bitnami.com/assets/stacks/drupal/img/drupal-stack-220x234.png
+    keywords:
+    - drupal
+    - cms
+    - wxt
+    - http
+    - web
+    - application
+    - php
+    maintainers:
+    - email: william.hearn@canada.ca
+      name: sylus
+    - email: zachary.seguin@canada.ca
+      name: zachomedia
+    name: drupal
+    sources:
+    - https://github.com/drupalwxt/wxt
+    type: application
+    urls:
+    - https://github.com/drupalwxt/helm-drupal/releases/download/drupal-0.20.1-beta8/drupal-0.20.1-beta8.tgz
+    version: 0.20.1-beta8
+  - apiVersion: v2
+    appVersion: 5.1.1
+    created: "2024-01-18T01:44:36.098137583Z"
+    dependencies:
+    - condition: mysql.enabled
+      name: mysql
+      repository: https://charts.bitnami.com/bitnami
+      version: 9.1.7
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.6.6
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.13.2
+    - condition: varnish.enabled
+      name: varnish
+      repository: https://statcan.github.io/charts
+      version: 0.2.2
+    description: Drupal 8/9 variant of the Web Experience Toolkit (WxT).
+    digest: 37cc7ea01a7470377536a326951f38a1110220fe3618b10989ea8df07c3c218a
     home: http://www.drupal.org/project/wxt
     icon: https://bitnami.com/assets/stacks/drupal/img/drupal-stack-220x234.png
     keywords:
@@ -9228,4 +9276,4 @@ entries:
     urls:
     - https://github.com/drupalwxt/helm-drupal/releases/download/varnish-0.2.5/varnish-0.2.5.tgz
     version: 0.2.5
-generated: "2024-01-18T23:00:54.830052782Z"
+generated: "2024-01-18T23:22:31.78383157Z"

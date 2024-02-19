@@ -31,7 +31,7 @@ drupal:
   image: drupalwxt/site-wxt
 
   ## Note that by default we use appVersion to get image tag
-  # tag: 5.2.0
+  # tag: 5.2.1
 
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
@@ -396,7 +396,7 @@ nginx:
   ## ref: https://hub.docker.com/drupalwxt/site-wxt/tags/
   image: drupalwxt/site-wxt
   ## Note that by default we use appVersion to get image tag
-  # tag: 5.2.0-nginx
+  # tag: 5.2.1-nginx
 
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.

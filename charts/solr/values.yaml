@@ -19,25 +19,32 @@ ingress:
 solr:
   # https://github.com/apache/solr-operator/blob/main/docs/solr-cloud/solr-cloud-crd.md#k8s-oper-user
   basicAuthSecret:
+  replicas: 1
   solrJavaMem: "-Xms1g -Xmx5g"
-  resources: {}
-    # requests:
-    #   memory: "256Mi"
-    #   cpu: "100m"
-    # limits:
-    #   memory: "1Gi"
-    #   cpu: "500m"
+  # customSolrKubeOptions:
+  #   podOptions:
+  #     livenessProbe:
+  #       periodSeconds: 15
+  #       timeoutSeconds: 5
+  #     readinessProbe:
+  #       timeoutSeconds: 5
+  #     resources:
+  #       limits:
+  #         memory: 5Gi
+  #       requests:
+  #         cpu: 250m
+  #         memory: 256Mi
   storage:
     size: 5Gi
 
 zookeeper:
   resources: {}
-    # requests:
-    #   memory: "256Mi"
-    #   cpu: "100m"
     # limits:
-    #   memory: "1Gi"
-    #   cpu: "500m"
+    #   memory: 2Gi
+    # requests:
+    #   cpu: 250m
+    #   memory: 256Mi
+
   storage:
     size: 5Gi
 

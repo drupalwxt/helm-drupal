@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "solr.labels" . | nindent 4 }}
 spec:
+  replicas: {{ .Values.solr.replicas }}
   dataStorage:
     persistent:
       reclaimPolicy: Delete
@@ -13,7 +14,6 @@ spec:
           resources:
             requests:
               storage: "{{ .Values.solr.storage.size }}"
-  replicas: {{ .Values.replicas }}
   solrImage:
     tag: "{{ default .Chart.AppVersion .Values.solr.tag }}"
   solrJavaMem: "{{ .Values.solr.solrJavaMem }}"
@@ -21,16 +21,10 @@ spec:
     authenticationType: Basic
     probesRequireAuth: true
     basicAuthSecret: {{ .Values.solr.basicAuthSecret }}
+  {{- if .Values.solr.customSolrKubeOptions }}
   customSolrKubeOptions:
-    podOptions:
-      livenessProbe:
-        timeoutSeconds: 5
-      readinessProbe:
-        timeoutSeconds: 5
-{{- if .Values.solr.resources }}
-      resources:
-{{ toYaml .Values.solr.resources | indent 8 }}
-{{- end  }}
+    {{- toYaml .Values.solr.customSolrKubeOptions | nindent 4 }}
+  {{- end }}
   zookeeperRef:
     provided:
       chroot: "/this/will/be/auto/created"
@@ -41,10 +35,10 @@ spec:
             requests:
               storage: "{{ .Values.zookeeper.storage.size }}"
       replicas: {{ .Values.replicas }}
+      {{- if .Values.zookeeper.resources }}
       zookeeperPodPolicy:
-{{- if .Values.zookeeper.resources }}
         resources:
-{{ toYaml .Values.zookeeper.resources | indent 10 }}
-{{- end  }}
+          {{- toYaml .Values.zookeeper.resources | nindent 10 }}
+      {{- end }}
   solrOpts: "-Dsolr.autoSoftCommit.maxTime=10000"
   solrGCTune: "-XX:SurvivorRatio=4 -XX:TargetSurvivorRatio=90 -XX:MaxTenuringThreshold=8"

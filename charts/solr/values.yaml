@@ -38,6 +38,7 @@ solr:
     size: 5Gi
 
 zookeeper:
+  replicas: 1
   resources: {}
     # limits:
     #   memory: 2Gi
@@ -54,7 +55,3 @@ zookeeper:
 destinationRule:
   enabled: false
   mode: DISABLE
-
-## Solr
-## Ref: https://github.com/drupalwxt/helm-drupal/tree/master/solr
-replicas: 1

@@ -34,7 +34,7 @@ spec:
           resources:
             requests:
               storage: "{{ .Values.zookeeper.storage.size }}"
-      replicas: {{ .Values.replicas }}
+      replicas: {{ .Values.zookeeper.replicas }}
       {{- if .Values.zookeeper.resources }}
       zookeeperPodPolicy:
         resources:

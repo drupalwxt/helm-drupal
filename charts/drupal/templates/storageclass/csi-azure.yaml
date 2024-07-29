@@ -15,7 +15,7 @@ provisioner: file.csi.azure.com
 provisioner: kubernetes.io/azure-file
 {{- end }}
 parameters:
-  skuName: Premium_LRS
+  skuName: {{ .Values.azure.azureFile.skuName }}
   protocol: {{ .Values.azure.azureFile.protocol }}
 {{- end }}
 {{- if .Values.azure.sharedDisk.enabled -}}
@@ -25,7 +25,7 @@ provisioner: disk.csi.azure.com
 provisioner: kubernetes.io/azure-disk
 {{- end }}
 parameters:
-  skuname: Premium_LRS
+  skuname: {{ .Values.azure.azureFile.skuName }}
   cachingMode: None
   maxShares: "{{ .Values.azure.sharedDisk.maxShares }}"
 {{- end }}

@@ -543,6 +543,7 @@ azure:
     size: 256Gi
     # storageClass: "-"
 
+    skuName: Standard_LRS
     protocol: smb
 
     public:

@@ -1,6 +1,6 @@
 # drupal
 
-![Version: 1.0.0-beta7](https://img.shields.io/badge/Version-1.0.0--beta7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 5.2.0](https://img.shields.io/badge/AppVersion-5.2.0-informational?style=flat-square)
+![Version: 1.0.0-beta8](https://img.shields.io/badge/Version-1.0.0--beta8-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 5.2.3](https://img.shields.io/badge/AppVersion-5.2.3-informational?style=flat-square)
 
 Drupal 10 variant of the Web Experience Toolkit (WxT).
 
@@ -98,6 +98,18 @@ helm install --name drupal -f values-<override>.yaml
 | drupal.extensions.enabled | bool | `true` |  |
 | drupal.extraSettings | string | `""` |  |
 | drupal.healthcheck.enabled | bool | `true` |  |
+| drupal.healthcheck.probes.livenessProbe.exec.command[0] | string | `"php-fpm-healthcheck"` |  |
+| drupal.healthcheck.probes.livenessProbe.failureThreshold | int | `3` |  |
+| drupal.healthcheck.probes.livenessProbe.initialDelaySeconds | int | `1` |  |
+| drupal.healthcheck.probes.livenessProbe.periodSeconds | int | `5` |  |
+| drupal.healthcheck.probes.livenessProbe.successThreshold | int | `1` |  |
+| drupal.healthcheck.probes.livenessProbe.timeoutSeconds | int | `1` |  |
+| drupal.healthcheck.probes.readinessProbe.exec.command[0] | string | `"php-fpm-healthcheck"` |  |
+| drupal.healthcheck.probes.readinessProbe.failureThreshold | int | `3` |  |
+| drupal.healthcheck.probes.readinessProbe.initialDelaySeconds | int | `1` |  |
+| drupal.healthcheck.probes.readinessProbe.periodSeconds | int | `5` |  |
+| drupal.healthcheck.probes.readinessProbe.successThreshold | int | `1` |  |
+| drupal.healthcheck.probes.readinessProbe.timeoutSeconds | int | `1` |  |
 | drupal.image | string | `"drupalwxt/site-wxt"` |  |
 | drupal.imagePullPolicy | string | `"IfNotPresent"` |  |
 | drupal.install | bool | `true` |  |
@@ -163,6 +175,21 @@ helm install --name drupal -f values-<override>.yaml
 | nginx.client_max_body_size | string | `"20m"` |  |
 | nginx.customLocations | string | `""` |  |
 | nginx.gzip | bool | `true` |  |
+| nginx.healthcheck.enabled | bool | `true` |  |
+| nginx.healthcheck.livenessProbe.failureThreshold | int | `3` |  |
+| nginx.healthcheck.livenessProbe.httpGet.path | string | `"/_healthz"` |  |
+| nginx.healthcheck.livenessProbe.httpGet.port | int | `8080` |  |
+| nginx.healthcheck.livenessProbe.initialDelaySeconds | int | `1` |  |
+| nginx.healthcheck.livenessProbe.periodSeconds | int | `5` |  |
+| nginx.healthcheck.livenessProbe.successThreshold | int | `1` |  |
+| nginx.healthcheck.livenessProbe.timeoutSeconds | int | `1` |  |
+| nginx.healthcheck.readinessProbe.failureThreshold | int | `3` |  |
+| nginx.healthcheck.readinessProbe.httpGet.path | string | `"/_healthz"` |  |
+| nginx.healthcheck.readinessProbe.httpGet.port | int | `8080` |  |
+| nginx.healthcheck.readinessProbe.initialDelaySeconds | int | `1` |  |
+| nginx.healthcheck.readinessProbe.periodSeconds | int | `5` |  |
+| nginx.healthcheck.readinessProbe.successThreshold | int | `1` |  |
+| nginx.healthcheck.readinessProbe.timeoutSeconds | int | `1` |  |
 | nginx.image | string | `"drupalwxt/site-wxt"` |  |
 | nginx.imagePullPolicy | string | `"IfNotPresent"` |  |
 | nginx.nodeSelector | object | `{}` |  |

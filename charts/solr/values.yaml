@@ -30,10 +30,11 @@ solr:
   #       timeoutSeconds: 5
   #     resources:
   #       limits:
-  #         memory: 5Gi
+  #         memory: "5Gi"
   #       requests:
-  #         cpu: 250m
-  #         memory: 256Mi
+  #         cpu: "250m"
+  #         memory: "256Mi"
+
   storage:
     size: 5Gi
 

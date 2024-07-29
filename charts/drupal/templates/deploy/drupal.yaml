@@ -56,11 +56,14 @@ spec:
           name: tcp-php-fpm
           protocol: TCP
         {{- if .Values.drupal.healthcheck.enabled }}
+        {{- if .Values.drupal.healthcheck.probes }}
+        {{- toYaml .Values.drupal.healthcheck.probes | nindent 8 }}
+        {{- else }}
         livenessProbe:
           exec:
             command:
               - php-fpm-healthcheck
-          initialDelaySeconds: 0
+          initialDelaySeconds: 1
           periodSeconds: 5
         readinessProbe:
           exec:
@@ -68,6 +71,7 @@ spec:
               - php-fpm-healthcheck
           initialDelaySeconds: 1
           periodSeconds: 5
+        {{- end }}
         {{- end }}
         env:
           {{- include "drupal.env" . | nindent 10 }}

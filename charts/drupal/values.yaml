@@ -259,6 +259,25 @@ drupal:
   # Requires https://github.com/renatomefi/php-fpm-healthcheck in the container.
   healthcheck:
     enabled: true
+    probes:
+      livenessProbe:
+        exec:
+          command:
+            - php-fpm-healthcheck
+        initialDelaySeconds: 1
+        periodSeconds: 5
+        timeoutSeconds: 1
+        successThreshold: 1
+        failureThreshold: 3
+      readinessProbe:
+        exec:
+          command:
+            - php-fpm-healthcheck
+        initialDelaySeconds: 1
+        periodSeconds: 5
+        timeoutSeconds: 1
+        successThreshold: 1
+        failureThreshold: 3
 
   # Enable all of the WxT extension modules
   extensions:
@@ -416,6 +435,31 @@ nginx:
   resolver: kube-dns.kube-system.svc.cluster.local
 
   serviceType: ClusterIP
+
+  healthcheck:
+    enabled: true
+    livenessProbe:
+      httpGet:
+        path: /_healthz
+        port: 8080
+      initialDelaySeconds: 1
+      periodSeconds: 5
+      timeoutSeconds: 1
+      successThreshold: 1
+      failureThreshold: 3
+    readinessProbe:
+      httpGet:
+        path: /_healthz
+        port: 8080
+      initialDelaySeconds: 1
+      periodSeconds: 5
+      timeoutSeconds: 1
+      successThreshold: 1
+      failureThreshold: 3
+
+  # rootLocationRules: |
+  #   deny 5.181.182.0/24;
+  #   allow all;
 
   customLocations: ""
 

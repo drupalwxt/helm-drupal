@@ -1,6 +1,6 @@
 # drupal
 
-![Version: 1.0.0-beta10](https://img.shields.io/badge/Version-1.0.0--beta10-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 5.2.3](https://img.shields.io/badge/AppVersion-5.2.3-informational?style=flat-square)
+![Version: 1.0.0-beta11](https://img.shields.io/badge/Version-1.0.0--beta11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 5.2.3](https://img.shields.io/badge/AppVersion-5.2.3-informational?style=flat-square)
 
 Drupal 10 variant of the Web Experience Toolkit (WxT).
 

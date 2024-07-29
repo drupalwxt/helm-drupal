@@ -57,7 +57,7 @@ spec:
           protocol: TCP
         {{- if .Values.drupal.healthcheck.enabled }}
         {{- if .Values.drupal.healthcheck.probes }}
-        {{- toYaml .Values.drupal.healthcheck.probes | nindent 10 }}
+        {{- toYaml .Values.drupal.healthcheck.probes | nindent 8 }}
         {{- else }}
         livenessProbe:
           exec:

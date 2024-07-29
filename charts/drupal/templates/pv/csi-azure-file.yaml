@@ -30,12 +30,14 @@ spec:
   {{- else if $values.azure.azureFile.storageClass }}
   storageClassName: "{{ $values.azure.azureFile.storageClass }}"
   {{- end }}
-  {{- if $values.azure.azureFile.$v.spec }}
-  {{- toYaml $values.azure.azureFile.$v.spec | nindent 2 }}
+  {{- with (index $values.azure.azureFile $v) }}
+  {{- if .spec }}
+  {{- toYaml .spec | nindent 2 }}
   {{- end }}
-  {{- if $values.azure.azureFile.$v.mountOptions }}
+  {{- if .mountOptions }}
   mountOptions:
-    {{- toYaml $values.azure.azureFile.$v.mountOptions | nindent 4 }}
+    {{- toYaml .mountOptions | nindent 4 }}
+  {{- end }}
   {{- end }}
 {{- end }}
 {{- end }}

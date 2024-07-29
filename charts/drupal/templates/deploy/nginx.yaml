@@ -64,6 +64,10 @@ spec:
         - name: https
           containerPort: 443
           protocol: TCP
+        {{- if .Values.nginx.healthcheck.enabled }}
+        {{- if .Values.nginx.healthcheck.probes }}
+        {{- toYaml .Values.nginx.healthcheck.probes | nindent 8 }}
+        {{- else }}
         readinessProbe:
           httpGet:
             path: /_healthz
@@ -76,6 +80,8 @@ spec:
             port: 8080
           initialDelaySeconds: 1
           periodSeconds: 5
+        {{- end }}
+        {{- end }}
         {{- if .Values.nginx.resources }}
         resources:
           {{- toYaml .Values.nginx.resources | nindent 10 }}

@@ -768,16 +768,17 @@ postgresql:
     tag: 14.3.0-debian-11-r3
   auth:
     enablePostgresUser: true
-    postgresPassword: ""
+    postgresPassword: "example"
     username: "wxt"
-    password: ""
+    password: "example"
     database: "wxt"
   primary:
     persistence:
       enabled: true
       # storageClass: managed-premium
       size: 128Gi
-    configuration: |-
+    configuration: ""
+    extendedConfiguration: |-
       listen_addresses='*'
       max_connections=200
       shared_buffers='512MB'
@@ -786,7 +787,6 @@ postgresql:
       maintenance_work_mem='32MB'
       min_wal_size='512MB'
       max_wal_size='512MB'
-      wal_buffer='8048kB'
       bytea_output='escape'
   volumePermissions:
     enabled: true
@@ -863,7 +863,7 @@ varnish:
     imagePullPolicy: IfNotPresent
   service:
     type: ClusterIP
-    port: 80
+    port: 8080
   resources: {}
   #  requests:
   #    memory: "512Mi"

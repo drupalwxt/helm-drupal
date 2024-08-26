@@ -62,7 +62,7 @@ spec:
           containerPort: 8080
           protocol: TCP
         - name: https
-          containerPort: 443
+          containerPort: 8443
           protocol: TCP
         {{- if .Values.nginx.healthcheck.enabled }}
         {{- if .Values.nginx.healthcheck.probes }}

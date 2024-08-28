@@ -1,6 +1,6 @@
 # Helm Charts for Drupal
 
-A **[Helm chart][helm]** for **[Drupal WxT][wxt]**.
+A **[Helm chart][helm]** for **Drupal**.
 
 This chart will deploy a highly available and performant enterprise Drupal site with the following integrations:
 
@@ -32,4 +32,3 @@ You can consult the `values.yaml` file for the full range of options available t
 [diagram]: https://github.com/drupalwxt/helm-drupal/blob/main/docs/diagram-drupal.pdf
 [drupal]: charts/drupal/
 [helm]: https://helm.sh/
-[wxt]: https://drupalwxt.github.io

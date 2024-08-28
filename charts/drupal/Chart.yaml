@@ -1,21 +1,19 @@
 name: drupal
 apiVersion: v2
 type: application
-version: 1.0.0-beta13
+version: 1.0.0-beta14
 appVersion: 5.2.3
-description: Drupal 10 variant of the Web Experience Toolkit (WxT).
+description: Helm Chart for deploying an enterprise-grade Drupal environment.
 keywords:
-- drupal
 - cms
-- wxt
+- drupal
 - http
-- web
-- application
 - php
-home: http://www.drupal.org/project/wxt
+- web
+home: http://www.drupal.org/project/drupal
 icon: https://bitnami.com/assets/stacks/drupal/img/drupal-stack-220x234.png
 sources:
-- https://github.com/drupalwxt/wxt
+- https://github.com/drupalwxt/helm-drupal
 maintainers:
 - name: sylus
   email: william.hearn@canada.ca

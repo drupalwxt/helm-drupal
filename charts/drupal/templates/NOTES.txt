@@ -58,33 +58,6 @@ kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush si {{ .Values.dr
 
 {{- end }}
 
-** Migrations
-
-{{- if or (not .Values.drupal.migrate) (not .Values.drupal.install) (not .Values.drupal.reconfigure) }}
-
-  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/instance={{ .Release.Name }},tier=drupal" -o jsonpath="{.items[0].metadata.name}")
-
-  # Baseline migrations for Canada.ca
-  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import wxt_file
-  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import --group wxt --tag 'Core'
-  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import --group gcweb --tag 'Core'
-  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import --group gcweb --tag 'Menu'
-
-  # Group migration
-  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import --group gcweb --tag 'Menu'
-  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush php-eval 'node_access_rebuild();'
-
-{{- else }}
-
-  Default Canada.ca content migrations have been run.
-
-  To perform additional migrations, run:
-
-  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/instance={{ .Release.Name }},tier=drupal" -o jsonpath="{.items[0].metadata.name}")
-  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush migrate:import $MIGRATION
-
-{{- end }}
-
 ** Login
 
 {{- if .Values.drupal.usePasswordFiles }}

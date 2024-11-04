@@ -2,7 +2,7 @@ name: drupal
 apiVersion: v2
 type: application
 version: 1.0.0-beta14
-appVersion: 5.2.3
+appVersion: 5.3.0
 description: Helm Chart for deploying an enterprise-grade Drupal environment.
 keywords:
 - cms

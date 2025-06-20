@@ -905,8 +905,10 @@ if (extension_loaded('redis')) {
   // Use for all bins otherwise specified.
   $settings['cache']['default'] = 'cache.backend.redis';
 
+  {{- if .Values.redis.queue.enabled }}
   // Use for all queues unless otherwise specified for a specific queue.
   $settings['queue_default'] = 'queue.redis';
+  {{- end }}
 
   // Or if you want to use reliable queue implementation.
   // $settings['queue_default'] = 'queue.redis_reliable';

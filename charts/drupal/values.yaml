@@ -816,6 +816,8 @@ proxysql:
 ## ref: https://github.com/bitnami/charts/blob/master/bitnami/redis/README.md
 redis:
   enabled: false
+  queue:
+    enabled: true
   replica:
     enabled: false
     replicaCount: 0

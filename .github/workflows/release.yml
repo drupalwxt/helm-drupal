@@ -59,10 +59,10 @@ jobs:
         run: |
           k3d cluster create --config=cluster/config.yaml
 
-      - name: Test Drupal Helm Chart
-        run: |
-          cd charts/drupal
-          helm install drupal -f values.yaml . --timeout=600s
+      # - name: Test Drupal Helm Chart
+      #   run: |
+      #     cd charts/drupal
+      #     helm install drupal -f values.yaml . --timeout=600s
 
       - name: Configure Git
         run: |

@@ -1,0 +1,115 @@
+name: Helm CI Shared
+
+on:
+  workflow_call:
+    inputs:
+      run_release:
+        required: false
+        type: boolean
+        default: false
+      database:
+        required: false
+        type: string
+        default: mysql
+
+env:
+  K3D_VERSION: 5.7.4
+  HELM_VERSION: 3.14.4
+  KUBECTL_VERSION: 1.29.2
+  KUSTOMIZE_VERSION: 5.3.0
+
+jobs:
+  helm-ci:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Helm linting
+        run: ./test/lint.sh
+
+      - name: Install toolchain
+        run: |
+          mkdir -p ${GITHUB_WORKSPACE}/bin/
+
+          # kubectl
+          curl -L https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
+            -o ${GITHUB_WORKSPACE}/bin/kubectl
+          chmod +x ${GITHUB_WORKSPACE}/bin/kubectl
+
+          # helm
+          curl -L https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz -o helm.tar.gz
+          tar -xzf helm.tar.gz
+          mv linux-amd64/helm ${GITHUB_WORKSPACE}/bin/helm
+          chmod +x ${GITHUB_WORKSPACE}/bin/helm
+
+          # kustomize
+          curl -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz -o kustomize.tar.gz
+          tar -xzf kustomize.tar.gz
+          mv kustomize ${GITHUB_WORKSPACE}/bin/kustomize
+          chmod +x ${GITHUB_WORKSPACE}/bin/kustomize
+
+          # k3d
+          curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | TAG=v${K3D_VERSION} bash
+
+          # taskfile
+          curl -sL https://taskfile.dev/install.sh | sh
+
+          # yq
+          curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 \
+            -o ${GITHUB_WORKSPACE}/bin/yq
+          chmod +x ${GITHUB_WORKSPACE}/bin/yq
+
+      - name: Add bin to PATH
+        run: echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
+
+      - name: Create Kubernetes Cluster
+        run: k3d cluster create --config=cluster/config.yaml
+
+      - name: Install Drupal Helm Chart
+        run: |
+          cd charts/drupal
+
+          if [ "${{ inputs.database }}" = "postgresql" ]; then
+            echo "Testing PostgreSQL install"
+            helm install drupal \
+              -f values.yaml \
+              --set mysql.enabled=false \
+              --set postgresql.enabled=true \
+              . --timeout=600s
+          else
+            echo "Testing MySQL install"
+            helm install drupal \
+              -f values.yaml \
+              --set mysql.enabled=true \
+              --set postgresql.enabled=false \
+              . --timeout=600s
+          fi
+
+      - name: Configure Git
+        if: inputs.run_release == true
+        run: |
+          git config user.name "chart-releaser"
+          git config user.email "chart-releaser@users.noreply.github.com"
+
+      - name: Add Helm repositories
+        if: inputs.run_release == true
+        run: |
+          for repo in $(yq '.chart-repos[]' test/config.yaml); do
+            helm repo add $(echo $repo | cut -d'=' -f1) $(echo $repo | cut -d'=' -f2) --force-update
+          done
+          helm repo update
+
+      - name: Run chart-releaser
+        if: inputs.run_release == true
+        uses: helm/chart-releaser-action@v1.6.0
+        with:
+          charts_dir: ./charts
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          CR_SKIP_EXISTING: "true"

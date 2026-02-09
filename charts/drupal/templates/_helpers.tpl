@@ -80,7 +80,7 @@ Create common environment variables for Drupal
     secretKeyRef:
       name: {{ template "drupal.fullname" . }}
       key: databasePassword
-{{- else if and .Values.mysql.enabled (not .Values.mysql.auth.usePasswordFiles) }}
+{{- else if and .Values.mysql.enabled }}
 - name: MYSQL_PASSWORD
   valueFrom:
     secretKeyRef:
@@ -97,8 +97,8 @@ Create common environment variables for Drupal
 - name: REDIS_PASSWORD
   valueFrom:
     secretKeyRef:
-      name: "{{ .Release.Name }}-redis"
-      key: redis-password
+      name: "{{ .Release.Name }}-redis-auth"
+      key: default-password
 {{- end }}
 {{- if not .Values.drupal.usePasswordFiles }}
 - name: DRUPAL_ADMIN_PASSWORD

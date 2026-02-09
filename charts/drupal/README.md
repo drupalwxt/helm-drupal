@@ -1,6 +1,6 @@
 # drupal
 
-![Version: 1.0.0-beta15](https://img.shields.io/badge/Version-1.0.0--beta15-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.1.0](https://img.shields.io/badge/AppVersion-6.1.0-informational?style=flat-square)
+![Version: 2.0.0-beta1](https://img.shields.io/badge/Version-2.0.0--beta1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.1.4](https://img.shields.io/badge/AppVersion-6.1.4-informational?style=flat-square)
 
 Helm Chart for deploying an enterprise-grade Drupal environment.
 
@@ -21,11 +21,11 @@ Helm Chart for deploying an enterprise-grade Drupal environment.
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | mysql | 9.1.7 |
-| https://charts.bitnami.com/bitnami | postgresql | 11.6.6 |
-| https://charts.bitnami.com/bitnami | redis | 16.13.2 |
+| https://charts.bitnami.com/bitnami | mysql(mysql) | 14.0.3 |
+| https://charts.bitnami.com/bitnami | postgresql | 15.5.38 |
 | https://charts.bitnami.com/bitnami | solr | 7.5.1 |
 | https://drupalwxt.github.io/helm-drupal | varnish | 0.2.5 |
+| https://valkey-io.github.io/valkey-helm | redis(valkey) | 0.9.3 |
 
 ## Prerequisites
 
@@ -154,11 +154,10 @@ helm install --name drupal -f values-<override>.yaml
 | drupal.smtp.host | string | `"mail"` |  |
 | drupal.smtp.starttls | bool | `true` |  |
 | drupal.smtp.tls | bool | `true` |  |
-| drupal.theme | string | `"theme-gcweb"` |  |
 | drupal.tolerations | list | `[]` |  |
 | drupal.updateDBBeforeDatabaseMigration | bool | `true` |  |
 | drupal.username | string | `"admin"` |  |
-| drupal.version | string | `"d10"` |  |
+| drupal.version | string | `"d11"` |  |
 | drupal.volumeMounts | string | `nil` |  |
 | drupal.volumePermissions.enabled | bool | `false` |  |
 | drupal.volumes | string | `nil` |  |
@@ -212,11 +211,21 @@ helm install --name drupal -f values-<override>.yaml
 | mysql.auth.rootPassword | string | `""` |  |
 | mysql.auth.username | string | `"wxt"` |  |
 | mysql.enabled | bool | `true` |  |
-| mysql.image.tag | string | `"8.0.29-debian-11-r3"` |  |
-| mysql.primary.configuration | string | `"[mysqld]\ndefault_authentication_plugin=mysql_native_password\nskip-name-resolve\nexplicit_defaults_for_timestamp\nbasedir=/opt/bitnami/mysql\nplugin_dir=/opt/bitnami/mysql/lib/plugin\nport=3306\nsocket=/opt/bitnami/mysql/tmp/mysql.sock\ndatadir=/bitnami/mysql/data\ntmpdir=/opt/bitnami/mysql/tmp\nmax_allowed_packet=16M\nbind-address=0.0.0.0\npid-file=/opt/bitnami/mysql/tmp/mysqld.pid\nlog-error=/opt/bitnami/mysql/logs/mysqld.log\ncharacter-set-server=UTF8\ncollation-server=utf8_general_ci\nslow_query_log=0\nslow_query_log_file=/opt/bitnami/mysql/logs/mysqld.log\nlong_query_time=10.0\ntransaction_isolation=\"READ-COMMITTED\"\n\nmax_allowed_packet = 256M\ninnodb_buffer_pool_size = 4096M\ninnodb_buffer_pool_instances = 4\ntable_definition_cache = 4096\ntable_open_cache = 8192\ninnodb_flush_log_at_trx_commit=2\n\n[client]\nport=3306\nsocket=/opt/bitnami/mysql/tmp/mysql.sock\ndefault-character-set=UTF8\nplugin_dir=/opt/bitnami/mysql/lib/plugin\n\n[manager]\nport=3306\nsocket=/opt/bitnami/mysql/tmp/mysql.sock\npid-file=/opt/bitnami/mysql/tmp/mysqld.pid"` |  |
+| mysql.image.pullPolicy | string | `"IfNotPresent"` |  |
+| mysql.image.registry | string | `"docker.io"` |  |
+| mysql.image.repository | string | `"bitnamilegacy/mysql"` |  |
+| mysql.image.tag | string | `"8.0"` |  |
+| mysql.primary.extraFlags | string | `"--default-authentication-plugin=mysql_native_password --skip-name-resolve --max_allowed_packet=256M --innodb_buffer_pool_size=4096M --innodb_buffer_pool_instances=4 --table_definition_cache=4096 --table_open_cache=8192 --innodb_flush_log_at_trx_commit=2 --skip_ssl --require_secure_transport=OFF"` |  |
 | mysql.primary.persistence.enabled | bool | `true` |  |
 | mysql.primary.persistence.size | string | `"128Gi"` |  |
+| mysql.primary.resources.limits.cpu | string | `"4000m"` |  |
+| mysql.primary.resources.limits.memory | string | `"8Gi"` |  |
+| mysql.primary.resources.requests.cpu | string | `"2000m"` |  |
+| mysql.primary.resources.requests.memory | string | `"4Gi"` |  |
 | mysql.volumePermissions.enabled | bool | `true` |  |
+| mysql.volumePermissions.image.registry | string | `"docker.io"` |  |
+| mysql.volumePermissions.image.repository | string | `"bitnamilegacy/os-shell"` |  |
+| mysql.volumePermissions.image.tag | string | `"12-debian-12"` |  |
 
 ### ProxySQL
 
@@ -241,12 +250,17 @@ helm install --name drupal -f values-<override>.yaml
 | postgresql.auth.postgresPassword | string | `"example"` |  |
 | postgresql.auth.username | string | `"wxt"` |  |
 | postgresql.enabled | bool | `false` |  |
-| postgresql.image.tag | string | `"14.3.0-debian-11-r3"` |  |
-| postgresql.primary.configuration | string | `""` |  |
+| postgresql.image.pullPolicy | string | `"IfNotPresent"` |  |
+| postgresql.image.registry | string | `"docker.io"` |  |
+| postgresql.image.repository | string | `"bitnamilegacy/postgresql"` |  |
+| postgresql.image.tag | string | `"16"` |  |
 | postgresql.primary.extendedConfiguration | string | `"listen_addresses='*'\nmax_connections=200\nshared_buffers='512MB'\nwork_mem='2048MB'\neffective_cache_size='512MB'\nmaintenance_work_mem='32MB'\nmin_wal_size='512MB'\nmax_wal_size='512MB'\nbytea_output='escape'"` |  |
 | postgresql.primary.persistence.enabled | bool | `true` |  |
 | postgresql.primary.persistence.size | string | `"128Gi"` |  |
 | postgresql.volumePermissions.enabled | bool | `true` |  |
+| postgresql.volumePermissions.image.registry | string | `"docker.io"` |  |
+| postgresql.volumePermissions.image.repository | string | `"bitnamilegacy/os-shell"` |  |
+| postgresql.volumePermissions.image.tag | string | `"12-debian-12"` |  |
 
 ### PGBouncer
 
@@ -310,25 +324,23 @@ helm install --name drupal -f values-<override>.yaml
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| redis.commonConfiguration | string | `"# Disable AOF https://redis.io/topics/persistence#append-only-file\nappendonly no\n# Disable RDB persistence.\nsave \"\""` |  |
-| redis.enabled | bool | `false` |  |
-| redis.master.disableCommands | list | `[]` |  |
-| redis.master.persistence.enabled | bool | `false` |  |
-| redis.master.service.type | string | `"ClusterIP"` |  |
+| redis.architecture | string | `"standalone"` |  |
+| redis.auth.aclUsers.default.password | string | `"secretpass"` |  |
+| redis.auth.aclUsers.default.permissions | string | `"~* &* +@all"` |  |
+| redis.auth.enabled | bool | `true` |  |
+| redis.configuration | string | `"appendonly no\nsave \"\""` |  |
+| redis.enabled | bool | `true` |  |
+| redis.primary.persistence.enabled | bool | `false` |  |
+| redis.primary.service.type | string | `"ClusterIP"` |  |
 | redis.queue.enabled | bool | `true` |  |
-| redis.replica.disableCommands | list | `[]` |  |
-| redis.replica.enabled | bool | `false` |  |
-| redis.replica.persistence.enabled | bool | `false` |  |
 | redis.replica.replicaCount | int | `0` |  |
-| redis.replica.service.type | string | `"ClusterIP"` |  |
-| redis.sentinel.enabled | bool | `false` |  |
 
 ## Varnish
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | varnish.affinity | object | `{}` |  |
-| varnish.enabled | bool | `false` |  |
+| varnish.enabled | bool | `true` |  |
 | varnish.nodeSelector | object | `{}` |  |
 | varnish.resources | object | `{}` |  |
 | varnish.service.port | int | `8080` |  |
@@ -337,7 +349,7 @@ helm install --name drupal -f values-<override>.yaml
 | varnish.varnishConfigContent | string | `"vcl 4.0;\n\nimport std;\nimport directors;\n\nbackend nginx {\n  .host = \"{{ include \"backend.fullname\" . }}-nginx\";\n  .host_header = \"{{ include \"backend.fullname\" . }}-nginx\";\n  .port = \"8080\";\n}\n\nsub vcl_init {\n  new backends = directors.round_robin();\n  backends.add_backend(nginx);\n}\n\nsub vcl_recv {\n  set req.http.X-Forwarded-Host = req.http.Host;\n  if (!req.http.X-Forwarded-Proto) {\n    set req.http.X-Forwarded-Proto = \"http\";\n  }\n\n  # Answer healthcheck\n  if (req.url == \"/_healthcheck\" || req.url == \"/healthcheck.txt\") {\n    return (synth(700, \"HEALTHCHECK\"));\n  }\n\n  # Answer splashpage\n  # if (req.url == \"/\") {\n  #   return (synth(701, \"SPLASH\"));\n  # }\n\n  set req.backend_hint = backends.backend();\n\n  # Always cache certain file types\n  # Remove cookies that Drupal doesn't care about\n  if (req.url ~ \"(?i)\\.(asc|dat|tgz|png|gif|jpeg|jpg|ico|swf|css|js)(\\?.*)?$\") {\n    unset req.http.Cookie;\n  } else if (req.http.Cookie) {\n    set req.http.Cookie = \";\" + req.http.Cookie;\n    set req.http.Cookie = regsuball(req.http.Cookie, \"; +\", \";\");\n    set req.http.Cookie = regsuball(req.http.Cookie, \";(SESS[a-z0-9]+|SSESS[a-z0-9]+|NO_CACHE)=\", \"; \\1=\");\n    set req.http.Cookie = regsuball(req.http.Cookie, \";[^ ][^;]*\", \"\");\n    set req.http.Cookie = regsuball(req.http.Cookie, \"^[; ]+|[; ]+$\", \"\");\n    if (req.http.Cookie == \"\") {\n        unset req.http.Cookie;\n    } else {\n        return (pass);\n    }\n  }\n  # If POST, PUT or DELETE, then don't cache\n  if (req.method == \"POST\" || req.method == \"PUT\" || req.method == \"DELETE\") {\n    return (pass);\n  }\n  # Happens before we check if we have this in cache already.\n  #\n  # Typically you clean up the request here, removing cookies you don't need,\n  # rewriting the request, etc.\n  return (hash);\n  #return (pass);\n}\n\nsub vcl_backend_fetch {\n  # NEW\n  set bereq.http.Host = \"{{ include \"backend.fullname\" . }}-nginx\";\n\n  # Don't add 127.0.0.1 to X-Forwarded-For\n  set bereq.http.X-Forwarded-For = regsub(bereq.http.X-Forwarded-For, \"(, )?127\\.0\\.0\\.\\d$\", \"\");\n}\n\nsub vcl_backend_response {\n  if (beresp.http.Location && beresp.http.Location !~ \"^https://api.twitter.com/\") {\n    set beresp.http.Location = regsub(\n      beresp.http.Location,\n      \"^https?://[^/]+/\",\n      bereq.http.X-Forwarded-Proto + \"://\" + bereq.http.X-Forwarded-Host + \"/\"\n    );\n  }\n  # Only cache select response codes\n  if (beresp.status == 200 || beresp.status == 203 || beresp.status == 204 || beresp.status == 206 || beresp.status == 300 || beresp.status == 301 || beresp.status == 404 || beresp.status == 405 || beresp.status == 410 || beresp.status == 414 || beresp.status == 501) {\n    # Cache for 5 minutes\n    set beresp.ttl = 5m;\n    set beresp.grace = 12h;\n    set beresp.keep = 24h;\n  } else {\n    set beresp.ttl = 0s;\n  }\n}\n\nsub vcl_deliver {\n  # Remove identifying information\n  unset resp.http.Server;\n  unset resp.http.X-Powered-By;\n  unset resp.http.X-Varnish;\n  unset resp.http.Via;\n\n  # Comment these for easier Drupal cache tag debugging in development.\n  unset resp.http.Cache-Tags;\n  unset resp.http.X-Drupal-Cache-Contexts;\n\n  # Add Content-Security-Policy\n  # set resp.http.Content-Security-Policy = \"default-src 'self' *.example.ca *.example.ca; style-src 'self' 'unsafe-inline' *.example.ca https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.example.ca  *.adobedtm.com use.fontawesome.com blob:; connect-src 'self' *.example.ca *.omtrdc.net *.demdex.net *.everesttech.net; img-src 'self' *.example.ca *.omtrdc.net *.demdex.net *.everesttech.net data:; font-src 'self' *.example.ca https://fonts.gstatic.com\";\n\n  # Add CORS Headers\n  # if (req.http.Origin ~ \"(?i)\\.example\\.ca$\") {\n  #   if (req.url ~ \"\\.(ttd|woff|woff2)(\\?.*)?$\") {\n  #     set resp.http.Access-Control-Allow-Origin = \"*\";\n  #     set resp.http.Access-Control-Allow-Methods = \"GET\";\n  #   }\n  # }\n\n  # Add X-Frame-Options\n  # if (req.url ~ \"^/(en/|fr/)?media/\") {\n  #   set resp.http.X-Frame-Options = \"SAMEORIGIN\";\n  # } else {\n  #   set resp.http.X-Frame-Options = \"DENY\";\n  # }\n\n  set resp.http.X-Content-Type-Options = \"nosniff\";\n  set resp.http.X-XSS-Protection = \"1; mode=block\";\n  set resp.http.Strict-Transport-Security = \"max-age=2629800\";\n\n  if (req.http.host ~ \"site.example.ca\") {\n    set resp.http.X-Robots-Tag = \"noindex, nofollow\";\n  }\n\n  if (req.url ~ \"^/(en/|fr/)?(search/|recherche/)site/\") {\n    set resp.http.X-Robots-Tag = \"noindex, nofollow\";\n  }\n\n  # Happens when we have all the pieces we need, and are about to send the\n  # response to the client.\n  #\n  # You can do accounting or modifying the final object here.\n  if (obj.hits > 0) {\n    set resp.http.X-Cache = \"HIT\";\n  } else {\n    set resp.http.X-Cache = \"MISS\";\n  }\n  # Handle errors\n  if ( (resp.status >= 500 && resp.status <= 599)\n    || resp.status == 400\n    || resp.status == 401\n    || resp.status == 403\n    || resp.status == 404) {\n    return (synth(resp.status));\n  }\n}\n\nsub vcl_synth {\n  # Remove identifying information\n  unset resp.http.Server;\n  unset resp.http.X-Powered-By;\n  unset resp.http.X-Varnish;\n  unset resp.http.Via;\n\n  # Add Content-Security-Policy\n  # set resp.http.Content-Security-Policy = \"default-src 'self' *.example.ca; style-src 'self' 'unsafe-inline' *.example.ca; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.example.ca *.adobedtm.com use.fontawesome.com blob:; connect-src 'self' *.example.ca *.omtrdc.net *.demdex.net *.everesttech.net; img-src 'self' *.example.ca data:;\";\n  # set resp.http.X-Content-Type-Options = \"nosniff\";\n  # set resp.http.X-Frame-Options = \"DENY\";\n  # set resp.http.X-XSS-Protection = \"1; mode=block\";\n\n  set resp.http.Strict-Transport-Security = \"max-age=2629800\";\n\n  # if (resp.status >= 500 && resp.status <= 599) {\n  #   set resp.http.Content-Type = \"text/html; charset=utf-8\";\n  #   synthetic(std.fileread(\"/data/configuration/varnish/errors/503.html\"));\n  #   return (deliver);\n  # } elseif (resp.status == 400) { # 400 - Bad Request\n  #   set resp.http.Content-Type = \"text/html; charset=utf-8\";\n  #   synthetic(std.fileread(\"/data/configuration/varnish/errors/400.html\"));\n  #   return (deliver);\n  # } elseif (resp.status == 401) { # 401 - Unauthorized\n  #   set resp.http.Content-Type = \"text/html; charset=utf-8\";\n  #   synthetic(std.fileread(\"/data/configuration/varnish/errors/401.html\"));\n  #   return (deliver);\n  # } elseif (resp.status == 403) { # 403 - Forbidden\n  #   set resp.http.Content-Type = \"text/html; charset=utf-8\";\n  #   synthetic(std.fileread(\"/data/configuration/varnish/errors/403.html\"));\n  #   return (deliver);\n  # } elseif (resp.status == 404) { # 404 - Not Found\n  #   set resp.http.Content-Type = \"text/html; charset=utf-8\";\n  #   synthetic(std.fileread(\"/data/configuration/varnish/errors/404.html\"));\n  #   return (deliver);\n  # } else\n  if (resp.status == 700) { # Respond to healthcheck\n    set resp.status = 200;\n    set resp.http.Content-Type = \"text/plain\";\n    synthetic ( {\"OK\"} );\n    return (deliver);\n  }\n  # elseif (resp.status == 701) { # Respond to splash\n  #   set resp.status = 200;\n  #   set resp.http.Content-Type = \"text/html\";\n  #   synthetic(std.fileread(\"/splash/index.html\"));\n  #   return (deliver);\n  # }\n}\n\n##\n# ERROR HANDLING\n##\n# sub vcl_backend_error {\n#   set beresp.http.Content-Type = \"text/html; charset=utf-8\";\n#   synthetic(std.fileread(\"/data/configuration/varnish/errors/503.html\"));\n#   return (deliver);\n# }\n"` |  |
 | varnish.varnishd.image | string | `"varnish"` |  |
 | varnish.varnishd.imagePullPolicy | string | `"IfNotPresent"` |  |
-| varnish.varnishd.tag | string | `"6.5.1"` |  |
+| varnish.varnishd.tag | string | `"6.6.2"` |  |
 
 <!-- Links Referenced -->
 

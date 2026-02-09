@@ -3,7 +3,7 @@
 set -euxo pipefail
 
 CHARTS="$@"
-CHART_TESTING_VERSION="3.7.0"
+CHART_TESTING_VERSION="3.14.0"
 
 if [ -z "$CHARTS" ]; then
   CHARTS="--all"

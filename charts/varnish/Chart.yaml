@@ -3,7 +3,7 @@ type: application
 description: A Helm chart for using Varnish.
 name: varnish
 version: 0.2.5
-appVersion: 6.6.0
+appVersion: 6.6.2
 home: https://www.varnish-software.com
 sources:
 - https://github.com/varnish

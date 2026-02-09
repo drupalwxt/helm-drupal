@@ -1,17 +1,26 @@
 # Helm Charts for Drupal
 
-A **[Helm chart][helm]** for **Drupal**.
+A **[Helm chart][helm]** for deploying **Drupal** on Kubernetes.
 
-This chart will deploy a highly available and performant enterprise Drupal site with the following integrations:
+This chart is designed to support a modern, stateless, enterprise-ready Drupal deployment with optional supporting services that can be enabled for local development, testing, or self-hosted environments.
 
-- File Storage (Azure Files) for Stateless Design
-- MySQL (optionally configured with ProxySQL)
-- PostgreSQL (optionally configured with PGBouncer)
-- Redis
-- Solr
-- Varnish
+## Included optional dependencies
 
-Please consult our **Architectural Diagram** for a recommended setup on Azure:
+The chart can deploy the following supporting services when enabled:
+
+- **File Storage** – Azure Files (for stateless Drupal file storage)
+- **MariaDB / MySQL-compatible database** (optional)
+- **PostgreSQL** (optional)
+- **Valkey (Redis-compatible cache & queue)** (optional)
+- **Apache Solr** (search)
+- **Varnish** (HTTP caching / reverse proxy)
+
+> These services are intended primarily for **development, CI, and self-contained deployments**.
+> In production environments, external managed services are typically recommended.
+
+## Architecture
+
+Please consult the **Architectural Diagram** for a recommended deployment pattern on Azure:
 
 - **[Architectural Diagram][diagram]**
 
@@ -19,15 +28,21 @@ Please consult our **Architectural Diagram** for a recommended setup on Azure:
 
 Further documentation can be found at the individual chart level:
 
-- **[Drupal 9/10][drupal]**
+- **[Drupal 10/11][drupal]**
 
-## Development
+## Versioning & Compatibility
 
-We strive to ensure for every significant changes made to the Helm Chart we will bump the `Chart.yaml` version so that there are no breaking changes introduced on your current release.
+We follow **semantic versioning** for chart releases:
 
-You can consult the `values.yaml` file for the full range of options available to you.
+- **Patch** → bug fixes and non-breaking improvements
+- **Minor** → new features and backwards-compatible changes
+- **Major** → breaking changes
 
-> **Note:** We try out best to follow `https://semver.org` so that it's clear patch, minor and major releases for breaking changes.
+For any significant chart change, the `Chart.yaml` version is bumped accordingly.
+
+You can consult the `values.yaml` file for the full set of configurable options.
+
+---
 
 [diagram]: https://github.com/drupalwxt/helm-drupal/blob/main/docs/diagram-drupal.pdf
 [drupal]: charts/drupal/

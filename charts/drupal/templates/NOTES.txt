@@ -76,11 +76,3 @@ kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush si {{ .Values.dr
 
   export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/instance={{ .Release.Name }},tier=drupal" -o jsonpath="{.items[0].metadata.name}")
   kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -- drush $YOUR_COMMAND
-
-** Istio
-
-Running with Istio sidecar injection?
-
-1. The jobs won't finish, so you'll need to monitor the pods and once they reach 1/2 ready, terminate the proxy:
-
-  kubectl exec -it $POD_NAME -n {{ .Release.Namespace }} -c istio-proxy -- kill -INT 1

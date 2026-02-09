@@ -1,24 +1,23 @@
 # k3d cluster create local --config=cluster/config.yaml
-apiVersion: k3d.io/v1alpha4
+apiVersion: k3d.io/v1alpha5
 kind: Simple
-image: docker.io/rancher/k3s:v1.23.4-k3s1
+image: rancher/k3s:v1.29.1-k3s1
 servers: 1
 agents: 1
 options:
   k3d:
     wait: true
-    timeout: "60s"
-    disableLoadbalancer: false
+    timeout: "120s"
     disableRollback: true
   k3s:
     extraArgs:
-      - arg: --no-deploy=traefik,metrics-server #--no-deploy=traefik, but we deploy ingress-nginx-controller by custom manifests in k3s
+      - arg: --disable=traefik,metrics-server,servicelb
         nodeFilters:
           - server:*
   kubeconfig:
     updateDefaultKubeconfig: true
     switchCurrentContext: true
 ports:
-  - port: 8081:80 # same as `--port '8081:80@loadbalancer'`
+  - port: 8081:80
     nodeFilters:
       - loadbalancer

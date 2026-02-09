@@ -850,13 +850,8 @@ if (extension_loaded('redis')) {
   $settings['cache']['default'] = 'cache.backend.redis';
   $settings['redis.connection']['interface'] = '{{ default "PhpRedis" .Values.redis.clientInterface }}';
   $settings['redis.connection']['scheme'] = 'tcp';
-  {{- if .Values.redis.sentinel.enabled }}
-  $settings['redis.connection']['host'] = ['{{ .Release.Name }}-redis:{{ .Values.redis.sentinel.service.sentinelPort }}'];
-  $settings['redis.connection']['instance']  = '{{ .Values.redis.sentinel.masterSet }}';
-  {{- else }}
-  $settings['redis.connection']['host'] = '{{ .Release.Name }}-redis-master';
-  $settings['redis.connection']['port'] = '{{ .Values.redis.master.service.ports.redis }}';
-  {{- end }}
+  $settings['redis.connection']['host'] = '{{ .Release.Name }}-redis';
+  $settings['redis.connection']['port'] = '{{ .Values.redis.service.port }}';
   $settings['redis.connection']['password'] = getenv('REDIS_PASSWORD') ?: '';
   $settings['redis.connection']['persistent'] = FALSE;
 

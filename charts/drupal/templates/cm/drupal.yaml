@@ -20,6 +20,8 @@ data:
   {{- tpl (.Files.Get "conf/settings.d9.php") . | nindent 4 }}
   {{- else if eq "d10" .Values.drupal.version }}
   {{- tpl (.Files.Get "conf/settings.d10.php") . | nindent 4 }}
+  {{- else if eq "d11" .Values.drupal.version }}
+  {{- tpl (.Files.Get "conf/settings.d11.php") . | nindent 4 }}
   {{- else }}
   settings.php:
     <?php

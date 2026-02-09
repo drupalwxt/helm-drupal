@@ -2,86 +2,15 @@ name: Release Charts
 
 on:
   push:
-    branches:
-      - main
-
-# Environment variables available to all jobs and steps in this workflow
-env:
-  K3D_VERSION: 5.4.4
-  HELM_VERSION: 3.11.3
-  KUBECTL_VERSION: 1.23.4
-  KUSTOMIZE_VERSION: 4.5.7
+    branches: [ main ]
 
 jobs:
   release:
-    # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
-    # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
-    permissions:
-      contents: write
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+    strategy:
+      matrix:
+        database: [ mysql, postgresql ]
 
-      - name: Helm linting
-        run: |
-          ./test/lint.sh
-
-      - name: Dependencies
-        run: |
-          mkdir -p ${GITHUB_WORKSPACE}/bin/
-
-          # install kubectl
-          curl -L https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl -o ${GITHUB_WORKSPACE}/bin/kubectl && chmod +x ${GITHUB_WORKSPACE}/bin/kubectl
-
-          # install helm
-          curl -L https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz -o helm-v${HELM_VERSION}-linux-amd64.tar.gz && tar -zxvf helm-v${HELM_VERSION}-linux-amd64.tar.gz && chmod +x linux-amd64/helm && mv linux-amd64/helm ${GITHUB_WORKSPACE}/bin/helm
-
-          # install kustomize
-          curl -L https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz -o kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz && tar -zxvf kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz && chmod +x kustomize && mv kustomize ${GITHUB_WORKSPACE}/bin/kustomize
-
-          # install k3d
-          curl -s https://raw.githubusercontent.com/rancher/k3d/main/install.sh | TAG=v${K3D_VERSION} bash
-
-          # install taskfile
-          curl -sL https://taskfile.dev/install.sh | sh
-
-          # install yq
-          sudo snap install yq
-
-      - name: GitHub Path
-        run: |
-          echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
-
-      - name: Create Kubernetes Cluster
-        run: |
-          k3d cluster create --config=cluster/config.yaml
-
-      # - name: Test Drupal Helm Chart
-      #   run: |
-      #     cd charts/drupal
-      #     helm install drupal -f values.yaml . --timeout=600s
-
-      - name: Configure Git
-        run: |
-          git config user.name "chart-releaser"
-          git config user.email "chart-releaser@users.noreply.github.com"
-
-      - name: Install Helm
-        uses: azure/setup-helm@v1
-        with:
-          version: v3.8.1
-
-      - name: Add repositories
-        run: |
-          for repo in $(yq '.chart-repos[]' test/config.yaml); do helm repo add $(echo $repo | cut -d'=' -f1) $(echo $repo | cut -d'=' -f2) --force-update; done
-
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.4.0
-        with:
-          charts_dir: ./charts
-        env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          CR_SKIP_EXISTING: 'true'
+    uses: ./.github/workflows/_helm-ci.yml
+    with:
+      database: ${{ matrix.database }}
+      run_release: true

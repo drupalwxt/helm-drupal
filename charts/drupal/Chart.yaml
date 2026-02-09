@@ -1,8 +1,8 @@
 name: drupal
 apiVersion: v2
 type: application
-version: 1.0.0-beta16
-appVersion: 6.1.0
+version: 2.0.0-beta1
+appVersion: 6.1.4
 description: Helm Chart for deploying an enterprise-grade Drupal environment.
 keywords:
 - cms
@@ -11,7 +11,7 @@ keywords:
 - php
 - web
 home: http://www.drupal.org/project/drupal
-icon: https://bitnami.com/assets/stacks/drupal/img/drupal-stack-220x234.png
+icon: https://www.drupal.org/files/druplicon-small.png
 sources:
 - https://github.com/drupalwxt/helm-drupal
 maintainers:
@@ -22,21 +22,23 @@ maintainers:
 engine: gotpl
 dependencies:
   - name: mysql
-    version: 9.1.7
+    version: 14.0.3
     repository: https://charts.bitnami.com/bitnami
+    alias: mysql
     condition: mysql.enabled
   - name: postgresql
-    version: 11.6.6
+    version: 15.5.38
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
-  - name: redis
-    version: 16.13.2
-    repository: https://charts.bitnami.com/bitnami
-    condition: redis.enabled
   - name: solr
     version: 7.5.1
     repository: https://charts.bitnami.com/bitnami
     condition: solr.enabled
+  - name: valkey
+    version: 0.9.3
+    repository: https://valkey-io.github.io/valkey-helm
+    alias: redis
+    condition: redis.enabled
   - name: varnish
     version: 0.2.5
     repository: https://drupalwxt.github.io/helm-drupal

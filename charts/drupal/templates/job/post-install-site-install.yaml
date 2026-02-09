@@ -56,15 +56,54 @@ spec:
               {{ toYaml .Values.drupal.preInstallScripts | nindent 14}}
               {{- end }}
 
+              {{- if .Values.mysql.enabled }}
+              echo "Fixing MariaDB client SSL defaults"
+              cat <<EOF > ~/.my.cnf
+              [client]
+              ssl = false
+              ssl-verify-server-cert = false
+              EOF
+
+              echo "Configuring Drush to disable MySQL SSL"
+              mkdir -p /var/www/html/drush
+              cat <<'EOF' > /var/www/html/drush/drush.yml
+              command:
+                sql:
+                  cli:
+                    options:
+                      extra: "--skip-ssl"
+                  connect:
+                    options:
+                      extra: "--skip-ssl"
+                  create:
+                    options:
+                      extra: "--skip-ssl"
+                  drop:
+                    options:
+                      extra: "--skip-ssl"
+                  dump:
+                    options:
+                      extra: "--skip-ssl"
+                  query:
+                    options:
+                      extra: "--skip-ssl"
+              EOF
+              {{- end }}
+
               # Wait for DB to be available
               {{ .Values.drupal.dbAvailabilityScript | nindent 14}}
 
               {{- if .Values.redis.enabled }}
-              {{- if .Values.redis.sentinel.enabled }}
-              until [[ $(printf "AUTH $REDIS_PASSWORD\r\n" | nc -w 2 {{ .Release.Name }}-redis {{ .Values.redis.sentinel.service.sentinelPort }}) == $(printf "+OK\r\n") ]]; do echo Waiting for Redis; sleep 3; done
-              {{- else }}
-              until [[ $(printf "AUTH $REDIS_PASSWORD\r\n" | nc -w 2 {{ .Release.Name }}-redis-master {{ .Values.redis.master.service.ports.redis }}) == $(printf "+OK\r\n") ]]; do echo Waiting for Redis; sleep 3; done
-              {{- end }}
+              PASS="$REDIS_PASSWORD"
+
+              until (
+                printf '*3\r\n$4\r\nAUTH\r\n$7\r\ndefault\r\n$%s\r\n%s\r\n*1\r\n$4\r\nPING\r\n' \
+                  "$(printf %s "$PASS" | wc -c)" "$PASS"
+                sleep 1
+              ) | nc -w 2 {{ .Release.Name }}-redis {{ .Values.redis.service.port }} | grep -q PONG; do
+                echo Waiting for Redis
+                sleep 3
+              done
               echo Redis available
               {{- end }}
 
@@ -72,12 +111,13 @@ spec:
               drush status || true
 
               {{- if .Values.redis.enabled }}
-              # Flush redis caches
-              {{- if .Values.redis.sentinel.enabled }}
-              printf "AUTH $REDIS_PASSWORD\r\nFLUSHDB\r\n" | nc -w 2 {{ .Release.Name }}-redis {{ .Values.redis.sentinel.service.sentinelPort }}
-              {{- else }}
-              printf "AUTH $REDIS_PASSWORD\r\nFLUSHDB\r\n" | nc -w 2 {{ .Release.Name }}-redis-master {{ .Values.redis.master.service.ports.redis }}
-              {{- end }}
+              PASS="$REDIS_PASSWORD"
+
+              (
+                printf '*3\r\n$4\r\nAUTH\r\n$7\r\ndefault\r\n$%s\r\n%s\r\n*1\r\n$7\r\nFLUSHDB\r\n' \
+                  "$(printf %s "$PASS" | wc -c)" "$PASS"
+                sleep 1
+              ) | nc -w 2 {{ .Release.Name }}-redis {{ .Values.redis.service.port }}
               {{- end }}
 
               # Run site install

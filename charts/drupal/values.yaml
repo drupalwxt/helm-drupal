@@ -75,15 +75,11 @@ drupal:
   # (NOTE: Root must always start with a / and should NOT have a trailing slash)
   siteRoot: /
 
-  # Default WxT Library theme (only used if install and/or reconfigure are enabled)
-  # Common options include: theme-wet-boew, theme-gcweb-legacy, theme-gcweb, ...
-  theme: theme-gcweb
-
   ## Version of the application
   ##
-  ## Supported versions: d9, d10
+  ## Supported versions: d9, d10, d11
   ##
-  version: d10
+  version: d11
 
   services: ''
   #  |-
@@ -706,78 +702,73 @@ azure:
 ## ref: https://github.com/bitnami/charts/blob/master/bitnami/mysql/README.md
 mysql:
   enabled: true
+
   image:
-    tag: 8.0.29-debian-11-r3
+    registry: docker.io
+    repository: bitnamilegacy/mysql
+    tag: "8.0"
+    pullPolicy: IfNotPresent
+
   auth:
     rootPassword: ""
     database: wxt
     username: wxt
     password: ""
+
   primary:
     persistence:
       enabled: true
-      # storageClass: managed-premium
       size: 128Gi
-    configuration: |-
-      [mysqld]
-      default_authentication_plugin=mysql_native_password
-      skip-name-resolve
-      explicit_defaults_for_timestamp
-      basedir=/opt/bitnami/mysql
-      plugin_dir=/opt/bitnami/mysql/lib/plugin
-      port=3306
-      socket=/opt/bitnami/mysql/tmp/mysql.sock
-      datadir=/bitnami/mysql/data
-      tmpdir=/opt/bitnami/mysql/tmp
-      max_allowed_packet=16M
-      bind-address=0.0.0.0
-      pid-file=/opt/bitnami/mysql/tmp/mysqld.pid
-      log-error=/opt/bitnami/mysql/logs/mysqld.log
-      character-set-server=UTF8
-      collation-server=utf8_general_ci
-      slow_query_log=0
-      slow_query_log_file=/opt/bitnami/mysql/logs/mysqld.log
-      long_query_time=10.0
-      transaction_isolation="READ-COMMITTED"
+    resources:
+      requests:
+        memory: 4Gi
+        cpu: 2000m
+      limits:
+        memory: 8Gi
+        cpu: 4000m
 
-      max_allowed_packet = 256M
-      innodb_buffer_pool_size = 4096M
-      innodb_buffer_pool_instances = 4
-      table_definition_cache = 4096
-      table_open_cache = 8192
-      innodb_flush_log_at_trx_commit=2
+    extraFlags: >-
+      --default-authentication-plugin=mysql_native_password
+      --skip-name-resolve
+      --max_allowed_packet=256M
+      --innodb_buffer_pool_size=4096M
+      --innodb_buffer_pool_instances=4
+      --table_definition_cache=4096
+      --table_open_cache=8192
+      --innodb_flush_log_at_trx_commit=2
+      --skip_ssl
+      --require_secure_transport=OFF
 
-      [client]
-      port=3306
-      socket=/opt/bitnami/mysql/tmp/mysql.sock
-      default-character-set=UTF8
-      plugin_dir=/opt/bitnami/mysql/lib/plugin
-
-      [manager]
-      port=3306
-      socket=/opt/bitnami/mysql/tmp/mysql.sock
-      pid-file=/opt/bitnami/mysql/tmp/mysqld.pid
   volumePermissions:
     enabled: true
+    image:
+      registry: docker.io
+      repository: bitnamilegacy/os-shell
+      tag: "12-debian-12"
 
 ## Configuration values for the PostgreSQL dependency sub-chart
 ## ref: https://github.com/bitnami/charts/blob/master/bitnami/postgresql/README.md
 postgresql:
   enabled: false
+
   image:
-    tag: 14.3.0-debian-11-r3
+    registry: docker.io
+    repository: bitnamilegacy/postgresql
+    tag: "16"
+    pullPolicy: IfNotPresent
+
   auth:
     enablePostgresUser: true
     postgresPassword: "example"
     username: "wxt"
     password: "example"
     database: "wxt"
+
   primary:
     persistence:
       enabled: true
-      # storageClass: managed-premium
       size: 128Gi
-    configuration: ""
+
     extendedConfiguration: |-
       listen_addresses='*'
       max_connections=200
@@ -788,8 +779,13 @@ postgresql:
       min_wal_size='512MB'
       max_wal_size='512MB'
       bytea_output='escape'
+
   volumePermissions:
     enabled: true
+    image:
+      registry: docker.io
+      repository: bitnamilegacy/os-shell
+      tag: "12-debian-12"
 
 pgbouncer:
   enabled: false
@@ -813,32 +809,29 @@ proxysql:
     stackSize: 1048576
 
 ## Configuration values for the Redis dependency sub-chart
-## ref: https://github.com/bitnami/charts/blob/master/bitnami/redis/README.md
+## ref: https://github.com/valkey-io/valkey-helm/blob/main/README.md
 redis:
-  enabled: false
+  enabled: true
+  architecture: standalone
+  auth:
+    enabled: true
+    aclUsers:
+      default:
+        permissions: "~* &* +@all"
+        password: "secretpass"
+
+  primary:
+    service:
+      type: ClusterIP
+    persistence:
+      enabled: false
+  replica:
+    replicaCount: 0
+  configuration: |-
+    appendonly no
+    save ""
   queue:
     enabled: true
-  replica:
-    enabled: false
-    replicaCount: 0
-    service:
-      type: ClusterIP
-    disableCommands: []
-    persistence:
-      enabled: false
-  sentinel:
-    enabled: false
-  master:
-    service:
-      type: ClusterIP
-    disableCommands: []
-    persistence:
-      enabled: false
-  commonConfiguration: |-
-    # Disable AOF https://redis.io/topics/persistence#append-only-file
-    appendonly no
-    # Disable RDB persistence.
-    save ""
 
 ## Configuration values for the Solr dependency sub-chart
 ## ref: https://github.com/bitnami/charts/blob/master/bitnami/redis/README.md
@@ -846,8 +839,9 @@ solr:
   enabled: false
   image:
     registry: docker.io
-    repository: bitnami/solr
-    tag: 9.2.1-debian-11-r16
+    repository: bitnamilegacy/solr
+    tag: "9.2.1-debian-11-r73"
+    pullPolicy: IfNotPresent
   cloudEnabled: false
   cloudBootstrap: false
   zookeeper:
@@ -856,12 +850,12 @@ solr:
   collectionReplicas: 1
 
 ## Configuration values for the Varnish dependency sub-chart
-## ref: https://github.com/statcan/charts/blob/master/stable/varnish/README.md
+## ref: https://github.com/drupalwxt/helm-drupal/blob/main/charts/varnish/README.md
 varnish:
-  enabled: false
+  enabled: true
   varnishd:
     image: varnish
-    tag: 6.5.1
+    tag: 6.6.2
     imagePullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1095,6 +1089,3 @@ varnish:
     #   synthetic(std.fileread("/data/configuration/varnish/errors/503.html"));
     #   return (deliver);
     # }
-
-solr:
-  enabled: false

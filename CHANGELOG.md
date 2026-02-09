@@ -1,3 +1,29 @@
+# Changelog
+
+## 2.0.0-beta1
+
+### ⚠️ Breaking Changes
+
+**Back up your MySQL/PostgreSQL databases before upgrading and proceed with caution.**
+
+- Replaced Bitnami Redis with **Valkey (official chart)**
+- Removed Redis Sentinel support
+- Switched Redis authentication from Bitnami password secret → **ACL-based auth**
+- Migrated MySQL, PostgreSQL, and Solr images to the **Bitnami Legacy registry**
+- Added global workaround to disable SSL requirements for MySQL connections in Drush
+
+### Known Issue
+
+- **Drush + MySQL SSL bug:** Drush attempts to enforce SSL when connecting to MySQL inside Kubernetes.
+  A global workaround is now applied using `--skip-ssl` to ensure site installation and maintenance commands succeed.
+
+### Changes
+
+- Upgraded MySQL and PostgreSQL chart versions
+- Updated Redis readiness and maintenance scripts to use RESP protocol (BusyBox `nc` compatible)
+- Added Helm CI matrix to test both MySQL and PostgreSQL installs
+- Reduced Bitnami-specific assumptions across templates and scripts
+
 ## 1.0.0-beta7
 
 - Breaking Changes

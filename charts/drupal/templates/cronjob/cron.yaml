@@ -8,7 +8,7 @@
 {{- $ctx := . }}
 {{- range $cronName, $cron := .Values.drupal.additionalCrons }}
 ---
-{{- if semverCompare ">=1.21" $.Capabilities.KubeVersion.GitVersion }}
+{{- if semverCompare ">=1.21-0" $.Capabilities.KubeVersion.GitVersion }}
 apiVersion: batch/v1
 {{- else }}
 apiVersion: batch/v1beta1

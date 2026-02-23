@@ -42,7 +42,7 @@ spec:
       initContainers:
       {{- if not (eq .Values.drupal.siteRoot "/") }}
         - name: init-site-root
-          image: 'alpine:3.10'
+          image: {{ .Values.drupal.initContainerImage | quote }}
           command:
             - /bin/sh
             - '-c'

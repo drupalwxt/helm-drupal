@@ -115,7 +115,7 @@ Create initContainers for Drupal
 {{- define "drupal.initContainers" -}}
 {{- if .Values.drupal.volumePermissions.enabled }}
 - name: set-volume-permissions
-  image: 'alpine:3.10'
+  image: {{ .Values.drupal.initContainerImage | quote }}
   command:
     - chown
     - '-R'
@@ -132,7 +132,7 @@ Create initContainers for Drupal
 {{- end }}
 {{- if .Values.azure.sharedDisk.enabled }}
 - name: init-chown
-  image: 'alpine:3.10'
+  image: {{ .Values.drupal.initContainerImage | quote }}
   command:
     - chown
     - '-R'
@@ -144,7 +144,7 @@ Create initContainers for Drupal
 {{- end }}
 {{- if or (and .Values.azure.azureFile.enabled .Values.azure.azureFile.initMediaIconsFolder) (and .Values.azure.sharedDisk.enabled .Values.azure.sharedDisk.initMediaIconsFolder) }}
 - name: init-media-icons-folder
-  image: 'alpine:3.10'
+  image: {{ .Values.drupal.initContainerImage | quote }}
   command:
     - mkdir
     - '-p'
@@ -155,7 +155,7 @@ Create initContainers for Drupal
 {{- end }}
 {{- if not (eq .Values.drupal.siteRoot "/") }}
 - name: init-site-root
-  image: 'alpine:3.10'
+  image: {{ .Values.drupal.initContainerImage | quote }}
   command:
     - /bin/sh
     - '-c'

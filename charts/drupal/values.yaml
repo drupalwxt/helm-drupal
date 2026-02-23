@@ -30,6 +30,9 @@ drupal:
   ##
   image: drupalwxt/site-wxt
 
+  ## Init container image for volume permission setup
+  initContainerImage: alpine:3.10
+
   ## Note that by default we use appVersion to get image tag
   # tag: 6.1.0
 

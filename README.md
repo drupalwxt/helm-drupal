@@ -4,6 +4,21 @@ A **[Helm chart][helm]** for deploying **Drupal** on Kubernetes.
 
 This chart is designed to support a modern, stateless, enterprise-ready Drupal deployment with optional supporting services that can be enabled for local development, testing, or self-hosted environments.
 
+## Quick start
+
+Add the DrupalWxT Helm repository:
+
+```h
+helm repo add drupalwxt https://drupalwxt.github.io/helm-drupal
+helm repo update
+```
+
+Install the chart:
+
+```sh
+helm install my-drupal drupalwxt/drupal
+```
+
 ## Included optional dependencies
 
 The chart can deploy the following supporting services when enabled:

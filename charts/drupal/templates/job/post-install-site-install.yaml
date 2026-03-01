@@ -136,7 +136,7 @@ spec:
               echo "Drop database"
               drush sql-drop -y
               echo "Restore database"
-              gunzip -c /backup/$BACKUPNAME/db.sql.gz{{ if .Values.drupal.restore.convert }} | sed 's/MyISAM/InnoDB/g'{{ end }} | drush sql-cli
+              gunzip -c /backup/$BACKUPNAME/db.sql.gz{{ if .Values.drupal.restore.convert }} | sed 's/MyISAM/InnoDB/g'{{ end }} | $(drush sql:connect)
               echo "Database restored"
               {{- end }}
 

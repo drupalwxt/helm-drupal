@@ -3,6 +3,54 @@ entries:
   drupal:
   - apiVersion: v2
     appVersion: 6.1.4
+    created: "2026-03-02T00:20:12.074325033Z"
+    dependencies:
+    - alias: mysql
+      condition: mysql.enabled
+      name: mysql
+      repository: https://charts.bitnami.com/bitnami
+      version: 14.0.3
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 15.5.38
+    - condition: solr.enabled
+      name: solr
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.5.1
+    - alias: redis
+      condition: redis.enabled
+      name: valkey
+      repository: https://valkey-io.github.io/valkey-helm
+      version: 0.9.3
+    - condition: varnish.enabled
+      name: varnish
+      repository: https://drupalwxt.github.io/helm-drupal
+      version: 0.2.5
+    description: Helm Chart for deploying an enterprise-grade Drupal environment.
+    digest: 0ee65b2044015843fa0235aa82c7373eaf9f33525512e4ff8babf9ed77dd22a1
+    home: http://www.drupal.org/project/drupal
+    icon: https://www.drupal.org/files/druplicon-small.png
+    keywords:
+    - cms
+    - drupal
+    - http
+    - php
+    - web
+    maintainers:
+    - email: william.hearn@canada.ca
+      name: sylus
+    - email: zachary.seguin@canada.ca
+      name: zachomedia
+    name: drupal
+    sources:
+    - https://github.com/drupalwxt/helm-drupal
+    type: application
+    urls:
+    - https://github.com/drupalwxt/helm-drupal/releases/download/drupal-2.0.0-beta4/drupal-2.0.0-beta4.tgz
+    version: 2.0.0-beta4
+  - apiVersion: v2
+    appVersion: 6.1.4
     created: "2026-03-01T23:22:27.165014194Z"
     dependencies:
     - alias: mysql
@@ -10354,4 +10402,4 @@ entries:
     urls:
     - https://github.com/drupalwxt/helm-drupal/releases/download/varnish-0.2.5/varnish-0.2.5.tgz
     version: 0.2.5
-generated: "2026-03-01T23:25:47.88015126Z"
+generated: "2026-03-02T00:20:12.24939002Z"

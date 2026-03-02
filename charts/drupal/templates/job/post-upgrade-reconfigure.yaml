@@ -53,7 +53,7 @@ spec:
 
               # Pre Upgrade scripts
               {{- if .Values.drupal.preUpgradeScripts }}
-              {{ toYaml .Values.drupal.preUpgradeScripts | nindent 14}}
+              {{ .Values.drupal.preUpgradeScripts | nindent 14}}
               {{- end }}
 
               {{- if .Values.mysql.enabled }}
@@ -123,7 +123,7 @@ spec:
 
               # Post Upgrade scripts
               {{- if .Values.drupal.postUpgradeScripts }}
-              {{ toYaml .Values.drupal.postUpgradeScripts | nindent 14}}
+              {{ .Values.drupal.postUpgradeScripts | nindent 14}}
               {{- end }}
         env:
           {{- include "drupal.env" . | nindent 10 }}

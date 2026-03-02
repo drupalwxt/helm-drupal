@@ -160,7 +160,16 @@ drupal:
   migrate: true
 
   # Reconfigure on upgrade
-  reconfigure: true
+  reconfigure:
+    enabled: true
+    resources:
+      limits:
+        cpu: 250m
+        memory: 512Mi
+      requests:
+        cpu: 50m
+        memory: 256Mi
+
   cacheRebuildBeforeDatabaseMigration: true
   updateDBBeforeDatabaseMigration: true
 

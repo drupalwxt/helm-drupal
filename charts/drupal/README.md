@@ -1,6 +1,6 @@
 # drupal
 
-![Version: 2.0.0-beta1](https://img.shields.io/badge/Version-2.0.0--beta1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.1.4](https://img.shields.io/badge/AppVersion-6.1.4-informational?style=flat-square)
+![Version: 2.0.0-beta4](https://img.shields.io/badge/Version-2.0.0--beta4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.1.4](https://img.shields.io/badge/AppVersion-6.1.4-informational?style=flat-square)
 
 Helm Chart for deploying an enterprise-grade Drupal environment.
 
@@ -112,6 +112,7 @@ helm install --name drupal -f values-<override>.yaml
 | drupal.healthcheck.probes.readinessProbe.timeoutSeconds | int | `1` |  |
 | drupal.image | string | `"drupalwxt/site-wxt"` |  |
 | drupal.imagePullPolicy | string | `"IfNotPresent"` |  |
+| drupal.initContainerImage | string | `"alpine:3.10"` |  |
 | drupal.install | bool | `true` |  |
 | drupal.migrate | bool | `true` |  |
 | drupal.nodeSelector | object | `{}` |  |
@@ -127,7 +128,11 @@ helm install --name drupal -f values-<override>.yaml
 | drupal.preInstallScripts | string | `""` |  |
 | drupal.preUpgradeScripts | string | `""` |  |
 | drupal.profile | string | `"wxt"` |  |
-| drupal.reconfigure | bool | `true` |  |
+| drupal.reconfigure.enabled | bool | `true` |  |
+| drupal.reconfigure.resources.limits.cpu | string | `"250m"` |  |
+| drupal.reconfigure.resources.limits.memory | string | `"512Mi"` |  |
+| drupal.reconfigure.resources.requests.cpu | string | `"50m"` |  |
+| drupal.reconfigure.resources.requests.memory | string | `"256Mi"` |  |
 | drupal.replicas | int | `1` |  |
 | drupal.resources | object | `{}` |  |
 | drupal.restore.convert | bool | `false` |  |

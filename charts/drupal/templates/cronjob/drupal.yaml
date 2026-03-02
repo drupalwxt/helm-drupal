@@ -72,6 +72,10 @@ spec:
               {{- if .Values.extraEnvVars }}
               {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 14 }}
               {{- end }}
+            {{- if .Values.drupal.cron.resources }}
+            resources:
+              {{- toYaml .Values.drupal.cron.resources | nindent 15 }}
+            {{- end }}
             volumeMounts:
               {{- include "drupal.volumeMounts" . | nindent 14 }}
               {{- if .Values.drupal.volumeMounts }}

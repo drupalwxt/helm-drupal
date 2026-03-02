@@ -130,6 +130,10 @@ spec:
           {{- if .Values.extraEnvVars }}
           {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 10 }}
           {{- end }}
+        {{- if .Values.drupal.reconfigure.resources }}
+        resources:
+          {{- toYaml .Values.drupal.reconfigure.resources | nindent 10 }}
+        {{- end }}
         volumeMounts:
           {{- include "drupal.volumeMounts" . | nindent 10 }}
           {{- if .Values.drupal.volumeMounts }}

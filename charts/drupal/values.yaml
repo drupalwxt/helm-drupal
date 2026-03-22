@@ -62,6 +62,7 @@ drupal:
 
   ## User of the application
   ##
+  existingSecret: ""
   username: admin
 
   ## Application password

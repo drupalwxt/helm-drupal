@@ -78,7 +78,7 @@ Create common environment variables for Drupal
 - name: EXTERNAL_PASSWORD
   valueFrom:
     secretKeyRef:
-      name: {{ template "drupal.fullname" . }}
+      name: {{ default (include "drupal.fullname" .) .Values.drupal.existingSecret }}
       key: databasePassword
 {{- else if and .Values.mysql.enabled }}
 - name: MYSQL_PASSWORD
@@ -101,10 +101,15 @@ Create common environment variables for Drupal
       key: default-password
 {{- end }}
 {{- if not .Values.drupal.usePasswordFiles }}
+- name: DRUPAL_ADMIN
+  valueFrom:
+    secretKeyRef:
+      name: {{ default (include "drupal.fullname" .) .Values.drupal.existingSecret }}
+      key: username
 - name: DRUPAL_ADMIN_PASSWORD
   valueFrom:
     secretKeyRef:
-      name: {{ include "drupal.fullname" . }}
+      name: {{ default (include "drupal.fullname" .) .Values.drupal.existingSecret }}
       key: password
 {{- end }}
 {{- end -}}

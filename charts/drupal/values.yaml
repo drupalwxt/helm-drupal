@@ -847,20 +847,52 @@ redis:
     enabled: true
 
 ## Configuration values for the Solr dependency sub-chart
-## ref: https://github.com/bitnami/charts/blob/master/bitnami/redis/README.md
+## ref: https://github.com/bitnami/charts/blob/master/bitnami/solr/README.md
 solr:
   enabled: false
+  ingress:
+    enabled: false
+  global:
+    security:
+      allowInsecureImages: true
   image:
     registry: docker.io
     repository: bitnamilegacy/solr
-    tag: "9.2.1-debian-11-r73"
-    pullPolicy: IfNotPresent
-  cloudEnabled: false
-  cloudBootstrap: false
-  zookeeper:
-    enabled: false
+    tag: 9.9.0-debian-12-r1
+  auth: {}
+  cloudEnabled: true
+  cloudBootstrap: true
+  persistence:
+    # storageClass: "-"
+    size: 5Gi
+  # OpenShift should be auto detected
+  # podSecurityContext:
+  #   enabled: false
+  # containerSecurityContext:
+  #   enabled: false
+  coreNames:
+    - drupal
+  collection: drupal
   replicaCount: 1
   collectionReplicas: 1
+  zookeeper:
+    enabled: true
+    persistence:
+      # storageClass: "-"
+      size: 500Mi
+    # OpenShift should be auto detected
+    # podSecurityContext:
+    #   enabled: false
+    # containerSecurityContext:
+    #   enabled: false
+    replicaCount: 1
+    resources:
+      limits:
+        cpu: 100m
+        memory: 256Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
 
 ## Configuration values for the Varnish dependency sub-chart
 ## ref: https://github.com/drupalwxt/helm-drupal/blob/main/charts/varnish/README.md

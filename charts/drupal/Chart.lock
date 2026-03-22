@@ -7,12 +7,12 @@ dependencies:
   version: 15.5.38
 - name: solr
   repository: https://charts.bitnami.com/bitnami
-  version: 7.5.1
+  version: 9.6.1
 - name: valkey
   repository: https://valkey-io.github.io/valkey-helm
   version: 0.9.3
 - name: varnish
   repository: https://drupalwxt.github.io/helm-drupal
   version: 0.2.5
-digest: sha256:2678da64ee92aa7da389591c84a90dc76e751ff5f7b82067963e9ff853b2fdf5
-generated: "2026-02-08T21:35:54.847832-05:00"
+digest: sha256:8a2e464e5358399331cfdc9fc24f6236307f95b19296a2a0a4e4dfa1946489ff
+generated: "2026-03-22T19:07:16.26966-04:00"

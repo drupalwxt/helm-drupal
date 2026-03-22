@@ -1,7 +1,7 @@
 name: drupal
 apiVersion: v2
 type: application
-version: 2.0.0-beta7
+version: 2.0.0-beta8
 appVersion: 6.1.4
 description: Helm Chart for deploying an enterprise-grade Drupal environment.
 keywords:
@@ -31,7 +31,7 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
   - name: solr
-    version: 7.5.1
+    version: 9.6.1
     repository: https://charts.bitnami.com/bitnami
     condition: solr.enabled
   - name: valkey

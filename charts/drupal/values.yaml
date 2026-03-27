@@ -855,6 +855,9 @@ solr:
   global:
     security:
       allowInsecureImages: true
+    compatibility:
+      openshift:
+        adaptSecurityContext: auto
   image:
     registry: docker.io
     repository: bitnamilegacy/solr
@@ -875,8 +878,25 @@ solr:
   collection: drupal
   replicaCount: 1
   collectionReplicas: 1
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 500m
+      memory: 1024Mi
   zookeeper:
     enabled: true
+    global:
+      security:
+        allowInsecureImages: true
+      compatibility:
+        openshift:
+          adaptSecurityContext: auto
+    image:
+      registry: docker.io
+      repository: bitnamilegacy/zookeeper
+      tag: 3.9.3-debian-12-r21
     persistence:
       # storageClass: "-"
       size: 500Mi

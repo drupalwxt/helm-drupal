@@ -821,6 +821,48 @@ proxysql:
     serverVersion: "5.7.28"
     stackSize: 1048576
 
+postgresOperator:
+  enabled: false
+  version: 15
+  auth:
+    database: drupal
+    username: drupal
+    usePasswordFiles: true
+  port: 5432
+  instances:
+    name: drupal
+    replicas: 1
+    resources:
+      requests:
+        cpu: 500m
+        memory: 512Mi
+      limits:
+        cpu: 1000m
+        memory: 2048Mi
+    sidecars:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 32Mi
+        limits:
+          cpu: 50m
+          memory: 64Mi
+  retention:
+    count: 5
+    type: time
+    schedules:
+      full: 0 8 * * *
+      incremental: 0 0,4,12,16,20 * * *
+  persistence:
+    # storageClass:
+    accessMode: ReadWriteOnce
+    size: 6Gi
+  backups:
+    persistence:
+      # storageClass:
+      accessMode: ReadWriteOnce
+      size: 2Gi
+
 ## Configuration values for the Redis dependency sub-chart
 ## ref: https://github.com/valkey-io/valkey-helm/blob/main/README.md
 redis:

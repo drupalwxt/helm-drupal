@@ -15,6 +15,21 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+## Configure OpenShift Route resources.
+## Routes are automatically used when the OpenShift Route API is available.
+##
+route:
+  enabled: false
+  labels: {}
+    # network-type: dmz
+  annotations: {}
+  path: /
+  hosts:
+    - chart-example.local
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+
 extraEnvVars: []
 
 netpol:

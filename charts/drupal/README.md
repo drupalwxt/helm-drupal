@@ -1,6 +1,6 @@
 # drupal
 
-![Version: 2.0.0-beta5](https://img.shields.io/badge/Version-2.0.0--beta5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.1.4](https://img.shields.io/badge/AppVersion-6.1.4-informational?style=flat-square)
+![Version: 2.0.0-beta12](https://img.shields.io/badge/Version-2.0.0--beta12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.1.4](https://img.shields.io/badge/AppVersion-6.1.4-informational?style=flat-square)
 
 Helm Chart for deploying an enterprise-grade Drupal environment.
 
@@ -23,14 +23,9 @@ Helm Chart for deploying an enterprise-grade Drupal environment.
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | mysql(mysql) | 14.0.3 |
 | https://charts.bitnami.com/bitnami | postgresql | 15.5.38 |
-| https://charts.bitnami.com/bitnami | solr | 7.5.1 |
+| https://charts.bitnami.com/bitnami | solr | 9.6.1 |
 | https://drupalwxt.github.io/helm-drupal | varnish | 0.2.5 |
 | https://valkey-io.github.io/valkey-helm | redis(valkey) | 0.9.3 |
-
-## Prerequisites
-
-- Kubernetes 1.21+
-- Helm v3.10.0+
 
 ## Installing the Chart
 
@@ -52,20 +47,36 @@ cd helm-drupal/drupal
 helm install --name drupal -f values-<override>.yaml
 ```
 
-## Ingress
+## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| ingress.annotations | object | `{}` |  |
-| ingress.enabled | bool | `false` |  |
-| ingress.hosts[0] | string | `"chart-example.local"` |  |
-| ingress.path | string | `"/"` |  |
-| ingress.tls | list | `[]` |  |
-
-## Drupal
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
+| azure.azureFile.accessMode | string | `"ReadWriteMany"` |  |
+| azure.azureFile.annotations | object | `{}` |  |
+| azure.azureFile.backup.spec | object | `{}` |  |
+| azure.azureFile.enabled | bool | `false` |  |
+| azure.azureFile.folders[0] | string | `"backup"` |  |
+| azure.azureFile.folders[1] | string | `"private"` |  |
+| azure.azureFile.folders[2] | string | `"public"` |  |
+| azure.azureFile.folders[3] | string | `"tmp"` |  |
+| azure.azureFile.initMediaIconsFolder | bool | `true` |  |
+| azure.azureFile.private.spec | object | `{}` |  |
+| azure.azureFile.protocol | string | `"smb"` |  |
+| azure.azureFile.public.spec | object | `{}` |  |
+| azure.azureFile.size | string | `"256Gi"` |  |
+| azure.azureFile.skuName | string | `"Standard_LRS"` |  |
+| azure.azureFile.tmp.spec | object | `{}` |  |
+| azure.sharedDisk.accessMode | string | `"ReadWriteMany"` |  |
+| azure.sharedDisk.annotations | object | `{}` |  |
+| azure.sharedDisk.enabled | bool | `false` |  |
+| azure.sharedDisk.folders[0] | string | `"private"` |  |
+| azure.sharedDisk.folders[1] | string | `"public"` |  |
+| azure.sharedDisk.initMediaIconsFolder | bool | `true` |  |
+| azure.sharedDisk.maxShares | int | `2` |  |
+| azure.sharedDisk.private.spec | object | `{}` |  |
+| azure.sharedDisk.public.spec | object | `{}` |  |
+| azure.sharedDisk.size | string | `"256Gi"` |  |
+| azure.storageClass.create | bool | `false` |  |
 | drupal.additionalCrons | object | `{}` |  |
 | drupal.args | list | `[]` |  |
 | drupal.autoscaling.enabled | bool | `false` |  |
@@ -95,6 +106,7 @@ helm install --name drupal -f values-<override>.yaml
 | drupal.cron.successfulJobsHistoryLimit | int | `3` |  |
 | drupal.dbAvailabilityScript | string | `"until drush sql:query 'SHOW TABLES;'; do echo Waiting for DB; sleep 3; done\necho DB available"` | default script used to detect when the DB is ready |
 | drupal.disableDefaultFilesMount | bool | `false` |  |
+| drupal.existingSecret | string | `""` |  |
 | drupal.extensions.enabled | bool | `true` |  |
 | drupal.extraSettings | string | `""` |  |
 | drupal.healthcheck.enabled | bool | `true` |  |
@@ -166,11 +178,41 @@ helm install --name drupal -f values-<override>.yaml
 | drupal.volumeMounts | string | `nil` |  |
 | drupal.volumePermissions.enabled | bool | `false` |  |
 | drupal.volumes | string | `nil` |  |
-
-## Nginx
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
+| external.database | string | `"wxt"` |  |
+| external.driver | string | `"mysql"` |  |
+| external.enabled | bool | `false` |  |
+| external.host | string | `"mysql.example.org"` |  |
+| external.password | string | `"password"` |  |
+| external.port | int | `3306` |  |
+| external.user | string | `"wxt"` |  |
+| extraEnvVars | list | `[]` |  |
+| ingress.annotations | object | `{}` |  |
+| ingress.enabled | bool | `false` |  |
+| ingress.hosts[0] | string | `"chart-example.local"` |  |
+| ingress.path | string | `"/"` |  |
+| ingress.tls | list | `[]` |  |
+| mysql.auth.database | string | `"wxt"` |  |
+| mysql.auth.password | string | `""` |  |
+| mysql.auth.rootPassword | string | `""` |  |
+| mysql.auth.username | string | `"wxt"` |  |
+| mysql.enabled | bool | `true` |  |
+| mysql.image.pullPolicy | string | `"IfNotPresent"` |  |
+| mysql.image.registry | string | `"docker.io"` |  |
+| mysql.image.repository | string | `"bitnamilegacy/mysql"` |  |
+| mysql.image.tag | string | `"8.0"` |  |
+| mysql.primary.extraFlags | string | `"--default-authentication-plugin=mysql_native_password --skip-name-resolve --max_allowed_packet=256M --innodb_buffer_pool_size=4096M --innodb_buffer_pool_instances=4 --table_definition_cache=4096 --table_open_cache=8192 --innodb_flush_log_at_trx_commit=2 --skip_ssl --require_secure_transport=OFF"` |  |
+| mysql.primary.persistence.enabled | bool | `true` |  |
+| mysql.primary.persistence.size | string | `"128Gi"` |  |
+| mysql.primary.resources.limits.cpu | string | `"4000m"` |  |
+| mysql.primary.resources.limits.memory | string | `"8Gi"` |  |
+| mysql.primary.resources.requests.cpu | string | `"2000m"` |  |
+| mysql.primary.resources.requests.memory | string | `"4Gi"` |  |
+| mysql.volumePermissions.enabled | bool | `true` |  |
+| mysql.volumePermissions.image.registry | string | `"docker.io"` |  |
+| mysql.volumePermissions.image.repository | string | `"bitnamilegacy/os-shell"` |  |
+| mysql.volumePermissions.image.tag | string | `"12-debian-12"` |  |
+| netpol.enabled | bool | `false` |  |
+| netpol.openshift.enabled | bool | `false` |  |
 | nginx.autoscaling.enabled | bool | `false` |  |
 | nginx.autoscaling.maxReplicas | int | `11` |  |
 | nginx.autoscaling.minReplicas | int | `1` |  |
@@ -206,49 +248,12 @@ helm install --name drupal -f values-<override>.yaml
 | nginx.tolerations | list | `[]` |  |
 | nginx.volumeMounts | string | `nil` |  |
 | nginx.volumes | string | `nil` |  |
-
-## MySQL
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| mysql.auth.database | string | `"wxt"` |  |
-| mysql.auth.password | string | `""` |  |
-| mysql.auth.rootPassword | string | `""` |  |
-| mysql.auth.username | string | `"wxt"` |  |
-| mysql.enabled | bool | `true` |  |
-| mysql.image.pullPolicy | string | `"IfNotPresent"` |  |
-| mysql.image.registry | string | `"docker.io"` |  |
-| mysql.image.repository | string | `"bitnamilegacy/mysql"` |  |
-| mysql.image.tag | string | `"8.0"` |  |
-| mysql.primary.extraFlags | string | `"--default-authentication-plugin=mysql_native_password --skip-name-resolve --max_allowed_packet=256M --innodb_buffer_pool_size=4096M --innodb_buffer_pool_instances=4 --table_definition_cache=4096 --table_open_cache=8192 --innodb_flush_log_at_trx_commit=2 --skip_ssl --require_secure_transport=OFF"` |  |
-| mysql.primary.persistence.enabled | bool | `true` |  |
-| mysql.primary.persistence.size | string | `"128Gi"` |  |
-| mysql.primary.resources.limits.cpu | string | `"4000m"` |  |
-| mysql.primary.resources.limits.memory | string | `"8Gi"` |  |
-| mysql.primary.resources.requests.cpu | string | `"2000m"` |  |
-| mysql.primary.resources.requests.memory | string | `"4Gi"` |  |
-| mysql.volumePermissions.enabled | bool | `true` |  |
-| mysql.volumePermissions.image.registry | string | `"docker.io"` |  |
-| mysql.volumePermissions.image.repository | string | `"bitnamilegacy/os-shell"` |  |
-| mysql.volumePermissions.image.tag | string | `"12-debian-12"` |  |
-
-### ProxySQL
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| proxysql.admin.password | string | `"password"` |  |
-| proxysql.admin.user | string | `"username@hostname"` |  |
-| proxysql.configuration.maxConnections | int | `2048` |  |
-| proxysql.configuration.serverVersion | string | `"5.7.28"` |  |
-| proxysql.configuration.stackSize | int | `1048576` |  |
-| proxysql.enabled | bool | `false` |  |
-| proxysql.monitor.password | string | `"password"` |  |
-| proxysql.monitor.user | string | `"username@hostname"` |  |
-
-## PostgreSQL
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
+| pgbouncer.enabled | bool | `false` |  |
+| pgbouncer.host | string | `"mypgserver.postgres.database.azure.com"` |  |
+| pgbouncer.maxClientConnections | int | `400` |  |
+| pgbouncer.password | string | `"password"` |  |
+| pgbouncer.poolSize | int | `50` |  |
+| pgbouncer.user | string | `"username@hostname"` |  |
 | postgresql.auth.database | string | `"wxt"` |  |
 | postgresql.auth.enablePostgresUser | bool | `true` |  |
 | postgresql.auth.password | string | `"example"` |  |
@@ -266,69 +271,14 @@ helm install --name drupal -f values-<override>.yaml
 | postgresql.volumePermissions.image.registry | string | `"docker.io"` |  |
 | postgresql.volumePermissions.image.repository | string | `"bitnamilegacy/os-shell"` |  |
 | postgresql.volumePermissions.image.tag | string | `"12-debian-12"` |  |
-
-### PGBouncer
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| pgbouncer.enabled | bool | `false` |  |
-| pgbouncer.host | string | `"mypgserver.postgres.database.azure.com"` |  |
-| pgbouncer.maxClientConnections | int | `400` |  |
-| pgbouncer.password | string | `"password"` |  |
-| pgbouncer.poolSize | int | `50` |  |
-| pgbouncer.user | string | `"username@hostname"` |  |
-
-## External
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| external.database | string | `"wxt"` |  |
-| external.driver | string | `"mysql"` |  |
-| external.enabled | bool | `false` |  |
-| external.host | string | `"mysql.example.org"` |  |
-| external.password | string | `"password"` |  |
-| external.port | int | `3306` |  |
-| external.user | string | `"wxt"` |  |
-
-## Azure Files
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| azure.azureFile.accessMode | string | `"ReadWriteMany"` |  |
-| azure.azureFile.annotations | object | `{}` |  |
-| azure.azureFile.backup.spec | object | `{}` |  |
-| azure.azureFile.enabled | bool | `false` |  |
-| azure.azureFile.folders[0] | string | `"backup"` |  |
-| azure.azureFile.folders[1] | string | `"private"` |  |
-| azure.azureFile.folders[2] | string | `"public"` |  |
-| azure.azureFile.folders[3] | string | `"tmp"` |  |
-| azure.azureFile.initMediaIconsFolder | bool | `true` |  |
-| azure.azureFile.private.spec | object | `{}` |  |
-| azure.azureFile.protocol | string | `"smb"` |  |
-| azure.azureFile.public.spec | object | `{}` |  |
-| azure.azureFile.size | string | `"256Gi"` |  |
-| azure.azureFile.skuName | string | `"Standard_LRS"` |  |
-| azure.azureFile.tmp.spec | object | `{}` |  |
-
-## Shared Disk
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| azure.sharedDisk.accessMode | string | `"ReadWriteMany"` |  |
-| azure.sharedDisk.annotations | object | `{}` |  |
-| azure.sharedDisk.enabled | bool | `false` |  |
-| azure.sharedDisk.folders[0] | string | `"private"` |  |
-| azure.sharedDisk.folders[1] | string | `"public"` |  |
-| azure.sharedDisk.initMediaIconsFolder | bool | `true` |  |
-| azure.sharedDisk.maxShares | int | `2` |  |
-| azure.sharedDisk.private.spec | object | `{}` |  |
-| azure.sharedDisk.public.spec | object | `{}` |  |
-| azure.sharedDisk.size | string | `"256Gi"` |  |
-
-## Redis
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
+| proxysql.admin.password | string | `"password"` |  |
+| proxysql.admin.user | string | `"username@hostname"` |  |
+| proxysql.configuration.maxConnections | int | `2048` |  |
+| proxysql.configuration.serverVersion | string | `"5.7.28"` |  |
+| proxysql.configuration.stackSize | int | `1048576` |  |
+| proxysql.enabled | bool | `false` |  |
+| proxysql.monitor.password | string | `"password"` |  |
+| proxysql.monitor.user | string | `"username@hostname"` |  |
 | redis.architecture | string | `"standalone"` |  |
 | redis.auth.aclUsers.default.password | string | `"secretpass"` |  |
 | redis.auth.aclUsers.default.permissions | string | `"~* &* +@all"` |  |
@@ -339,11 +289,44 @@ helm install --name drupal -f values-<override>.yaml
 | redis.primary.service.type | string | `"ClusterIP"` |  |
 | redis.queue.enabled | bool | `true` |  |
 | redis.replica.replicaCount | int | `0` |  |
-
-## Varnish
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
+| route.annotations | object | `{}` |  |
+| route.enabled | bool | `false` |  |
+| route.hosts[0] | string | `"chart-example.local"` |  |
+| route.labels | object | `{}` |  |
+| route.path | string | `"/"` |  |
+| route.tls.insecureEdgeTerminationPolicy | string | `"Redirect"` |  |
+| route.tls.termination | string | `"edge"` |  |
+| solr.auth | object | `{}` |  |
+| solr.cloudBootstrap | bool | `true` |  |
+| solr.cloudEnabled | bool | `true` |  |
+| solr.collection | string | `"drupal"` |  |
+| solr.collectionReplicas | int | `1` |  |
+| solr.coreNames[0] | string | `"drupal"` |  |
+| solr.enabled | bool | `false` |  |
+| solr.global.compatibility.openshift.adaptSecurityContext | string | `"auto"` |  |
+| solr.global.security.allowInsecureImages | bool | `true` |  |
+| solr.image.registry | string | `"docker.io"` |  |
+| solr.image.repository | string | `"bitnamilegacy/solr"` |  |
+| solr.image.tag | string | `"9.9.0-debian-12-r1"` |  |
+| solr.ingress.enabled | bool | `false` |  |
+| solr.persistence.size | string | `"5Gi"` |  |
+| solr.replicaCount | int | `1` |  |
+| solr.resources.limits.cpu | string | `"500m"` |  |
+| solr.resources.limits.memory | string | `"1024Mi"` |  |
+| solr.resources.requests.cpu | string | `"250m"` |  |
+| solr.resources.requests.memory | string | `"512Mi"` |  |
+| solr.zookeeper.enabled | bool | `true` |  |
+| solr.zookeeper.global.compatibility.openshift.adaptSecurityContext | string | `"auto"` |  |
+| solr.zookeeper.global.security.allowInsecureImages | bool | `true` |  |
+| solr.zookeeper.image.registry | string | `"docker.io"` |  |
+| solr.zookeeper.image.repository | string | `"bitnamilegacy/zookeeper"` |  |
+| solr.zookeeper.image.tag | string | `"3.9.3-debian-12-r21"` |  |
+| solr.zookeeper.persistence.size | string | `"500Mi"` |  |
+| solr.zookeeper.replicaCount | int | `1` |  |
+| solr.zookeeper.resources.limits.cpu | string | `"100m"` |  |
+| solr.zookeeper.resources.limits.memory | string | `"256Mi"` |  |
+| solr.zookeeper.resources.requests.cpu | string | `"100m"` |  |
+| solr.zookeeper.resources.requests.memory | string | `"256Mi"` |  |
 | varnish.affinity | object | `{}` |  |
 | varnish.enabled | bool | `true` |  |
 | varnish.nodeSelector | object | `{}` |  |
@@ -355,8 +338,6 @@ helm install --name drupal -f values-<override>.yaml
 | varnish.varnishd.image | string | `"varnish"` |  |
 | varnish.varnishd.imagePullPolicy | string | `"IfNotPresent"` |  |
 | varnish.varnishd.tag | string | `"6.6.2"` |  |
-
-<!-- Links Referenced -->
 
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)

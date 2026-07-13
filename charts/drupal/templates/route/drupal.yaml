@@ -1,0 +1,43 @@
+{{- if and .Values.route.enabled (.Capabilities.APIVersions.Has "route.openshift.io/v1/Route") }}
+{{- $fullName := include "drupal.fullname" . -}}
+{{- $releaseName := .Release.Name -}}
+{{- $varnishEnabled := .Values.varnish.enabled -}}
+{{- range $index, $host := .Values.route.hosts }}
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ $fullName }}-{{ $index }}
+  labels:
+    app.kubernetes.io/name: {{ include "drupal.name" $ }}
+    helm.sh/chart: {{ include "drupal.chart" $ }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    {{- with $.Values.route.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with $.Values.route.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  host: {{ $host | quote }}
+  {{- with $.Values.route.path }}
+  path: {{ . | quote }}
+  {{- end }}
+  to:
+    kind: Service
+    {{- if $varnishEnabled }}
+    name: {{ $releaseName }}-varnish
+    {{- else }}
+    name: {{ $fullName }}-nginx
+    {{- end }}
+  port:
+    targetPort: 8080
+  {{- with $.Values.route.tls }}
+  tls:
+    termination: {{ .termination | default "edge" }}
+    insecureEdgeTerminationPolicy: {{ .insecureEdgeTerminationPolicy | default "Redirect" }}
+  {{- end }}
+{{- end }}
+{{- end }}

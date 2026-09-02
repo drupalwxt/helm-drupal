@@ -39,13 +39,16 @@ spec:
     termination: {{ .termination | default "edge" }}
     insecureEdgeTerminationPolicy: {{ .insecureEdgeTerminationPolicy | default "Redirect" }}
     {{- if .key }}
-    key: {{ .key }}
+    key: |-
+{{ .key | nindent 6 }}
     {{- end }}
     {{- if .certificate }}
-    certificate: {{ .certificate }}
+    certificate: |-
+{{ .certificate | nindent 6 }}
     {{- end }}
     {{- if .caCertificate }}
-    caCertificate: {{ .caCertificate }}
+    caCertificate: |-
+{{ .caCertificate | nindent 6 }}
     {{- end }}
   {{- end }}
 {{- end }}

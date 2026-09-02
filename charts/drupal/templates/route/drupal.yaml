@@ -38,6 +38,10 @@ spec:
   tls:
     termination: {{ .termination | default "edge" }}
     insecureEdgeTerminationPolicy: {{ .insecureEdgeTerminationPolicy | default "Redirect" }}
+    {{- if .externalCertificate }}
+    externalCertificate:
+      name: {{ .externalCertificate.name | quote }}
+    {{- else }}
     {{- if .key }}
     key: |-
 {{ .key | nindent 6 }}
@@ -49,6 +53,7 @@ spec:
     {{- if .caCertificate }}
     caCertificate: |-
 {{ .caCertificate | nindent 6 }}
+    {{- end }}
     {{- end }}
   {{- end }}
 {{- end }}

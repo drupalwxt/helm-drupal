@@ -27,8 +27,21 @@ route:
   hosts:
     - chart-example.local
   tls:
+    # Terminate TLS at the OpenShift router (edge): HTTPS is decrypted here,
+    # then the request is forwarded to the app over plain HTTP internally.
     termination: edge
+
+    # Redirect insecure HTTP requests to HTTPS when they reach the route.
     insecureEdgeTerminationPolicy: Redirect
+
+    # Private key for the route certificate (PEM format)
+    # key:
+
+    # Public certificate for the route (PEM format)
+    # certificate:
+
+    # Optional CA certificate chain used to validate the backend/route cert
+    # caCertificate:
 
 extraEnvVars: []
 

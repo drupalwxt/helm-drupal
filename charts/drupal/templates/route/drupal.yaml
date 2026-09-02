@@ -38,6 +38,15 @@ spec:
   tls:
     termination: {{ .termination | default "edge" }}
     insecureEdgeTerminationPolicy: {{ .insecureEdgeTerminationPolicy | default "Redirect" }}
+    {{- if .key }}
+    key: {{ .key }}
+    {{- end }}
+    {{- if .certificate }}
+    certificate: {{ .certificate }}
+    {{- end }}
+    {{- if .caCertificate }}
+    caCertificate: {{ .caCertificate }}
+    {{- end }}
   {{- end }}
 {{- end }}
 {{- end }}

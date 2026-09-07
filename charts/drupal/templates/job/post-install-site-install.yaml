@@ -175,6 +175,8 @@ spec:
                 --db-url="mysql://{{ .Values.mysql.auth.username }}:$MYSQL_PASSWORD@{{ .Release.Name }}-mysql:{{ .Values.mysql.primary.service.ports.mysql }}/{{ .Values.mysql.auth.database }}" \
                 {{- else if .Values.postgresql.enabled }}
                 --db-url="pgsql://{{ .Values.postgresql.auth.username }}:$POSTGRES_PASSWORD@{{ .Release.Name }}-postgresql:{{ .Values.postgresql.primary.service.ports.postgresql }}/{{ .Values.postgresql.auth.database }}" \
+                {{- else if .Values.postgresOperator.enabled }}
+                --db-url="pgsql://{{ .Values.postgresOperator.auth.username }}:$POSTGRES_PASSWORD@{{ .Release.Name }}-postgres-cluster-pgbouncer:{{ .Values.postgresOperator.port }}/{{ .Values.postgresOperator.auth.database }}" \
                 {{- end }}
                 --account-name={{ .Values.drupal.username }} \
                 --account-pass=$DRUPAL_ADMIN_PASSWORD \

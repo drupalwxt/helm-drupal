@@ -86,7 +86,7 @@ Create common environment variables for Drupal
     secretKeyRef:
       name: "{{ .Release.Name }}-mysql"
       key: mysql-password
-{{- else if .Values.postgresql.enabled }}
+{{- else if or .Values.postgresql.enabled .Values.postgresOperator.enabled }}
 - name: POSTGRES_PASSWORD
   valueFrom:
     secretKeyRef:

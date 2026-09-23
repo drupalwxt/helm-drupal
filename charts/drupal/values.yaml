@@ -18,45 +18,45 @@ ingress:
 ## Configure OpenShift Route resources.
 ## Routes are automatically used when the OpenShift Route API is available.
 ##
-route:
-  enabled: false
-  labels: {}
-    # network-type: dmz
-  annotations: {}
-  path: /
-  hosts:
-    - chart-example.local
-
-  tls:
-    # Terminate TLS at the OpenShift router (edge): HTTPS is decrypted here,
-    # then the request is forwarded to the app over plain HTTP internally.
-    termination: edge
-
-    # Redirect insecure HTTP requests to HTTPS when they reach the route.
-    insecureEdgeTerminationPolicy: Redirect
-
-    # Reference an existing Kubernetes TLS Secret containing tls.crt and tls.key.
-    # Use this OR the inline key/certificate fields below, not both.
-    # externalCertificate:
-    #   name: my-route-tls
-
-    # Private key for the route certificate (PEM format).
-    # key: |-
-    #   -----BEGIN PRIVATE KEY-----
-    #   ...
-    #   -----END PRIVATE KEY-----
-
-    # Public certificate for the route (PEM format).
-    # certificate: |-
-    #   -----BEGIN CERTIFICATE-----
-    #   ...
-    #   -----END CERTIFICATE-----
-
-    # Optional CA/intermediate certificate chain associated with the route certificate.
-    # caCertificate: |-
-    #   -----BEGIN CERTIFICATE-----
-    #   ...
-    #   -----END CERTIFICATE-----
+routes: []
+  # - name: drupal
+  #   enabled: true
+  #   labels: {}
+  #     # network-type: dmz
+  #   annotations: {}
+  #   path: /
+  #   hosts:   # only the first host is used; add another entry for another host
+  #     - chart-example.local
+  #   tls:
+  #     # Terminate TLS at the OpenShift router (edge): HTTPS is decrypted here,
+  #     # then the request is forwarded to the app over plain HTTP internally.
+  #     termination: edge
+  #
+  #     # Redirect insecure HTTP requests to HTTPS when they reach the route.
+  #     insecureEdgeTerminationPolicy: Redirect
+  #
+  #     # Reference an existing Kubernetes TLS Secret containing tls.crt and tls.key.
+  #     # Use this OR the inline key/certificate fields below, not both.
+  #     externalCertificate:
+  #       name: my-route-tls
+  #
+  #     # Private key for the route certificate (PEM format).
+  #     key: |-
+  #       -----BEGIN PRIVATE KEY-----
+  #       ...
+  #       -----END PRIVATE KEY-----
+  #
+  #     # Public certificate for the route (PEM format).
+  #     certificate: |-
+  #       -----BEGIN CERTIFICATE-----
+  #       ...
+  #       -----END CERTIFICATE-----
+  #
+  #     # Optional CA/intermediate certificate chain.
+  #     caCertificate: |-
+  #       -----BEGIN CERTIFICATE-----
+  #       ...
+  #       -----END CERTIFICATE-----
 
 extraEnvVars: []
 

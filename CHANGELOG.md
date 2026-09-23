@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.0.0-beta16
+
+### ⚠️ Breaking Changes
+
+- Replaced `route:` with `routes:`, a list of independent OpenShift Routes each with its own
+  `name`, `enabled`, `labels`, `annotations`, `path`, `hosts` and `tls`. Routes are now named
+  after `name` instead of an index, and one entry uses one host.
+
+### Changes
+
+- Fixed inline `key`/`certificate`/`caCertificate` rendering with a leading blank line
+- Ingress is suppressed when any route is enabled
+
 ## 2.0.0-beta1
 
 ### ⚠️ Breaking Changes

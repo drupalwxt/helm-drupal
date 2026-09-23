@@ -1,4 +1,4 @@
-{{- if and .Values.ingress.enabled (not .Values.route.enabled) }}
+{{- if and .Values.ingress.enabled (not (include "drupal.routesEnabled" .)) }}
 {{- $fullName := include "drupal.fullname" . -}}
 {{- $releaseName := .Release.Name -}}
 {{- $varnishEnabled := .Values.varnish.enabled -}}

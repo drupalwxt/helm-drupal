@@ -1,28 +1,29 @@
-{{- if and .Values.route.enabled (.Capabilities.APIVersions.Has "route.openshift.io/v1/Route") }}
+{{- if .Capabilities.APIVersions.Has "route.openshift.io/v1/Route" }}
 {{- $fullName := include "drupal.fullname" . -}}
 {{- $releaseName := .Release.Name -}}
 {{- $varnishEnabled := .Values.varnish.enabled -}}
-{{- range $index, $host := .Values.route.hosts }}
+{{- range $index, $route := .Values.routes }}
+{{- if $route.enabled }}
 ---
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: {{ $fullName }}-{{ $index }}
+  name: {{ $route.name | default (printf "%s-%d" $fullName $index) }}
   labels:
     app.kubernetes.io/name: {{ include "drupal.name" $ }}
     helm.sh/chart: {{ include "drupal.chart" $ }}
     app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
-    {{- with $.Values.route.labels }}
+    {{- with $route.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
-  {{- with $.Values.route.annotations }}
+  {{- with $route.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  host: {{ $host | quote }}
-  {{- with $.Values.route.path }}
+  host: {{ first $route.hosts | quote }}
+  {{- with $route.path }}
   path: {{ . | quote }}
   {{- end }}
   to:
@@ -34,7 +35,7 @@ spec:
     {{- end }}
   port:
     targetPort: 8080
-  {{- with $.Values.route.tls }}
+  {{- with $route.tls }}
   tls:
     termination: {{ .termination | default "edge" }}
     insecureEdgeTerminationPolicy: {{ .insecureEdgeTerminationPolicy | default "Redirect" }}
@@ -43,18 +44,16 @@ spec:
       name: {{ .externalCertificate.name | quote }}
     {{- else }}
     {{- if .key }}
-    key: |-
-{{ .key | nindent 6 }}
+    key: |-{{ .key | nindent 6 }}
     {{- end }}
     {{- if .certificate }}
-    certificate: |-
-{{ .certificate | nindent 6 }}
+    certificate: |-{{ .certificate | nindent 6 }}
     {{- end }}
     {{- if .caCertificate }}
-    caCertificate: |-
-{{ .caCertificate | nindent 6 }}
+    caCertificate: |-{{ .caCertificate | nindent 6 }}
     {{- end }}
     {{- end }}
   {{- end }}
+{{- end }}
 {{- end }}
 {{- end }}

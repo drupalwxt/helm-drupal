@@ -328,3 +328,12 @@ Create connection pooler for Drupal
     secretName: {{ $fullName }}-pgbouncer
 {{- end }}
 {{- end -}}
+
+{{/*
+Returns "true" when at least one route is enabled, otherwise an empty string.
+*/}}
+{{- define "drupal.routesEnabled" -}}
+{{- range .Values.routes }}
+{{- if .enabled }}true{{ end }}
+{{- end }}
+{{- end -}}

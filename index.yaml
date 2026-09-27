@@ -11631,6 +11631,24 @@ entries:
     version: 0.1.0
   varnish:
   - apiVersion: v2
+    appVersion: 6.6.2
+    created: "2026-09-27T16:14:11.510801674Z"
+    description: A Helm chart for using Varnish.
+    digest: 4bb5d1d06c89d5d17d6db944ba3cb0295853d93ba43ba6b5591fce705f21606a
+    home: https://www.varnish-software.com
+    maintainers:
+    - email: william.hearn@canada.ca
+      name: sylus
+    - email: zachary.seguin@canada.ca
+      name: zachomedia
+    name: varnish
+    sources:
+    - https://github.com/varnish
+    type: application
+    urls:
+    - https://github.com/drupalwxt/helm-drupal/releases/download/varnish-0.2.6/varnish-0.2.6.tgz
+    version: 0.2.6
+  - apiVersion: v2
     appVersion: 6.6.0
     created: "2023-12-03T18:31:23.445627471Z"
     description: A Helm chart for using Varnish.
@@ -11648,4 +11666,4 @@ entries:
     urls:
     - https://github.com/drupalwxt/helm-drupal/releases/download/varnish-0.2.5/varnish-0.2.5.tgz
     version: 0.2.5
-generated: "2026-09-23T03:00:16.563863341Z"
+generated: "2026-09-27T16:14:11.51127227Z"

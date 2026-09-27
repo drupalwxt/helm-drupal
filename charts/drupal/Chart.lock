@@ -13,6 +13,6 @@ dependencies:
   version: 0.9.3
 - name: varnish
   repository: https://drupalwxt.github.io/helm-drupal
-  version: 0.2.5
-digest: sha256:8a2e464e5358399331cfdc9fc24f6236307f95b19296a2a0a4e4dfa1946489ff
-generated: "2026-03-22T19:07:16.26966-04:00"
+  version: 0.2.6
+digest: sha256:4760a57e52de8f44dbcb8e4e58d8eb5e3e9363c15df8742e5735b84edce66070
+generated: "2026-09-27T12:15:09.137082-04:00"

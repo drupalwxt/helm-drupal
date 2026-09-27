@@ -40,6 +40,6 @@ dependencies:
     alias: redis
     condition: redis.enabled
   - name: varnish
-    version: 0.2.5
+    version: 0.2.6
     repository: https://drupalwxt.github.io/helm-drupal
     condition: varnish.enabled

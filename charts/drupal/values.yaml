@@ -92,6 +92,9 @@ drupal:
   imagePullPolicy: IfNotPresent
 
   replicas: 1
+  podDisruptionBudget:
+    enabled: false
+    maxUnavailable: 1
 
   # PHP configuration
   php:
@@ -220,10 +223,6 @@ drupal:
   # Restrict how many attempt install and/or reconfigure jobs will try in case of failure. Default is 6.
   # backoffLimitInstall: 1
   # backoffLimitReconfigure: 1
-
-  # podDisruptionBudget:
-  #   minAvailable: 1
-  #   maxUnavailable: 1
 
   # Configure the Drupal cron
   cron:
@@ -482,6 +481,9 @@ nginx:
   imagePullPolicy: IfNotPresent
 
   replicas: 1
+  podDisruptionBudget:
+    enabled: false
+    maxUnavailable: 1
 
   # Set your cluster's DNS resolution service here
   resolver: kube-dns.kube-system.svc.cluster.local

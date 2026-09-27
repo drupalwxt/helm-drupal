@@ -1,0 +1,35 @@
+{{- if .Values.nginx.podDisruptionBudget.enabled }}
+
+{{- $name := include "nginx.name" . -}}
+{{- $fullName := include "nginx.fullname" . -}}
+{{- $chartName := include "nginx.chart" . -}}
+{{- $release := .Release }}
+{{- $values := .Values }}
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+
+metadata:
+  name: {{ $fullName }}
+  labels:
+    app.kubernetes.io/name: {{ $name }}
+    helm.sh/chart: {{ $chartName }}
+    app.kubernetes.io/instance: {{ $release.Name }}
+    app.kubernetes.io/managed-by: {{ $release.Service }}
+
+spec:
+  {{- with $values.nginx.podDisruptionBudget.minAvailable }}
+  minAvailable: {{ . }}
+  {{- end }}
+
+  {{- with $values.nginx.podDisruptionBudget.maxUnavailable }}
+  maxUnavailable: {{ . }}
+  {{- end }}
+
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $name }}
+      app.kubernetes.io/instance: {{ $release.Name }}
+
+{{- end }}

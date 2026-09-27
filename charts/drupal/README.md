@@ -1,6 +1,6 @@
 # drupal
 
-![Version: 2.0.0-beta12](https://img.shields.io/badge/Version-2.0.0--beta12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.1.4](https://img.shields.io/badge/AppVersion-6.1.4-informational?style=flat-square)
+![Version: 2.0.0-beta16](https://img.shields.io/badge/Version-2.0.0--beta16-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.1.4](https://img.shields.io/badge/AppVersion-6.1.4-informational?style=flat-square)
 
 Helm Chart for deploying an enterprise-grade Drupal environment.
 
@@ -24,7 +24,7 @@ Helm Chart for deploying an enterprise-grade Drupal environment.
 | https://charts.bitnami.com/bitnami | mysql(mysql) | 14.0.3 |
 | https://charts.bitnami.com/bitnami | postgresql | 15.5.38 |
 | https://charts.bitnami.com/bitnami | solr | 9.6.1 |
-| https://drupalwxt.github.io/helm-drupal | varnish | 0.2.5 |
+| https://drupalwxt.github.io/helm-drupal | varnish | 0.2.6 |
 | https://valkey-io.github.io/valkey-helm | redis(valkey) | 0.9.3 |
 
 ## Installing the Chart
@@ -135,6 +135,8 @@ helm install --name drupal -f values-<override>.yaml
 | drupal.php.fpm | string | `"pm.max_children = 50\npm.start_servers = 5\npm.min_spare_servers = 5\npm.max_spare_servers = 35"` |  |
 | drupal.php.ini | object | `{}` |  |
 | drupal.podAnnotations | object | `{}` |  |
+| drupal.podDisruptionBudget.enabled | bool | `false` |  |
+| drupal.podDisruptionBudget.maxUnavailable | int | `1` |  |
 | drupal.postInstallScripts | string | `""` |  |
 | drupal.postUpgradeScripts | string | `""` |  |
 | drupal.preInstallScripts | string | `""` |  |
@@ -239,6 +241,8 @@ helm install --name drupal -f values-<override>.yaml
 | nginx.image | string | `"drupalwxt/site-wxt"` |  |
 | nginx.imagePullPolicy | string | `"IfNotPresent"` |  |
 | nginx.nodeSelector | object | `{}` |  |
+| nginx.podDisruptionBudget.enabled | bool | `false` |  |
+| nginx.podDisruptionBudget.maxUnavailable | int | `1` |  |
 | nginx.real_ip_header | string | `"X-Forwarded-For"` |  |
 | nginx.replicas | int | `1` |  |
 | nginx.resolver | string | `"kube-dns.kube-system.svc.cluster.local"` |  |
@@ -289,13 +293,7 @@ helm install --name drupal -f values-<override>.yaml
 | redis.primary.service.type | string | `"ClusterIP"` |  |
 | redis.queue.enabled | bool | `true` |  |
 | redis.replica.replicaCount | int | `0` |  |
-| route.annotations | object | `{}` |  |
-| route.enabled | bool | `false` |  |
-| route.hosts[0] | string | `"chart-example.local"` |  |
-| route.labels | object | `{}` |  |
-| route.path | string | `"/"` |  |
-| route.tls.insecureEdgeTerminationPolicy | string | `"Redirect"` |  |
-| route.tls.termination | string | `"edge"` |  |
+| routes | list | `[]` |  |
 | solr.auth | object | `{}` |  |
 | solr.cloudBootstrap | bool | `true` |  |
 | solr.cloudEnabled | bool | `true` |  |

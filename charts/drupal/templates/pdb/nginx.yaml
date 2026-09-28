@@ -1,8 +1,8 @@
 {{- if .Values.nginx.podDisruptionBudget.enabled }}
 
-{{- $name := include "nginx.name" . -}}
-{{- $fullName := include "nginx.fullname" . -}}
-{{- $chartName := include "nginx.chart" . -}}
+{{- $name := include "drupal.name" . -}}
+{{- $fullName := include "drupal.fullname" . -}}-nginx
+{{- $chartName := include "drupal.chart" . -}}
 {{- $release := .Release }}
 {{- $values := .Values }}
 

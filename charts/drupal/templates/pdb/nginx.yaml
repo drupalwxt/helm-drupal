@@ -1,7 +1,7 @@
 {{- if .Values.nginx.podDisruptionBudget.enabled }}
 
 {{- $name := include "drupal.name" . -}}
-{{- $fullName := include "drupal.fullname" . -}}-nginx
+{{- $fullName := printf "%s-nginx" (include "drupal.fullname" .) -}}
 {{- $chartName := include "drupal.chart" . -}}
 {{- $release := .Release }}
 {{- $values := .Values }}

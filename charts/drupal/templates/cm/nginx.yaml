@@ -9,4 +9,8 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
   nginx.conf: |
+    {{- if .Values.nginx.configuration }}
+    {{- tpl .Values.nginx.configuration . | nindent 4 }}
+    {{- else }}
     {{- tpl (.Files.Get "conf/nginx.conf") . | nindent 4 }}
+    {{- end }}

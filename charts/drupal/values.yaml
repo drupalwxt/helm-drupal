@@ -511,6 +511,12 @@ nginx:
       successThreshold: 1
       failureThreshold: 3
 
+  # Optional full nginx.conf override.
+  # When empty, the chart uses conf/nginx.conf.
+  # When set, this value replaces the entire nginx.conf and is rendered with tpl,
+  # so Helm template expressions can still be used inside it.
+  configuration: ""
+
   # rootLocationRules: |
   #   deny 5.181.182.0/24;
   #   allow all;

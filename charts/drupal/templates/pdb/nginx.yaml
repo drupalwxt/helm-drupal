@@ -31,5 +31,6 @@ spec:
     matchLabels:
       app.kubernetes.io/name: {{ $name }}
       app.kubernetes.io/instance: {{ $release.Name }}
+      tier: frontend
 
 {{- end }}

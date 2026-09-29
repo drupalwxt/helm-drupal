@@ -1,6 +1,6 @@
 # drupal
 
-![Version: 2.0.0-beta19](https://img.shields.io/badge/Version-2.0.0--beta19-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.1.4](https://img.shields.io/badge/AppVersion-6.1.4-informational?style=flat-square)
+![Version: 2.0.0-beta20](https://img.shields.io/badge/Version-2.0.0--beta20-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 6.1.4](https://img.shields.io/badge/AppVersion-6.1.4-informational?style=flat-square)
 
 Helm Chart for deploying an enterprise-grade Drupal environment.
 
@@ -221,6 +221,7 @@ helm install --name drupal -f values-<override>.yaml
 | nginx.autoscaling.targetCPUUtilizationPercentage | int | `50` |  |
 | nginx.autoscaling.targetMemoryUtilizationPercentage | int | `50` |  |
 | nginx.client_max_body_size | string | `"20m"` |  |
+| nginx.configuration | string | `""` |  |
 | nginx.customLocations | string | `""` |  |
 | nginx.gzip | bool | `true` |  |
 | nginx.healthcheck.enabled | bool | `true` |  |

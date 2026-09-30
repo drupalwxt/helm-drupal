@@ -156,6 +156,18 @@ $databases['default']['default'] = [
   'driver' => 'pgsql',
   'collation' => 'utf8mb4_general_ci',
 ];
+{{- else if .Values.postgresOperator.enabled }}
+$databases['default']['default'] = [
+  'database' => {{ .Values.postgresOperator.auth.database | quote }},
+  'username' => {{ .Values.postgresOperator.auth.username | quote }},
+  'password' => getenv('POSTGRES_PASSWORD') ?: '',
+  'host' => '{{ .Release.Name }}-postgres-cluster-pgbouncer',
+  'port' => {{ .Values.postgresOperator.port | quote }},
+  'prefix' => '',
+  'namespace' => 'Drupal\Core\Database\Driver\pgsql',
+  'driver' => 'pgsql',
+  'collation' => 'utf8mb4_general_ci',
+];
 {{- end }}
 
 /**
